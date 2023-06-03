@@ -9,8 +9,7 @@ export default function HomeCard({ label, href }: HomeCardProps) {
             <div className="
                 border 
                 rounded-lg 
-                w-[48%] 
-                p-20 m-auto
+                p-20
                 bg-yellow-400 
                 font-semibold 
                 flex 
@@ -20,7 +19,8 @@ export default function HomeCard({ label, href }: HomeCardProps) {
                 hover:outline-4
                 hover:outline-red-400
                 hover:border-0
-                cursor-pointer h-full text-center"
+                cursor-pointer 
+                text-center"
             >
                 {label}
             </div>

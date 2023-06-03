@@ -5,9 +5,10 @@ const client = createClient({
   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN as string,
 });
 
-export const getEntries = async (tag?: string) => {
+export const getEntries = async (locale: string, tag?: string) => {
   const query: any = {
     content_type: "course",
+    locale,
   };
 
   if (tag) {

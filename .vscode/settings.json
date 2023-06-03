@@ -15,7 +15,8 @@
     "pnpm-lock.yaml": true,
     "postcss.config.js": true,
     "README.md": true,
-    ".next": true
+    ".next": true,
+    "i18n.ts": true
   },
   "explorerExclude.backup": {},
   "typescript.tsdk": "node_modules\\.pnpm\\typescript@5.1.3\\node_modules\\typescript\\lib",

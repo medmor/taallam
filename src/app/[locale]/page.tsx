@@ -8,8 +8,8 @@ export default function Home() {
   const locale = useLocale()
 
   return (
-    <div className="p-5 flex items-center min-h-[80vh]">
-      <div className="flex flex-wrap gap-5 m-auto h-full items-stretch">
+    <div className="flex justify-center items-center min-h-[85vh]">
+      <div className="flex flex-wrap justify-center gap-5">
         <HomeCard label={t("Preschool 2")} href={`/${locale}/courses/preschool.2`} />
         <HomeCard label={t("Primary 3")} href={`/${locale}/courses/primary.3`} />
         <HomeCard label={t("Stories")} href={`/${locale}/stories`} />

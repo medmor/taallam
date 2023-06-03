@@ -1,11 +1,14 @@
+import { useLocale } from 'next-intl';
 import { getEntries } from '@/lib/contentful'
 
 export default async function Page() {
-    const entries = await getEntries('story');
+    const locale = useLocale();
+    const entries = await getEntries(locale == 'en' ? 'en-US' : locale, 'story');
 
     return (
         <div>
-            {JSON.stringify(entries)}
+            {JSON.stringify(entries[0])}
         </div>
     )
 }
+
