@@ -15,7 +15,7 @@ export default function Navbar() {
             </div>
             <div className="flex">
                 <Link href={`/${locale}`} className="font-bold text-xl text-white me-4">{t("Taallam")}</Link>
-                <ul className="text-white flex gap-4 p-1">
+                <ul className="text-neutral-300 flex gap-4 p-1">
                     <li>
                         <Link href={`/${locale}/courses/preschool.2`} >{t("Preschool 2")}</Link>
                     </li>
@@ -23,7 +23,7 @@ export default function Navbar() {
                         <Link href={`/${locale}/courses/primary.3`} >{t("Primary 3")}</Link>
                     </li>
                     <li>
-                        <Link href={`/${locale}/stories`} className="text-orange-400 font-semibold" >{t("Stories")}</Link>
+                        <Link href={`/${locale}/stories`} className="text-white font-semibold" >{t("Stories")}</Link>
                     </li>
                 </ul>
             </div>
