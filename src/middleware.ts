@@ -1,10 +1,14 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import i18n from "../i18n";
+import createMiddleware from "next-intl/middleware";
 
-export function middleware(request: NextRequest) {
-  const locale = request.nextUrl.locale || i18n.defaultLocale;
-  request.nextUrl.searchParams.set("lang", locale);
-  request.nextUrl.href = request.nextUrl.href.replace(`/${locale}`, "");
-  return NextResponse.rewrite(request.nextUrl);
-}
+export default createMiddleware({
+  // A list of all locales that are supported
+  locales: ["en", "ar"],
+
+  // If this locale is matched, pathnames work without a prefix (e.g. `/about`)
+  defaultLocale: "en",
+});
+
+export const config = {
+  // Skip all paths that should not be internationalized
+  matcher: ["/((?!api|_next|.*\\..*).*)"],
+};

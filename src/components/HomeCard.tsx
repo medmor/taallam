@@ -20,7 +20,7 @@ export default function HomeCard({ label, href }: HomeCardProps) {
                 hover:outline-4
                 hover:outline-red-400
                 hover:border-0
-                cursor-pointer"
+                cursor-pointer h-full text-center"
             >
                 {label}
             </div>

@@ -17,5 +17,7 @@
     "README.md": true,
     ".next": true
   },
-  "explorerExclude.backup": {}
+  "explorerExclude.backup": {},
+  "typescript.tsdk": "node_modules\\.pnpm\\typescript@5.1.3\\node_modules\\typescript\\lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
