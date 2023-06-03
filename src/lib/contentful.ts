@@ -20,8 +20,9 @@ export const getEntries = async (locale: string, tag?: string) => {
 };
 
 export const getEntryById = async (id: string) => {
-  const { items } = await client.getEntries({
-    "sys.id": id,
-  });
-  return items[0];
+  return await client.getEntry(id);
+};
+
+export const getAsset = async (id: string) => {
+  return await client.getAsset(id);
 };
