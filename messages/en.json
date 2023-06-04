@@ -2,7 +2,8 @@
   "home": {
     "Preschool 2": "Preschool 2",
     "Primary 3": "Primary 3",
-    "Stories": "Stories"
+    "Stories": "Stories",
+    "heading": "Learn with Hiba and Hamza"
   },
   "navbar": {
     "Taallam": "Taallam",
@@ -10,5 +11,9 @@
     "Primary 3": "Primary 3",
     "Stories": "Stories",
     "language": "العربية"
+  },
+  "storyViewer": {
+    "next": "Next",
+    "previous": "Previous"
   }
 }

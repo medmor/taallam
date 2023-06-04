@@ -8,6 +8,9 @@ export interface CourseType {
     summary: Document;
     activities: Document;
   };
+  sys: {
+    id: string;
+  };
 }
 export interface ImageAsset {
   sys: {

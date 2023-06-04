@@ -1,57 +1,26 @@
-import Image from 'next/image'
 import { useLocale } from 'next-intl';
-import { getAsset, getEntries } from '@/lib/contentful'
-import { CourseType, ImageAsset } from '@/types/CourseType';
-import { BLOCKS, Document as RichDocument } from '@/types/RichText';
+import { getAsset, getEntries, getImageUrl } from '@/lib/contentful'
+import HomeCard from '@/components/HomeCard';
 
-export default async function Page() {
+export default async function StoriesPage() {
     const locale = useLocale();
-    const entries = await getEntries(locale == 'en' ? 'en-US' : locale, 'story');
-    //@ts-ignore
-    const story = entries[0] as CourseType;
 
-    const cardImageUrl = await getImageUrl(story.fields.cardImage, locale);
+    const entries = await getEntries(locale == 'en' ? 'en-US' : locale, 'story');
 
     return (
-        <div className='p-4 bg-orange-600 text-white'>
-            <div className='text-3xl font-bold text-center'>
-                {story.fields.title}
-            </div>
-            <div className='grid-cols-2 grid p-4 gap-2'>
-                <div>
-                    <Image
-                        className='rounded-xl'
-                        src={`https:${cardImageUrl}`}
-                        alt={story.fields.cardImage.fields.title}
-                        width={600}
-                        height={600}
+        <div className="flex flex-wrap justify-center gap-5 p-10">
+            {entries.map(async (story) => (
+                <div key={story.fields.title}>
+                    <HomeCard
+                        label={story.fields.title}
+                        href={`/${locale}/stories/${story.sys.id}`}
+                        imageUrl={await getImageUrl(story.fields.cardImage.sys.id)}
                     />
+
                 </div>
-                <div className='text-center text-black text-xl p-4 space-y-5 font-bold rounded-xl bg-green-500'>
-                    {parseRichText(story.fields.summary, [])}
-                </div>
-            </div>
+            ))}
         </div>
     )
 }
 
-async function getImageUrl(img: ImageAsset, locale: string) {
-    if (locale == 'en')
-        return img.fields.file.url;
-    //@ts-ignore
-    const asset: ImageAsset = await getAsset(img.sys.id)
-    return asset.fields.file.url;
-}
 
-function parseRichText(document: any, parsed: any) {
-    for (let i = 0; i < document.content.length; i++) {
-        const content = document.content[i];
-        if (content.nodeType == BLOCKS.PARAGRAPH) {
-            parsed.push(<div>{content.content[0].value}</div>)
-
-        } else {
-            parseRichText(content, parsed)
-        }
-    }
-    return parsed
-}

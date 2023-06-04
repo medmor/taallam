@@ -23,9 +23,9 @@ export default function RootLayout({ children, params }: RootLayoutProps) {
   }
   return (
     <html lang={locale} dir={locale == 'ar' ? 'rtl' : 'ltr'}>
-      <body>
+      <body className='bg-orange-600 '>
         <Navbar />
-        <div className="bg-green-500 h-full">
+        <div className="h-full">
           {children}
         </div>
         <Footer></Footer>

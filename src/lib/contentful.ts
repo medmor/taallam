@@ -1,3 +1,4 @@
+import { CourseType } from "@/types/CourseType";
 import { createClient } from "contentful";
 
 const client = createClient({
@@ -5,10 +6,14 @@ const client = createClient({
   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN as string,
 });
 
-export const getEntries = async (locale: string, tag?: string) => {
+export const getEntries = async (
+  locale: string,
+  tag?: string
+): Promise<CourseType[]> => {
   const query: any = {
     content_type: "course",
     locale,
+    select: "sys.id, fields.title, fields.cardImage",
   };
 
   if (tag) {
@@ -16,13 +21,24 @@ export const getEntries = async (locale: string, tag?: string) => {
   }
 
   const { items } = await client.getEntries(query);
+
+  //@ts-ignore
   return items;
 };
 
-export const getEntryById = async (id: string) => {
-  return await client.getEntry(id);
+export const getEntryById = async (
+  id: string,
+  locale: string
+): Promise<CourseType> => {
+  //@ts-ignore
+  return await client.getEntry(id, { locale });
 };
 
 export const getAsset = async (id: string) => {
   return await client.getAsset(id);
 };
+
+export async function getImageUrl(id: string) {
+  const asset = await getAsset(id);
+  return asset.fields.file?.url;
+}

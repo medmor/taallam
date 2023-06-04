@@ -2,7 +2,8 @@
   "home": {
     "Preschool 2": "التمهيدي 2",
     "Primary 3": "الابتدائي 3",
-    "Stories": "قصص"
+    "Stories": "قصص",
+    "heading": "تعلم مع هبة وحمزة"
   },
   "navbar": {
     "Taallam": "تعلم",
@@ -10,5 +11,9 @@
     "Primary 3": "الابتدائي 3",
     "Stories": "قصص",
     "language": "English"
+  },
+  "storyViewer": {
+    "next": "التالي",
+    "previous": "السابق"
   }
 }
