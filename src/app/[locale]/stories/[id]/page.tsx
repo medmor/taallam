@@ -20,7 +20,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
     await parseRichText(story.fields.summary, texts, images)
 
     return (
-        <StroyViewer texts={texts} images={images} />
+        <StroyViewer texts={texts.filter(t => t)} images={images} />
     )
 }
 

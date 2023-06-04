@@ -2,6 +2,8 @@ import '@/styles/globals.css'
 
 import { useLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
+
 
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
@@ -14,8 +16,14 @@ interface RootLayoutProps {
 }
 
 
-export default function RootLayout({ children, params }: RootLayoutProps) {
+export default async function RootLayout({ children, params }: RootLayoutProps) {
   const locale = useLocale();
+  let messages;
+  try {
+    messages = (await import(`../../../messages/${locale}.json`)).default;
+  } catch (error) {
+    console.log(error);
+  }
 
   // Show a 404 error if the user requests an unknown locale
   if (params.locale !== locale) {
@@ -26,7 +34,9 @@ export default function RootLayout({ children, params }: RootLayoutProps) {
       <body className='bg-orange-600 '>
         <Navbar />
         <div className="h-full">
-          {children}
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            {children}
+          </NextIntlClientProvider>
         </div>
         <Footer></Footer>
       </body>
