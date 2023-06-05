@@ -7,7 +7,7 @@ export default function ChangeLanguage() {
 
 
     return (
-        <Link href={`/${locale == 'ar' ? 'en' : 'ar'}`} className="mx-5 p-1 text-purple-900" >
+        <Link href={`/${locale == 'ar' ? 'en' : 'ar'}`} className="mx-5 p-1" >
             {t("language")}
         </Link>
     )

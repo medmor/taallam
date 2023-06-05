@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 
 
-import Navbar from '@/components/Navbar'
+import Navbar from '@/components/navbar/Navbar'
 import Footer from '@/components/Footer'
 
 interface RootLayoutProps {
@@ -32,12 +32,12 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
   return (
     <html lang={locale} dir={locale == 'ar' ? 'rtl' : 'ltr'}>
       <body className='bg-orange-600 '>
-        <Navbar />
-        <div className="h-full">
-          <NextIntlClientProvider locale={locale} messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <Navbar />
+          <div className="h-full">
             {children}
-          </NextIntlClientProvider>
-        </div>
+          </div>
+        </NextIntlClientProvider>
         <Footer></Footer>
       </body>
     </html>

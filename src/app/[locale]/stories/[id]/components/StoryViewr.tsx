@@ -25,14 +25,14 @@ export default function StroyViewer({ images, texts }: StoryViewerProps) {
         <div className='p-4'>
             <div dir="ltr" className='flex justify-around bg-white p-2 rounded-xl max-w-xl m-auto gap-5'>
                 <Button
-                    label={t("previous")}
+                    label={""}
                     disabled={index <= 0}
                     onClick={() => { setIndex((index) => index - 1); setDirection("prev") }}
                     icon={AiOutlineArrowLeft}
                 />
                 <div>{index + 1}/{texts.length}</div>
                 <Button
-                    label={t("next")}
+                    label={""}
                     disabled={index > texts.length - 2}
                     onClick={() => { setIndex((index) => index + 1); setDirection('next') }}
                     icon={AiOutlineArrowRight}
@@ -40,7 +40,7 @@ export default function StroyViewer({ images, texts }: StoryViewerProps) {
             </div>
             <div className="grid grid-cols-1">
                 {texts.map((t, i) => (
-                    <Transition className={`grid-cols-2 grid p-4 row-start-1 col-start-1`}
+                    <Transition className={`flex flex-col sm:flex-row gap-2 justify-center p-4 row-start-1 col-start-1`}
                         key={t}
                         show={i == index}
                         enter="transition ease-in-out duration-500 transform"
@@ -50,9 +50,22 @@ export default function StroyViewer({ images, texts }: StoryViewerProps) {
                         leaveFrom="translate-x-0"
                         leaveTo={dir == "next" ? "translate-x-full" : "-translate-x-full"}
                     >
+                        <div className={`
+                            flex
+                            items-center
+                            justify-center
+                            text-center
+                            p-2 sm:p-10 space-y-5
+                            rounded-xl
+                            bg-white 
+                            sm:text-[3vw] 
+                            ${index == 0 ? 'font-bold' : ''}                     
+                            `}>
+                            {texts[i]}
+                        </div>
                         <div className="relative">
                             <Image
-                                className={`rounded-xl m-auto w-[400px] h-[350px] bg-white`}
+                                className={`rounded-xl m-auto sm:min-w-[350px] min-h-[350px] bg-white`}
                                 src={`https:${images[i].src}`}
                                 alt={images[i].alt}
                                 width={400}
@@ -75,19 +88,6 @@ export default function StroyViewer({ images, texts }: StoryViewerProps) {
 
 
                             }
-                        </div>
-
-                        <div className={`
-                            flex
-                            items-center
-                            justify-center
-                            text-center
-                            p-4 space-y-5
-                            rounded-xl
-                            bg-white 
-                            ${index == 0 ? 'text-[4vw] font-bold' : 'text-[3vw]'}                     
-                            `}>
-                            {texts[i]}
                         </div>
                     </Transition>
                 ))}
