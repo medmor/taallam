@@ -17,7 +17,7 @@ interface RootLayoutProps {
 
 
 export default async function RootLayout({ children, params }: RootLayoutProps) {
-  const locale = useLocale();
+  let locale = useLocale();
   let messages;
   try {
     messages = (await import(`../../../messages/${locale}.json`)).default;
@@ -27,7 +27,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
 
   // Show a 404 error if the user requests an unknown locale
   if (params.locale !== locale) {
-    notFound();
+    locale = params.locale
   }
   return (
     <html lang={locale} dir={locale == 'ar' ? 'rtl' : 'ltr'}>

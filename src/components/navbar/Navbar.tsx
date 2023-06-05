@@ -4,9 +4,10 @@ import Link from "next/link"
 import { useTranslations, useLocale } from 'next-intl';
 import { AiOutlineMenu } from 'react-icons/ai'
 
-import ChangeLanguage from "../ChangeLanguage"
+import ChangeLanguage from "./ChangeLanguage"
 import Logo from "./Logo";
 import NavbarItem from "./NavbarItem";
+import { usePathname } from "next/navigation";
 
 
 
@@ -14,12 +15,9 @@ export default function Navbar() {
     const t = useTranslations('navbar');
     const locale = useLocale();
     const [collapsed, setCollapsed] = useState(true);
-    const [currentHref, setCurrentHref] = useState('');
+    const pathname = usePathname();
 
-    const isActif = (href: string) => currentHref.includes(href);
-    useEffect(() => {
-        setCurrentHref(window.location.href)
-    }, [])
+    const isActif = (href: string) => pathname.includes(href);
     return (
         <nav className="
                 p-4
@@ -52,7 +50,7 @@ export default function Navbar() {
                     <NavbarItem
                         href={`/${locale}/courses/preschool.2`}
                         label={t("Preschool 2")}
-                        active={isActif('perschool.2')}
+                        active={isActif('preschool.2')}
                     />
                     <NavbarItem
                         href={`/${locale}/courses/primary.3`}

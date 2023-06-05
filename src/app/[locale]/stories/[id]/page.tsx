@@ -1,7 +1,7 @@
 import { useLocale } from 'next-intl';
 import { getAsset, getEntryById } from '@/lib/contentful'
 import { ImageAsset } from '@/types/CourseType';
-import { BLOCKS } from '@/types/RichText';
+import { BLOCKS, Block } from '@/types/RichText';
 import StroyViewer from './components/StoryViewr';
 
 interface StoryPageProps {
@@ -17,7 +17,8 @@ export default async function StoryPage({ params }: StoryPageProps) {
 
     const images = [{ src: cardImageUrl, alt: story.fields.cardImage.fields.title }]
     const texts: any[] = [story.fields.title]
-    await parseRichText(story.fields.summary, texts, images)
+    await parseSummary(story.fields.summary, texts, images)
+    parseQuizzes(story.fields.activities)
 
     return (
         <StroyViewer texts={texts.filter(t => t)} images={images} />
@@ -32,7 +33,7 @@ async function getImageUrl(img: ImageAsset, locale: string) {
     return asset.fields.file.url;
 }
 
-async function parseRichText(document: any, texts: any, images: any) {
+async function parseSummary(document: any, texts: any, images: any) {
     for (let i = 0; i < document.content.length; i++) {
         const content = document.content[i];
         if (content.nodeType == BLOCKS.PARAGRAPH) {
@@ -47,7 +48,16 @@ async function parseRichText(document: any, texts: any, images: any) {
             )
         }
         else {
-            await parseRichText(content, texts, images)
+            await parseSummary(content, texts, images)
         }
+    }
+}
+
+function parseQuizzes(quizzes: Block) {
+    for (let i = 0; i < quizzes.content.length; i++) {
+        const content = quizzes.content[i];
+        console.log(content.nodeType)
+        if (content && content.nodeType !== 'text')
+            parseQuizzes(content as Block)
     }
 }
