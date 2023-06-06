@@ -15,5 +15,8 @@
   "storyViewer": {
     "next": "Next",
     "previous": "Previous"
+  },
+  "quiz": {
+    "Comprehension Quiz": "Comprehension Quiz"
   }
 }

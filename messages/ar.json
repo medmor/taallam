@@ -15,5 +15,8 @@
   "storyViewer": {
     "next": "التالي",
     "previous": "السابق"
+  },
+  "quiz": {
+    "Comprehension Quiz": "أسئلة الفهم"
   }
 }

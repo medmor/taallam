@@ -2,9 +2,10 @@ import { useLocale } from 'next-intl';
 import { getAsset, getEntryById } from '@/lib/contentful'
 import { ImageAsset } from '@/types/CourseType';
 import { BLOCKS, Block } from '@/types/RichText';
-import StroyViewer from './components/StoryViewr';
+import StroyViewer from './components/StoryViewer';
 import Mcq from '@/components/quiz/Mcq';
-import { EmptyQuiz, Quiz, QuizCategoryConsts } from '@/types/QuizType';
+import { EmptyQuiz, Quiz, QuizCategory, QuizCategoryConsts } from '@/types/QuizType';
+import StroyTest from './components/StoryTest';
 
 interface StoryPageProps {
     params: {
@@ -21,11 +22,13 @@ export default async function StoryPage({ params }: StoryPageProps) {
     const images = [{ src: cardImageUrl, alt: story.fields.cardImage.fields.title }]
     const texts: any[] = [story.fields.title]
     await parseSummary(story.fields.summary, texts, images)
-    console.log(parseQuizzes(story.fields.activities).length)
+
+    const quizzes = parseQuizzes(story.fields.activities)
+
     return (
         <>
             <StroyViewer texts={texts.filter(t => t)} images={images} />
-            <Mcq />
+            <StroyTest quizzes={quizzes} />
         </>
     )
 }
@@ -61,17 +64,23 @@ async function parseSummary(document: any, texts: any, images: any) {
 function parseQuizzes(doc: Block, quizzes: any[] = []): Quiz[] {
     const lines = getAllDocLines(doc)
     for (let i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith(QuizCategoryConsts.mcq)) {
+        const line = lines[i];
+        let start = line.substring(0, 3);
+        if (isQuestion(start)) {
             const quiz = EmptyQuiz();
-            quiz.question = lines[i].replace(QuizCategoryConsts.mcq + '-', "").trim();
+            quiz.category = start as QuizCategory;
+            quiz.question = line.replace(start + '-', "").trim();
             let j = i + 1
-            while (lines[j] && !lines[j].startsWith(QuizCategoryConsts.mcq)) {
+            start = lines[j].substring(0, 3);
+            while (lines[j] && !isQuestion(start)) {
                 if (lines[j].endsWith('===')) {
                     quiz.answer = lines[j].replace('===', '')
                 } else {
                     quiz.choices.push(lines[j])
                 }
                 j++
+                if (lines[j])
+                    start = lines[j].substring(0, 3);
             }
             i = j - 1
             quizzes.push(quiz)
@@ -93,4 +102,8 @@ function getAllDocLines(doc: Block, lines: string[] = []) {
         }
     }
     return lines;
+}
+
+function isQuestion(start: string) {
+    return start in QuizCategoryConsts
 }
