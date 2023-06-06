@@ -1,5 +1,3 @@
-'use client'
-import { useTranslations } from 'next-intl'
 
 import { Quiz } from "@/types/QuizType"
 import { useEffect, useState } from 'react';
@@ -7,10 +5,25 @@ import { useEffect, useState } from 'react';
 
 interface McqProps {
     quiz: Quiz
+    setScore: any;
 }
 
-export default function Mcq({ quiz }: McqProps) {
+export default function Mcq({ quiz, setScore }: McqProps) {
     const [choices, setChoices] = useState(['']);
+    const [selected, setSelected] = useState('');
+
+    const selectedChoiceClass = (choice: string) => {
+        if (choice == selected) {
+            if (choice == quiz.answer) {
+                return 'bg-lime-500';
+            }
+            else {
+                return 'bg-red-600';
+            }
+        } else {
+            return '';
+        }
+    }
     useEffect(() => {
         setChoices(shuffleChoices([...quiz.choices, quiz.answer]))
     }, [quiz.choices, quiz.answer])
@@ -22,7 +35,30 @@ export default function Mcq({ quiz }: McqProps) {
                 </div>
                 <div className='p-4'>
                     {choices.map(choice => (
-                        <div className='p-2 mb-1 border rounded-lg hover:bg-slate-100' key={choice}>{choice}</div>
+                        <div
+                            className={`
+                                cursor-pointer
+                                p-2 mb-1 
+                                border rounded-lg 
+                                ${!selected ? 'hover:bg-slate-100' : ''}
+                                ${selectedChoiceClass(choice)}
+                            `}
+                            key={choice}
+                            onClick={() => {
+                                if (!selected) {
+                                    setSelected(choice)
+                                    console.log(selected)
+                                    if (choice == quiz.answer) {
+                                        setScore((score: number) => score + 1)
+                                    } else {
+                                        setScore((score: number) => score - 1)
+                                    }
+                                }
+                            }
+                            }
+                        >
+                            {choice}
+                        </div>
                     ))}
                 </div>
             </div>

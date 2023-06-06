@@ -8,25 +8,47 @@ interface CarouselProps {
     setIndex: any;
     dir: string
     setDir: any;
-    children: React.ReactNode[]
+    children: React.ReactNode[];
+    loop?: boolean;
+    oneDirection?: boolean;
 }
 
-export default function Carousel({ children, index, setIndex, dir, setDir }: CarouselProps) {
+export default function Carousel({ children, index, setIndex, dir, setDir, loop, oneDirection }: CarouselProps) {
 
     return (
         <div className='p-4'>
             <div dir="ltr" className='flex justify-around bg-white p-2 rounded-xl max-w-xl m-auto gap-5'>
+                {
+                    !oneDirection && <Button
+                        label={""}
+                        disabled={(index <= 0 && !loop)}
+                        onClick={
+                            () => {
+                                setDir("prev");
+                                if (loop && index <= 0) {
+                                    setIndex(() => children.length - 1)
+                                } else {
+                                    setIndex((index: number) => index - 1);
+                                }
+                            }
+                        }
+                        icon={AiOutlineArrowLeft}
+                    />
+                }
+                <div className="p-4 border border-orange-600 rounded-full">{index + 1}/{children.length}</div>
                 <Button
                     label={""}
-                    disabled={index <= 0}
-                    onClick={() => { setIndex((index: number) => index - 1); setDir("prev") }}
-                    icon={AiOutlineArrowLeft}
-                />
-                <div>{index + 1}/{children.length}</div>
-                <Button
-                    label={""}
-                    disabled={index > children.length - 2}
-                    onClick={() => { setIndex((index: number) => index + 1); setDir('next') }}
+                    disabled={(index > children.length - 2 && !loop)}
+                    onClick={
+                        () => {
+                            setDir('next');
+                            if (loop && index >= children.length - 1) {
+                                setIndex(() => 0)
+                            } else {
+                                setIndex((index: number) => index + 1);
+                            }
+                        }
+                    }
                     icon={AiOutlineArrowRight}
                 />
             </div>

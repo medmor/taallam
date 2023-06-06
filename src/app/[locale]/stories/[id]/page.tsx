@@ -2,10 +2,8 @@ import { useLocale } from 'next-intl';
 import { getAsset, getEntryById } from '@/lib/contentful'
 import { ImageAsset } from '@/types/CourseType';
 import { BLOCKS, Block } from '@/types/RichText';
-import StroyViewer from './components/StoryViewer';
-import Mcq from '@/components/quiz/Mcq';
+import Stroy from './components/Story';
 import { EmptyQuiz, Quiz, QuizCategory, QuizCategoryConsts } from '@/types/QuizType';
-import StroyTest from './components/StoryTest';
 
 interface StoryPageProps {
     params: {
@@ -27,8 +25,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
 
     return (
         <>
-            <StroyViewer texts={texts.filter(t => t)} images={images} />
-            <StroyTest quizzes={quizzes} />
+            <Stroy texts={texts.filter(t => t)} images={images} quizzes={quizzes} />
         </>
     )
 }
