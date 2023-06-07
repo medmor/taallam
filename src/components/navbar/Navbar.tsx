@@ -27,7 +27,7 @@ export default function Navbar() {
         >
             <div className="flex justify-between me-5">
                 <Link href={`/${locale}`} >
-                    <Logo />
+                    <Logo src={t("logo")} />
                 </Link>
                 <div>
                     <button className="

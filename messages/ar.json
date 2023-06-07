@@ -10,13 +10,14 @@
     "Preschool 2": "التمهيدي 2",
     "Primary 3": "الابتدائي 3",
     "Stories": "قصص",
-    "language": "English"
+    "language": "English",
+    "logo": "/images/logoars.png"
   },
   "storyViewer": {
-    "next": "التالي",
-    "previous": "السابق"
+    "quiz": "أسئلة"
   },
-  "quiz": {
-    "Comprehension Quiz": "أسئلة الفهم"
+  "storyTest": {
+    "score": "النتيجة : ",
+    "lessonsBtn": "العبر المستخلصة من القصة"
   }
 }

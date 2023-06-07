@@ -10,13 +10,16 @@
     "Preschool 2": "Preschool 2",
     "Primary 3": "Primary 3",
     "Stories": "Stories",
-    "language": "العربية"
+    "language": "العربية",
+    "logo": "/images/logos.png"
   },
   "storyViewer": {
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "quiz": "Quiz"
   },
-  "quiz": {
-    "Comprehension Quiz": "Comprehension Quiz"
+  "storyTest": {
+    "score": "Your score : ",
+    "lessonsBtn": "Lessons learned from the story"
   }
 }

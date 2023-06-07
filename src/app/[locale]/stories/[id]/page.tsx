@@ -23,9 +23,10 @@ export default async function StoryPage({ params }: StoryPageProps) {
 
     const quizzes = parseQuizzes(story.fields.activities)
 
+
     return (
         <>
-            <Stroy texts={texts.filter(t => t)} images={images} quizzes={quizzes} />
+            <Stroy texts={texts.filter(t => t)} images={images} quizzes={quizzes} lessons={story.fields.objectifs} />
         </>
     )
 }

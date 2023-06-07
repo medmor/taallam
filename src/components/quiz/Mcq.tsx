@@ -49,7 +49,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
                                     setSelected(choice)
                                     console.log(selected)
                                     if (choice == quiz.answer) {
-                                        setScore((score: number) => score + 1)
+                                        setScore((score: number) => score + 2)
                                     } else {
                                         setScore((score: number) => score - 1)
                                     }
