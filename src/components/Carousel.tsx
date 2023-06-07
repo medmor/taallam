@@ -57,12 +57,12 @@ export default function Carousel({ children, index, setIndex, dir, setDir, loop,
                     <Transition className={`row-start-1 col-start-1`}
                         key={i}
                         show={i == index}
-                        enter="transition ease-in-out duration-500 transform"
-                        enterFrom={dir == "next" ? "-translate-x-full" : "translate-x-full"}
+                        enter={`transition ease-in-out duration-1000 transform`}
+                        enterFrom="translate-x-full"
                         enterTo="translate-x-0"
-                        leave="transition ease-in-out duration-500 transform"
+                        leave={`transition ease-in-out duration-1000 transform`}
                         leaveFrom="translate-x-0"
-                        leaveTo={dir == "next" ? "translate-x-full" : "-translate-x-full"}
+                        leaveTo="translate-x-full"
                     >
                         {child}
                     </Transition>

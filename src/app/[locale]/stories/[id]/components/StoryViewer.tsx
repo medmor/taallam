@@ -36,7 +36,7 @@ export default function StroyViewer({ images, texts, canShowTest, setCanShowTest
 
     return (
         <StoryPart id="story-viewer">
-            <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDirection} loop>
+            <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDirection}>
                 {texts.map((text, i) => (
                     <div className="flex flex-col sm:flex-row gap-2 justify-center p-4 " key={i}>
                         <div className={`
@@ -47,7 +47,7 @@ export default function StroyViewer({ images, texts, canShowTest, setCanShowTest
                             p-2 sm:p-10 space-y-5
                             rounded-xl
                             bg-white 
-                            sm:text-[3vw] 
+                            text-2xl
                             ${index == 0 ? 'font-bold' : ''}                     
                             `}>
                             {text}
@@ -63,7 +63,7 @@ export default function StroyViewer({ images, texts, canShowTest, setCanShowTest
                                 )
                             }
                             <Image
-                                className={`rounded-xl border-2 border-orange-600 p-1 m-auto sm:min-w-[350px] h-auto bg-white`}
+                                className={`rounded-xl border-2 p-1 m-auto sm:min-w-[350px] h-auto bg-white`}
                                 src={`https:${images[i].src}`}
                                 alt={images[i].alt}
                                 width={400}

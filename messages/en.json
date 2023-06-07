@@ -21,5 +21,8 @@
   "storyTest": {
     "score": "Your score : ",
     "lessonsBtn": "Lessons learned from the story"
+  },
+  "footer": {
+    "logo": "/images/logos.png"
   }
 }

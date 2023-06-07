@@ -19,5 +19,8 @@
   "storyTest": {
     "score": "النتيجة : ",
     "lessonsBtn": "العبر المستخلصة من القصة"
+  },
+  "footer": {
+    "logo": "/images/logoars.png"
   }
 }
