@@ -33,7 +33,7 @@ export default function StroyTest({ quizzes, canShowStoryLessons, setCanShowStor
     return (
         <StoryPart id="story-test">
             <div className="mt-2 text-center font-bold bg-white rounded-t-lg">
-                {t('score')} = <span dir="ltr">{score} / {quizzes.length * 2}</span>
+                {t('score')} <span dir="ltr">{score} / {quizzes.length * 2}</span>
             </div>
             <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDir} oneDirection>
                 {quizzes.map(quiz => {
