@@ -1,5 +1,5 @@
 import { useLocale } from 'next-intl';
-import { getEntries, getImageUrl } from '@/lib/contentful'
+import { getEntries, getImageUrl } from '@/lib/contentful/client'
 import HomeCard from '@/components/HomeCard';
 
 export default async function StoriesPage() {

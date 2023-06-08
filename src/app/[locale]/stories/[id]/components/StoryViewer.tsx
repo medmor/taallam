@@ -2,10 +2,11 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTranslations } from 'next-intl'
 import { Transition } from '@headlessui/react'
 import { BsArrowDownCircleFill } from 'react-icons/bs'
+import { GiSpeaker } from 'react-icons/gi'
 
 import Carousel from "@/components/Carousel";
 import Button from "@/components/Button";
@@ -15,17 +16,27 @@ import StoryPart from "./StoryPart";
 interface StoryViewerProps {
     images: { src: string; alt: string; }[];
     texts: string[];
+    audios: string[];
     canShowTest: boolean;
     setCanShowTest: any
 }
 
-export default function StroyViewer({ images, texts, canShowTest, setCanShowTest }: StoryViewerProps) {
+export default function StroyViewer({ images, texts, audios, canShowTest, setCanShowTest }: StoryViewerProps) {
     const t = useTranslations("storyViewer");
     const [index, setIndex] = useState(0);
     const [loaded, setLoaded] = useState(-1);
     const [dir, setDirection] = useState('next');
     const [quizButtonClickd, setQuizButtonClicked] = useState(false);
-
+    const audio = new Audio(audios[0]);
+    const play = () => {
+        audio.pause();
+        const times = audios[1][index].split("-").map(t => Number(t));
+        audio.currentTime = times[0];
+        audio.play();
+        setTimeout(() => {
+            audio.pause()
+        }, (times[1] - times[0]) * 1000);
+    }
     useEffect(() => {
         if (index >= texts.length - 1) {
             setTimeout(() => {
@@ -36,21 +47,35 @@ export default function StroyViewer({ images, texts, canShowTest, setCanShowTest
 
     return (
         <StoryPart id="story-viewer">
-            <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDirection}>
+            <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDirection} onSlide={() => audio.pause()}>
                 {texts.map((text, i) => (
                     <div className="flex flex-col sm:flex-row gap-2 justify-center p-4 " key={i}>
                         <div className={`
+                            relative
                             flex
                             items-center
                             justify-center
                             text-center
-                            p-2 sm:p-10 space-y-5
+                            p-2 pt-6 sm:p-10 space-y-5
                             rounded-xl
                             bg-white 
                             text-2xl
                             ${index == 0 ? 'font-bold' : ''}                     
                             `}>
-                            {text}
+                            <div className='absolute top-2 right-2'>
+                                <Button
+                                    label=''
+                                    onClick={() => play()}
+                                    icon={GiSpeaker}
+                                    small
+                                    outline
+
+                                />
+                            </div>
+                            <div >
+
+                                {text}
+                            </div>
                         </div>
                         <div className="relative">
                             {

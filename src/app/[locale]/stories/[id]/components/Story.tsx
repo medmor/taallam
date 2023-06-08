@@ -9,17 +9,33 @@ import StoryLessons from "./StoryLessons";
 interface StoryProps {
     texts: string[];
     images: any[];
+    audios: any[];
     quizzes: Quiz[];
     lessons: string[]
 }
-export default function Story({ texts, images, quizzes, lessons }: StoryProps) {
+export default function Story({ texts, images, audios, quizzes, lessons }: StoryProps) {
     const [canShowTest, setCanShowTest] = useState(false);
     const [canShowLessons, SetCanShowLessons] = useState(false);
     return (
         <>
-            <StroyViewer texts={texts.filter(t => t)} images={images} canShowTest={canShowTest} setCanShowTest={setCanShowTest} />
-            {canShowTest && <StroyTest quizzes={quizzes} canShowStoryLessons={canShowLessons} setCanShowStoryLessons={SetCanShowLessons} />}
-            {canShowLessons && <StoryLessons lessons={lessons} />}
+            <StroyViewer
+                texts={texts.filter(t => t)}
+                images={images}
+                audios={audios}
+                canShowTest={canShowTest}
+                setCanShowTest={setCanShowTest}
+            />
+            {
+                canShowTest &&
+                <StroyTest
+                    quizzes={quizzes}
+                    canShowStoryLessons={canShowLessons}
+                    setCanShowStoryLessons={SetCanShowLessons}
+                />
+            }
+            {
+                canShowLessons && <StoryLessons lessons={lessons} />
+            }
         </>
     )
 }

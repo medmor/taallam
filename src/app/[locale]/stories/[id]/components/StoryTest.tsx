@@ -32,13 +32,6 @@ export default function StroyTest({ quizzes, canShowStoryLessons, setCanShowStor
 
     return (
         <StoryPart id="story-test">
-            {
-                canShowStoryLessons && (
-                    <a href="#story-lessons" className="p-4 block">
-                        <Button label={t("lessonsBtn")} onClick={() => ''} icon={BsArrowDownCircleFill} />
-                    </a>
-                )
-            }
             <div className="mt-2 text-center font-bold bg-white rounded-t-lg">
                 {t('score')} = <span dir="ltr">{score} / {quizzes.length * 2}</span>
             </div>
@@ -49,6 +42,13 @@ export default function StroyTest({ quizzes, canShowStoryLessons, setCanShowStor
                     }
                 })}
             </Carousel>
+            {
+                canShowStoryLessons && (
+                    <a href="#story-lessons" className="p-4 block">
+                        <Button label={t("lessonsBtn")} onClick={() => ''} icon={BsArrowDownCircleFill} />
+                    </a>
+                )
+            }
 
         </StoryPart>
     )

@@ -11,9 +11,10 @@ interface CarouselProps {
     children: React.ReactNode[];
     loop?: boolean;
     oneDirection?: boolean;
+    onSlide?: any;
 }
 
-export default function Carousel({ children, index, setIndex, dir, setDir, loop, oneDirection }: CarouselProps) {
+export default function Carousel({ children, index, setIndex, dir, setDir, loop, oneDirection, onSlide }: CarouselProps) {
 
     return (
         <div className='p-4'>
@@ -24,6 +25,9 @@ export default function Carousel({ children, index, setIndex, dir, setDir, loop,
                         disabled={(index <= 0 && !loop)}
                         onClick={
                             () => {
+                                if (onSlide) {
+                                    onSlide();
+                                }
                                 setDir("prev");
                                 if (loop && index <= 0) {
                                     setIndex(() => children.length - 1)
@@ -41,6 +45,9 @@ export default function Carousel({ children, index, setIndex, dir, setDir, loop,
                     disabled={(index > children.length - 2 && !loop)}
                     onClick={
                         () => {
+                            if (onSlide) {
+                                onSlide();
+                            }
                             setDir('next');
                             if (loop && index >= children.length - 1) {
                                 setIndex(() => 0)
