@@ -1,3 +1,4 @@
+import InConstruction from "@/components/InConstruction"
 
 
 interface SubjectPage {
@@ -7,6 +8,8 @@ interface SubjectPage {
 }
 export default function SubjectPage({ params }: SubjectPage) {
     return (
-        <div>{params.subject}</div>
+        <div>\
+            <InConstruction />
+        </div>
     )
 }

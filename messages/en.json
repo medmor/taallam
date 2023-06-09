@@ -1,4 +1,12 @@
 {
+  "common": {
+    "inConstruction": "construction-en",
+    "math": "Math",
+    "science": "Science",
+    "arabic": "Arabic",
+    "french": "French",
+    "english": "English"
+  },
   "home": {
     "Preschool 2": "Preschool 2",
     "Primary 3": "Primary 3",

@@ -1,4 +1,12 @@
 {
+  "common": {
+    "inConstruction": "construction-ar",
+    "math": "الرياضيات",
+    "science": "علوم",
+    "arabic": "عربية",
+    "french": "فرنسية",
+    "english": "فرنسية"
+  },
   "home": {
     "Preschool 2": "التمهيدي 2",
     "Primary 3": "الابتدائي 3",
