@@ -26,15 +26,12 @@ export default function Story({ texts, images, audios, quizzes, lessons }: Story
                 setCanShowTest={setCanShowTest}
             />
             {
-                canShowTest &&
-                <StroyTest
-                    quizzes={quizzes}
-                    canShowStoryLessons={canShowLessons}
-                    setCanShowStoryLessons={SetCanShowLessons}
-                />
-            }
-            {
-                canShowLessons && <StoryLessons lessons={lessons} />
+                canShowTest && (
+                    <>
+                        <StroyTest quizzes={quizzes} />
+                        <StoryLessons lessons={lessons} />
+                    </>
+                )
             }
         </>
     )

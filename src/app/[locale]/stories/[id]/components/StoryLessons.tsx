@@ -1,13 +1,17 @@
 import StoryPart from "./StoryPart";
+import { useTranslations } from "next-intl";
 
 interface Storylessons {
     lessons: string[];
 }
 export default function StoryLessons({ lessons }: Storylessons) {
+    const t = useTranslations('storyLessons');
     return (
         <StoryPart id="story-lessons" >
+            <div className="text-center bg-white rounded-t-lg text-xl p-2 font-bold">
+                {t("lessons")}
+            </div>
             <div className="p-4">
-
                 {lessons.map((lesson) => {
                     const parts = lesson.split(":")
                     return (

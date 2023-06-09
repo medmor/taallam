@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BsArrowDownCircleFill } from "react-icons/bs";
 import { useTranslations } from "next-intl";
 
@@ -13,22 +13,15 @@ import { Quiz, QuizCategoryConsts } from "@/types/QuizType";
 
 interface StoryTestProps {
     quizzes: Quiz[];
-    canShowStoryLessons: boolean;
-    setCanShowStoryLessons: any;
+
 }
-export default function StroyTest({ quizzes, canShowStoryLessons, setCanShowStoryLessons }: StoryTestProps) {
+export default function StroyTest({ quizzes }: StoryTestProps) {
     const t = useTranslations('storyTest');
     const [index, setIndex] = useState(0);
     const [dir, setDir] = useState('next');
     const [score, setScore] = useState(0);
 
-    useEffect(() => {
-        if (index >= quizzes.length - 1) {
-            setTimeout(() => {
-                setCanShowStoryLessons(true);
-            }, 5000);
-        }
-    }, [index, setCanShowStoryLessons, quizzes.length]);
+
 
     return (
         <StoryPart id="story-test">
@@ -42,13 +35,7 @@ export default function StroyTest({ quizzes, canShowStoryLessons, setCanShowStor
                     }
                 })}
             </Carousel>
-            {
-                canShowStoryLessons && (
-                    <a href="#story-lessons" className="p-4 block">
-                        <Button label={t("lessonsBtn")} onClick={() => ''} icon={BsArrowDownCircleFill} />
-                    </a>
-                )
-            }
+
 
         </StoryPart>
     )

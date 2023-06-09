@@ -19,8 +19,10 @@
     "quiz": "Quiz"
   },
   "storyTest": {
-    "score": "Your score : ",
-    "lessonsBtn": "Lessons learned from the story"
+    "score": "Your score : "
+  },
+  "storyLessons": {
+    "lessons": "Lessons learned from the story"
   },
   "footer": {
     "logo": "/images/logos.png"
