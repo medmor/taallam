@@ -50,8 +50,8 @@ export default function StroyViewer({ images, texts, audios, canShowTest, setCan
             <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDirection} onSlide={() => audio.pause()}>
                 {texts.map((text, i) => (
                     <div className="flex flex-col sm:flex-row gap-2 justify-center p-4 " key={i}>
-                        <div className={`
-                            relative
+                        <div className={
+                            `relative
                             flex
                             items-center
                             justify-center
@@ -60,18 +60,21 @@ export default function StroyViewer({ images, texts, audios, canShowTest, setCan
                             rounded-xl
                             bg-white 
                             text-2xl
-                            ${index == 0 ? 'font-bold' : ''}                     
-                            `}>
-                            <div className='absolute top-2 right-2'>
-                                <Button
-                                    label=''
-                                    onClick={() => play()}
-                                    icon={GiSpeaker}
-                                    small
-                                    outline
-
-                                />
-                            </div>
+                            ${index == 0 ? 'font-bold' : ''}                    
+                            `
+                        }>
+                            {
+                                audios.length &&
+                                <div className='absolute top-2 right-2'>
+                                    <Button
+                                        label=''
+                                        onClick={() => play()}
+                                        icon={GiSpeaker}
+                                        small
+                                        outline
+                                    />
+                                </div>
+                            }
                             <div >
 
                                 {text}
