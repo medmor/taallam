@@ -15,9 +15,9 @@ export default function CoursesPage({ params }: CoursesPageProps) {
             <div className="flex flex-wrap justify-center gap-5 m-auto mb-2">
                 <HomeCard label={t("math")} href={`/${locale}/courses/${params.level}/math`} />
                 <HomeCard label={t("science")} href={`/${locale}/courses/${params.level}/science`} />
-                <HomeCard label={t("arabic")} href={`/${locale}/courses/${params.level}/arabic`} />
-                <HomeCard label={t("french")} href={`/${locale}/courses/${params.level}/french`} />
-                <HomeCard label={t("english")} href={`/${locale}/courses/${params.level}/english`} />
+                {/* <HomeCard label={t("arabic")} href={`/${locale}/courses/${params.level}/arabic`} /> */}
+                {/* <HomeCard label={t("french")} href={`/${locale}/courses/${params.level}/french`} /> */}
+                <HomeCard label={t("language")} href={`/${locale}/courses/${params.level}/language`} />
             </div>
             <InConstruction />
         </div>
