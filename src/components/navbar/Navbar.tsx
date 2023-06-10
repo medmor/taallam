@@ -48,14 +48,14 @@ export default function Navbar() {
                     px-10 py-2 sm:space-y-0 space-y-2 sm:p-1"
                 >
                     <NavbarItem
-                        href={`/${locale}/courses/preschool.2`}
+                        href={`/${locale}/courses/preschool2`}
                         label={t("Preschool 2")}
-                        active={isActif('preschool.2')}
+                        active={isActif('preschool2')}
                     />
                     <NavbarItem
-                        href={`/${locale}/courses/primary.3`}
+                        href={`/${locale}/courses/primary3`}
                         label={t("Primary 3")}
-                        active={isActif('primary.3')}
+                        active={isActif('primary3')}
                     />
                     <NavbarItem
                         href={`/${locale}/stories`}

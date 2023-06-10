@@ -15,7 +15,7 @@ export const getEntries = async (
     locale,
     select: "sys.id, fields.title, fields.cardImage",
   };
-
+  console.log(tag);
   if (tag) {
     query["metadata.tags.sys.id[all]"] = tag;
   }

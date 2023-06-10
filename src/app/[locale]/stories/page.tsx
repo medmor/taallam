@@ -16,7 +16,6 @@ export default async function StoriesPage() {
                         href={`/${locale}/stories/${story.sys.id}`}
                         imageUrl={await getImageUrl(story.fields.cardImage.sys.id)}
                     />
-
                 </div>
             ))}
         </div>

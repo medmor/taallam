@@ -1,9 +1,11 @@
 'use client'
-import { Quiz } from "@/types/QuizType";
-import StroyViewer from "./StoryViewer";
-import StroyTest from "./StoryTest";
 import { useState } from "react";
-import StoryLessons from "./StoryLessons";
+
+import { Quiz } from "@/types/QuizType";
+
+import Summary from "@/components/content/Summary";
+import Test from "@/components/content/Test";
+import Objectifs from "@/components/content/Objectifs";
 
 
 interface StoryProps {
@@ -15,9 +17,10 @@ interface StoryProps {
 }
 export default function Story({ texts, images, audios, quizzes, lessons }: StoryProps) {
     const [canShowTest, setCanShowTest] = useState(false);
+    console.log(texts[0])
     return (
         <>
-            <StroyViewer
+            <Summary
                 texts={texts.filter(t => t)}
                 images={images}
                 audios={audios}
@@ -27,8 +30,8 @@ export default function Story({ texts, images, audios, quizzes, lessons }: Story
             {
                 canShowTest && (
                     <>
-                        <StroyTest quizzes={quizzes} />
-                        <StoryLessons lessons={lessons} />
+                        <Test quizzes={quizzes} />
+                        <Objectifs lessons={lessons} />
                     </>
                 )
             }
