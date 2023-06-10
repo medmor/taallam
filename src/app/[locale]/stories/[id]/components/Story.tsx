@@ -15,7 +15,6 @@ interface StoryProps {
 }
 export default function Story({ texts, images, audios, quizzes, lessons }: StoryProps) {
     const [canShowTest, setCanShowTest] = useState(false);
-    const [canShowLessons, SetCanShowLessons] = useState(false);
     return (
         <>
             <StroyViewer
