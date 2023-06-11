@@ -57,6 +57,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
                             }
                             }
                         >
+                            <div dangerouslySetInnerHTML={{ __html: choice }}></div>
                             {choice}
                         </div>
                     ))}
