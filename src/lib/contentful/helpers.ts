@@ -1,6 +1,6 @@
 import { getAsset } from "./client";
 import { ImageAsset } from "@/types/CourseType";
-import { BLOCKS, Block } from "@/types/RichText";
+import { BLOCKS, Block, INLINES } from "@/types/RichText";
 
 import {
   EmptyQuiz,
@@ -23,22 +23,19 @@ export async function parseSummary(
   audios: any[]
 ) {
   for (let i = 0; i < document.content.length; i++) {
-    const content = document.content[i];
-    if (content.nodeType == BLOCKS.PARAGRAPH) {
-      texts.push(content.content[0].value);
-    } else if (content.nodeType == BLOCKS.EMBEDDED_ASSET) {
-      const asset = await getAsset(content.data.target.sys.id);
-      if (asset.fields.file?.details.image) {
+    const paragraph = document.content[i];
+    if (paragraph.nodeType == BLOCKS.PARAGRAPH) {
+      const value = paragraph.content[0].value;
+      const heyperlink = paragraph.content[1];
+      if (value.length > 0 && heyperlink) {
+        texts.push(value);
         images.push({
-          src: asset.fields.file?.url!,
-          alt: asset.fields.title!,
+          src: heyperlink.data.uri,
+          alt: heyperlink.content.value,
         });
-      } else {
-        audios.push(asset.fields.file?.url);
-        audios.push(asset.fields.description?.split(" "));
       }
-    } else {
-      await parseSummary(content, texts, images, audios);
+    } else if (paragraph.nodeType == BLOCKS.QUOTE) {
+      console.log(paragraph.content[0].content[0].value);
     }
   }
 }

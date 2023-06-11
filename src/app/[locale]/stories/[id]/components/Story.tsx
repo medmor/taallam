@@ -17,7 +17,7 @@ interface StoryProps {
 }
 export default function Story({ texts, images, audios, quizzes, lessons }: StoryProps) {
     const [canShowTest, setCanShowTest] = useState(false);
-    console.log(texts[0])
+
     return (
         <>
             <Summary

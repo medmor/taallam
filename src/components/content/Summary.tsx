@@ -91,7 +91,7 @@ export default function StroyViewer({ images, texts, audios, canShowTest, setCan
                             }
                             <Image
                                 className={`rounded-xl border-2 p-1 m-auto sm:min-w-[350px] h-auto bg-white`}
-                                src={`https:${images[i].src}`}
+                                src={images[i].src}
                                 alt={images[i].alt}
                                 width={400}
                                 height={350}

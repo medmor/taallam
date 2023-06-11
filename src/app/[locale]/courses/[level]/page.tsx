@@ -8,7 +8,6 @@ interface CoursesPageProps {
     }
 }
 export default async function CoursesPage({ params }: CoursesPageProps) {
-    console.log(params)
     const locale = useLocale();
     const entries = await getEntries(locale == 'en' ? 'en-US' : locale, `course,${params.level}`);
 
@@ -19,7 +18,7 @@ export default async function CoursesPage({ params }: CoursesPageProps) {
                     <HomeCard
                         label={course.fields.title}
                         href={`/${locale}/courses/${params.level}/${course.sys.id}`}
-                        imageUrl={await getImageUrl(course.fields.cardImage.sys.id)}
+                        imageUrl={`/images/content/${course.sys.id}/card.png`}
                     />
                 </div>
             ))}

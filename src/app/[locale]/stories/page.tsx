@@ -14,7 +14,7 @@ export default async function StoriesPage() {
                     <HomeCard
                         label={story.fields.title}
                         href={`/${locale}/stories/${story.sys.id}`}
-                        imageUrl={await getImageUrl(story.fields.cardImage.sys.id)}
+                        imageUrl={`/images/content/${story.sys.id}/card.png`}
                     />
                 </div>
             ))}
