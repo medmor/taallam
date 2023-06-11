@@ -9,21 +9,21 @@ interface StoryPageProps {
     }
 }
 
-export default async function StoryPage({ params }: StoryPageProps) {
+export default async function CoursePage({ params }: StoryPageProps) {
     const locale = useLocale();
-    const story = await getEntryById(params.id, locale == 'en' ? 'en-US' : locale);
+    const course = await getEntryById(params.id, locale == 'en' ? 'en-US' : locale);
 
-    const images = [{ src: `/images/content/${story.sys.id}/card.png`, alt: story.fields.cardImage.fields.title }]
-    const texts: any[] = [story.fields.title]
-    const audios: any[] = []
-    await parseSummary(story.fields.summary, texts, images, audios)
+    const images = [{ src: `/images/content/${course.sys.id}/card.png`, alt: course.fields.cardImage.fields.title }]
+    const texts: any[] = [course.fields.title]
+    const audios: any[] = [`/audios/${course.sys.id}/${locale}/audio.mp3`]
+    await parseSummary(course.fields.summary, texts, images, audios)
 
-    const quizzes = parseQuizzes(story.fields.activities)
+    const quizzes = parseQuizzes(course.fields.activities)
 
 
     return (
         <>
-            <Stroy texts={texts.filter(t => t)} images={images} audios={audios} quizzes={quizzes} lessons={story.fields.objectifs} />
+            <Stroy texts={texts.filter(t => t)} images={images} audios={audios} quizzes={quizzes} lessons={course.fields.objectifs} />
         </>
     )
 }

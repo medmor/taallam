@@ -35,7 +35,16 @@ export async function parseSummary(
         });
       }
     } else if (paragraph.nodeType == BLOCKS.QUOTE) {
-      console.log(paragraph.content[0].content[0].value);
+      const times = paragraph.content[0].content[0].value
+        .split(",")
+        .map((t: string) => {
+          const limits = t.split("-");
+          return {
+            start: Number(limits[0]),
+            end: Number(limits[1]),
+          };
+        });
+      audios.push(times);
     }
   }
 }

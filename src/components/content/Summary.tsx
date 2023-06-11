@@ -16,7 +16,7 @@ import ContentPart from "./ContentPart";
 interface StoryViewerProps {
     images: { src: string; alt: string; }[];
     texts: string[];
-    audios: string[];
+    audios: any;
     canShowTest: boolean;
     setCanShowTest: any
 }
@@ -27,16 +27,19 @@ export default function StroyViewer({ images, texts, audios, canShowTest, setCan
     const [loaded, setLoaded] = useState(-1);
     const [dir, setDirection] = useState('next');
     const [quizButtonClickd, setQuizButtonClicked] = useState(false);
+
     const audio = new Audio(audios[0]);
+
     const play = () => {
         audio.pause();
-        const times = audios[1][index].split("-").map(t => Number(t));
-        audio.currentTime = times[0];
+        const times = audios[1][index];
+        audio.currentTime = times.start;
         audio.play();
         setTimeout(() => {
             audio.pause()
-        }, (times[1] - times[0]) * 1000);
+        }, (times.end - times.start) * 1000);
     }
+
     useEffect(() => {
         if (index >= texts.length - 1) {
             setTimeout(() => {
@@ -64,7 +67,7 @@ export default function StroyViewer({ images, texts, audios, canShowTest, setCan
                             `
                         }>
                             {
-                                audios.length > 0 &&
+                                audios[1] &&
                                 <div className='absolute top-2 right-2'>
                                     <Button
                                         label=''
