@@ -47,7 +47,6 @@ export default function Mcq({ quiz, setScore }: McqProps) {
                             onClick={() => {
                                 if (!selected) {
                                     setSelected(choice)
-                                    console.log(selected)
                                     if (choice == quiz.answer) {
                                         setScore((score: number) => score + 2)
                                     } else {
@@ -58,7 +57,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
                             }
                         >
                             <div dangerouslySetInnerHTML={{ __html: choice }}></div>
-                            {choice}
+                            {/* {choice} */}
                         </div>
                     ))}
                 </div>
