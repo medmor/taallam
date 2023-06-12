@@ -3,7 +3,6 @@ import { Document } from "./RichText";
 export interface CourseType {
   fields: {
     title: string;
-    cardImage: ImageAsset;
     objectifs: string[];
     summary: Document;
     activities: Document;
