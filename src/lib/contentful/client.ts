@@ -13,7 +13,7 @@ export const getEntries = async (
   const query: any = {
     content_type: "course",
     locale,
-    select: "sys.id, fields.title, fields.cardImage",
+    select: "sys.id, fields.title",
   };
 
   if (tag) {

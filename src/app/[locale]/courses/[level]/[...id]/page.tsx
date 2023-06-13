@@ -13,13 +13,12 @@ export default async function CoursePage({ params }: StoryPageProps) {
     const locale = useLocale();
     const course = await getEntryById(params.id, locale == 'en' ? 'en-US' : locale);
 
-    const images = [{ src: `/images/content/${course.sys.id}/card.png`, alt: course.fields.cardImage.fields.title }]
+    const images = [{ src: `/images/content/${course.sys.id}/card.png`, alt: course.fields.title }]
     const texts: any[] = [course.fields.title]
     const audios: any[] = [`/audios/${course.sys.id}/${locale}/audio.mp3`]
     await parseSummary(course.fields.summary, texts, images, audios)
 
     const quizzes = parseQuizzes(course.fields.activities)
-
 
     return (
         <>
