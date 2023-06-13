@@ -1,40 +1,43 @@
-import { CSSProperties } from "react";
+import { BsCircleFill } from 'react-icons/bs'
+import { FaSquareFull, FaHeart } from 'react-icons/fa'
+import { IoCaretUpSharp, IoStar } from 'react-icons/io5'
 
 export interface ShapesProps {
     properties: string[]
 }
 export default function Shapes({ properties }: ShapesProps) {
     const shape = properties[0];
-    const color = properties[1];
+    let color = properties[1];
     const size = Number(properties[2])
 
-    let shapeStyle: CSSProperties = {};
-    if (shape == 'square') {
-        shapeStyle.width = shapeStyle.height = `${size}px`;
-    }
-    else if (shape == 'triangle') {
-        shapeStyle.width = shapeStyle.height = '0px';
-        shapeStyle.borderLeft = shapeStyle.borderRight = `${3 * size / 4}px solid white`
-        shapeStyle.borderBottom = `${size}px solid`
-    }
-    else if (shape == 'circle') {
-        shapeStyle.borderRadius = '100%';
-        shapeStyle.width = shapeStyle.height = `${size}px`
-    }
 
-    if (color == 'red') {
-        shapeStyle.background = shapeStyle.borderBottomColor = 'red'
-    }
-    else if (color == 'green') {
-        shapeStyle.background = shapeStyle.borderBottomColor = 'green'
-    }
-    else if (color == 'blue') {
-        shapeStyle.background = shapeStyle.borderBottomColor = 'blue'
-    }
+
+    let shapeIcon = () => {
+        if (shape == 'square') {
+            return <FaSquareFull size={size} style={{ color: color }} />
+        }
+        else if (shape == 'triangle') {
+            return <IoCaretUpSharp size={size} style={{ color: color, transform: "scaleX(150%) scaleY(200%)" }} />
+        }
+        else if (shape == 'circle') {
+            return <BsCircleFill size={size} style={{ color: color }} />
+        }
+        else if (shape == 'heart') {
+            return <FaHeart size={size} style={{ color: color }} />
+        }
+        else if (shape == 'rectangle') {
+            return <FaSquareFull size={size} style={{ color: color, transform: "scaleX(120%) scaleY(80%)" }} />
+        }
+        else if (shape == 'star') {
+            return <IoStar size={size} style={{ color: color }} />
+        }
+    };
+
+    const bgClass = () => color == 'orange' || color == 'yellow' ? 'bg-black' : 'bg-white'
 
     return (
-        <div className="p-10 rounded-lg bg-white">
-            <div style={shapeStyle}></div>
+        <div className={`p-10 rounded-lg ${bgClass()}`}>
+            {shapeIcon()}
         </div>
     )
 }
