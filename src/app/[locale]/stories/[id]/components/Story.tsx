@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { Quiz } from "@/types/QuizType";
 
@@ -16,8 +16,11 @@ interface StoryProps {
     lessons: string[]
 }
 export default function Story({ texts, images, audios, quizzes, lessons }: StoryProps) {
-    const [canShowTest, setCanShowTest] = useState(false);
 
+    const [canShowTest, setCanShowTest] = useState(false);
+    const updateShowTest = useCallback(() => {
+        setCanShowTest(true);
+    }, [])
     return (
         <>
             <Summary
@@ -25,7 +28,7 @@ export default function Story({ texts, images, audios, quizzes, lessons }: Story
                 images={images}
                 audios={audios}
                 canShowTest={canShowTest}
-                setCanShowTest={setCanShowTest}
+                setCanShowTest={updateShowTest}
             />
             {
                 canShowTest && (

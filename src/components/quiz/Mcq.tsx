@@ -1,6 +1,6 @@
 
 import { Quiz } from "@/types/QuizType"
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Choice from "./Choice";
 
 
@@ -13,7 +13,8 @@ export default function Mcq({ quiz, setScore }: McqProps) {
     const [choices, setChoices] = useState(['']);
     const [selected, setSelected] = useState('');
 
-    const selectedChoiceClass = (choice: string) => {
+    const selectedChoiceClass = useCallback((choice: string) => {
+        console.log(5)
         if (choice == selected) {
             if (choice == quiz.answer) {
                 return 'bg-lime-500';
@@ -24,7 +25,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
         } else {
             return '';
         }
-    }
+    }, [quiz.answer, selected])
     useEffect(() => {
         setChoices(shuffleChoices([...quiz.choices, quiz.answer]))
     }, [quiz.choices, quiz.answer])

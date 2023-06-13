@@ -1,3 +1,4 @@
+'use client'
 import dynamic from "next/dynamic";
 
 export interface DynamicComponentProps {
@@ -6,6 +7,7 @@ export interface DynamicComponentProps {
 }
 
 export default function DynamicComponent({ component, properties }: DynamicComponentProps) {
+    console.log('client')
     const Dynamic = dynamic<any>(() => import(`./dynamic/${component}`), {
         loading: () => <p>Loading...</p>,
     });

@@ -1,7 +1,7 @@
 
 'use client'
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useTranslations } from 'next-intl'
 import { BsArrowDownCircleFill } from 'react-icons/bs'
 import { GiSpeaker } from 'react-icons/gi'
@@ -20,35 +20,43 @@ interface StoryViewerProps {
     setCanShowTest: any
 }
 
-export default function StroyViewer({ images, texts, audios, canShowTest, setCanShowTest }: StoryViewerProps) {
+export default function Summary({ images, texts, audios, canShowTest, setCanShowTest }: StoryViewerProps) {
+    console.log('sumary')
     const t = useTranslations("storyViewer");
     const [index, setIndex] = useState(0);
     const [dir, setDirection] = useState('next');
     const [quizButtonClickd, setQuizButtonClicked] = useState(false);
 
-    const audio = new Audio(audios[0]);
+    let audio: HTMLAudioElement | undefined = undefined;
+    if (audios[1]) { audio = new Audio(audios[0]); }
 
-    const play = () => {
-        audio.pause();
-        const times = audios[1][index];
-        audio.currentTime = times.start;
-        audio.play();
-        setTimeout(() => {
-            audio.pause()
-        }, (times.end - times.start) * 1000);
-    }
+    const pause = useCallback(() => {
+        if (audio)
+            audio.pause();
+    }, [audio])
+    const play = useCallback(() => {
+        if (audio) {
+            pause();
+            const times = audios[1][index];
+            audio.currentTime = times.start;
+            audio.play();
+            setTimeout(() => {
+                pause()
+            }, (times.end - times.start) * 1000);
+        }
+    }, [audio, audios, index, pause])
 
     useEffect(() => {
         if (index >= texts.length - 1) {
             setTimeout(() => {
-                setCanShowTest(true);
+                setCanShowTest();
             }, 3000);
         }
     }, [index, setCanShowTest, texts.length]);
 
     return (
         <ContentPart id="story-viewer">
-            <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDirection} onSlide={() => audio.pause()}>
+            <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDirection} onSlide={() => pause}>
                 {texts.map((text, i) => (
                     <div className="flex flex-col sm:flex-row gap-2 justify-center p-4 " key={i}>
                         <div className={

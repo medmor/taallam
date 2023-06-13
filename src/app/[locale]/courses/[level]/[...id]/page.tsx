@@ -1,7 +1,7 @@
 import { useLocale } from 'next-intl';
 import { getEntryById } from '@/lib/contentful/client'
 import Stroy from '../../../stories/[id]/components/Story';
-import { getImageUrl, parseQuizzes, parseSummary } from '@/lib/contentful/helpers';
+import { parseQuizzes, parseSummary } from '@/lib/contentful/helpers';
 
 interface StoryPageProps {
     params: {
