@@ -1,16 +1,15 @@
 
 'use client'
 
-import Image from 'next/image'
 import { useEffect, useState, useRef } from "react";
 import { useTranslations } from 'next-intl'
-import { Transition } from '@headlessui/react'
 import { BsArrowDownCircleFill } from 'react-icons/bs'
 import { GiSpeaker } from 'react-icons/gi'
 
 import Carousel from "@/components/Carousel";
 import Button from "@/components/Button";
 import ContentPart from "./ContentPart";
+import ContentMedia from './ContentMedia';
 
 
 interface StoryViewerProps {
@@ -24,7 +23,6 @@ interface StoryViewerProps {
 export default function StroyViewer({ images, texts, audios, canShowTest, setCanShowTest }: StoryViewerProps) {
     const t = useTranslations("storyViewer");
     const [index, setIndex] = useState(0);
-    const [loaded, setLoaded] = useState(-1);
     const [dir, setDirection] = useState('next');
     const [quizButtonClickd, setQuizButtonClicked] = useState(false);
 
@@ -92,28 +90,7 @@ export default function StroyViewer({ images, texts, audios, canShowTest, setCan
                                     </a>
                                 )
                             }
-                            <Image
-                                className={`rounded-xl border-2 p-1 m-auto sm:min-w-[350px] h-auto bg-white`}
-                                src={images[i].src}
-                                alt={images[i].alt}
-                                width={400}
-                                height={350}
-                                unoptimized
-                                onLoad={() => { setLoaded(i) }}
-                            />
-                            {
-                                <Transition
-                                    show={loaded != index}
-                                    enter="transition-opacity duration-300"
-                                    enterFrom="opacity-0"
-                                    enterTo="opacity-100"
-                                    leave="transition-opacity duration-50"
-                                    leaveFrom="opacity-100"
-                                    leaveTo="opacity-0"
-                                >
-                                    <div className="dot absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"></div>
-                                </Transition>
-                            }
+                            <ContentMedia src={images[i].src} alt={images[i].alt} />
                         </div>
                     </div>
                 ))}

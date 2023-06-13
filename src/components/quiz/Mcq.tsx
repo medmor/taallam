@@ -1,6 +1,7 @@
 
 import { Quiz } from "@/types/QuizType"
 import { useEffect, useState } from 'react';
+import Choice from "./Choice";
 
 
 interface McqProps {
@@ -40,6 +41,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
                                 cursor-pointer
                                 p-2 mb-1 
                                 border rounded-lg 
+                                flex justify-center
                                 ${!selected ? 'hover:bg-slate-100' : ''}
                                 ${selectedChoiceClass(choice)}
                             `}
@@ -56,8 +58,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
                             }
                             }
                         >
-                            <div dangerouslySetInnerHTML={{ __html: choice }}></div>
-                            {/* {choice} */}
+                            <Choice choice={choice} />
                         </div>
                     ))}
                 </div>

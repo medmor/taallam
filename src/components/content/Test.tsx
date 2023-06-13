@@ -33,8 +33,6 @@ export default function StroyTest({ quizzes }: StoryTestProps) {
                     }
                 })}
             </Carousel>
-
-
         </ContentPart>
     )
 }

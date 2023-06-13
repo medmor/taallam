@@ -17,7 +17,6 @@ export default async function CoursePage({ params }: StoryPageProps) {
     const texts: any[] = [course.fields.title]
     const audios: any[] = [`/audios/${course.sys.id}/${locale}/audio.mp3`]
     await parseSummary(course.fields.summary, texts, images, audios)
-
     const quizzes = parseQuizzes(course.fields.activities)
 
     return (

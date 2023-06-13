@@ -26,12 +26,12 @@ export async function parseSummary(
     const paragraph = document.content[i];
     if (paragraph.nodeType == BLOCKS.PARAGRAPH) {
       const value = paragraph.content[0].value;
-      const heyperlink = paragraph.content[1];
-      if (value.length > 0 && heyperlink) {
+      const hyperlink = paragraph.content[1];
+      if (value.length > 0 && hyperlink) {
         texts.push(value);
         images.push({
-          src: heyperlink.data.uri,
-          alt: heyperlink.content.value,
+          src: hyperlink.data.uri,
+          alt: hyperlink.content[0].value,
         });
       }
     } else if (paragraph.nodeType == BLOCKS.QUOTE) {
