@@ -14,7 +14,7 @@ interface CarouselProps {
     onSlide?: any;
 }
 
-export default function Carousel({ children, index, setIndex, dir, setDir, loop, oneDirection, onSlide }: CarouselProps) {
+export default function Carousel({ children, index, setIndex, setDir, loop, oneDirection, onSlide }: CarouselProps) {
 
     return (
         <div className='p-4'>

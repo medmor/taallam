@@ -36,7 +36,7 @@ export default function Shapes({ properties }: ShapesProps) {
     const bgClass = () => color == 'orange' || color == 'yellow' ? 'bg-black' : 'bg-white'
 
     return (
-        <div className={`p-10 rounded-lg ${bgClass()}`}>
+        <div className={`p-10 rounded-lg flex justify-center ${bgClass()}`}>
             {shapeIcon()}
         </div>
     )

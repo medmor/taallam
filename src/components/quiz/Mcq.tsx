@@ -14,7 +14,6 @@ export default function Mcq({ quiz, setScore }: McqProps) {
     const [selected, setSelected] = useState('');
 
     const selectedChoiceClass = useCallback((choice: string) => {
-        console.log(5)
         if (choice == selected) {
             if (choice == quiz.answer) {
                 return 'bg-lime-500';

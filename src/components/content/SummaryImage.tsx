@@ -2,7 +2,7 @@
 
 import { Transition } from "@headlessui/react"
 import Image from "next/image"
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 interface SummaryImageProps {
     src: string;
@@ -10,6 +10,7 @@ interface SummaryImageProps {
 }
 export default function SummaryImage({ src, alt }: SummaryImageProps) {
     const [loaded, setLoaded] = useState(false);
+    const updateLoaded = useCallback(() => { setLoaded(true) }, [])
     return (
         <>
             <Image
@@ -19,7 +20,7 @@ export default function SummaryImage({ src, alt }: SummaryImageProps) {
                 width={400}
                 height={350}
                 unoptimized
-                onLoad={() => { setLoaded(true) }}
+                onLoad={() => updateLoaded}
             />
             {
                 <Transition

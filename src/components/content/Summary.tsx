@@ -21,7 +21,6 @@ interface StoryViewerProps {
 }
 
 export default function Summary({ images, texts, audios, canShowTest, setCanShowTest }: StoryViewerProps) {
-    console.log('sumary')
     const t = useTranslations("storyViewer");
     const [index, setIndex] = useState(0);
     const [dir, setDirection] = useState('next');
