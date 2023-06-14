@@ -55,7 +55,7 @@ export default function Summary({ images, texts, audios, canShowTest, setCanShow
 
     return (
         <ContentPart id="story-viewer">
-            <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDirection} onSlide={() => pause}>
+            <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDirection} onSlide={() => pause()}>
                 {texts.map((text, i) => (
                     <div className="flex flex-col sm:flex-row gap-2 justify-center p-4 " key={i}>
                         <div className={

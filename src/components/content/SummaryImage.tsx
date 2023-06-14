@@ -10,7 +10,7 @@ interface SummaryImageProps {
 }
 export default function SummaryImage({ src, alt }: SummaryImageProps) {
     const [loaded, setLoaded] = useState(false);
-    const updateLoaded = useCallback(() => { setLoaded(true) }, [])
+    const updateLoaded = useCallback(() => { setLoaded(true); }, [])
     return (
         <>
             <Image
@@ -20,7 +20,7 @@ export default function SummaryImage({ src, alt }: SummaryImageProps) {
                 width={400}
                 height={350}
                 unoptimized
-                onLoad={() => updateLoaded}
+                onLoad={() => updateLoaded()}
             />
             {
                 <Transition
