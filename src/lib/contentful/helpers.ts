@@ -26,7 +26,7 @@ export async function parseSummary(
     const block = document.content[i];
 
     if (block.nodeType == BLOCKS.PARAGRAPH) {
-      texts.push(block.content[0].value);
+      if (block.content[0].value) texts.push(block.content[0].value);
     } else if (block.nodeType == BLOCKS.QUOTE) {
       const value = block.content[0].content[0].value as string;
       if (value.startsWith("component?")) {
@@ -101,5 +101,6 @@ export function getAllDocLines(doc: Block, lines: string[] = []) {
 }
 
 export function isQuestion(start: string) {
-  return start in QuizCategoryConsts;
+  return start == "mcq";
+  //return start in QuizCategoryConsts;
 }
