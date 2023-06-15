@@ -13,14 +13,14 @@ import ContentMedia from './ContentMedia';
 
 
 interface StoryViewerProps {
-    images: { src: string; alt: string; }[];
+    medias: any[];
     texts: string[];
     audios: any;
     canShowTest: boolean;
     setCanShowTest: any
 }
 
-export default function Summary({ images, texts, audios, canShowTest, setCanShowTest }: StoryViewerProps) {
+export default function Summary({ medias, texts, audios, canShowTest, setCanShowTest }: StoryViewerProps) {
     const t = useTranslations("storyViewer");
     const [index, setIndex] = useState(0);
     const [dir, setDirection] = useState('next');
@@ -97,7 +97,7 @@ export default function Summary({ images, texts, audios, canShowTest, setCanShow
                                     </a>
                                 )
                             }
-                            <ContentMedia src={images[i].src} alt={images[i].alt} />
+                            <ContentMedia data={medias[i]} />
                         </div>
                     </div>
                 ))}

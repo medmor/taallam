@@ -19,32 +19,43 @@ export async function getImageUrl(img: ImageAsset, locale: string) {
 export async function parseSummary(
   document: any,
   texts: any[],
-  images: any[],
+  medias: any[],
   audios: any[]
 ) {
   for (let i = 0; i < document.content.length; i++) {
-    const paragraph = document.content[i];
-    if (paragraph.nodeType == BLOCKS.PARAGRAPH) {
-      const value = paragraph.content[0].value;
-      const hyperlink = paragraph.content[1];
-      if (value.length > 0 && hyperlink) {
-        texts.push(value);
-        images.push({
-          src: hyperlink.data.uri,
-          alt: hyperlink.content[0].value,
+    const block = document.content[i];
+
+    if (block.nodeType == BLOCKS.PARAGRAPH) {
+      texts.push(block.content[0].value);
+    } else if (block.nodeType == BLOCKS.QUOTE) {
+      const value = block.content[0].content[0].value as string;
+      if (value.startsWith("component?")) {
+        const data = value.split("?");
+        medias.push({
+          type: "component",
+          component: data[1],
+          properties: data[2].split("&"),
         });
+      } else if (value.startsWith("image?")) {
+        const data = value.split("?");
+        medias.push({
+          type: "image",
+          src: data[1],
+          alt: data[2],
+        });
+      } else if (value.startsWith("audio?")) {
+        const times = value
+          .split("?")[1]
+          .split(",")
+          .map((t: string) => {
+            const limits = t.split("-");
+            return {
+              start: Number(limits[0]),
+              end: Number(limits[1]),
+            };
+          });
+        audios.push(times);
       }
-    } else if (paragraph.nodeType == BLOCKS.QUOTE) {
-      const times = paragraph.content[0].content[0].value
-        .split(",")
-        .map((t: string) => {
-          const limits = t.split("-");
-          return {
-            start: Number(limits[0]),
-            end: Number(limits[1]),
-          };
-        });
-      audios.push(times);
     }
   }
 }

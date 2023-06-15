@@ -10,12 +10,12 @@ import Objectifs from "@/components/content/Objectifs";
 
 interface StoryProps {
     texts: string[];
-    images: any[];
+    medias: any[];
     audios: any[];
     quizzes: Quiz[];
     lessons: string[]
 }
-export default function Story({ texts, images, audios, quizzes, lessons }: StoryProps) {
+export default function Story({ texts, medias, audios, quizzes, lessons }: StoryProps) {
 
     const [canShowTest, setCanShowTest] = useState(false);
     const updateShowTest = useCallback(() => {
@@ -25,7 +25,7 @@ export default function Story({ texts, images, audios, quizzes, lessons }: Story
         <>
             <Summary
                 texts={texts.filter(t => t)}
-                images={images}
+                medias={medias}
                 audios={audios}
                 canShowTest={canShowTest}
                 setCanShowTest={updateShowTest}

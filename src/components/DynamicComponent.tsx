@@ -23,7 +23,6 @@ export default function DynamicComponent({ component, properties }: DynamicCompo
                 leaveTo="opacity-0"
             >
                 <div className="bg-white min-w-[200px] min-h-[200px]">
-
                     <div className="dot absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"></div>
                 </div>
             </Transition>

@@ -5,18 +5,16 @@ import SummaryImage from './SummaryImage';
 import InConstruction from '../InConstruction';
 import DynamicComponent from '../DynamicComponent';
 interface ContentMediaProps {
-    src: string;
-    alt: string;
+    data: any
 }
-export default function ContentMedia({ src, alt }: ContentMediaProps) {
-    const ext = path.extname(src);
-    if (ext == '.png') {
+export default function ContentMedia({ data }: ContentMediaProps) {
+    if (data.type == 'image') {
         return (
-            <SummaryImage src={src} alt={alt} />
+            <SummaryImage src={data.src} alt={data.alt} />
         )
     }
-    else if (ext == '.tsx') {
-        return <DynamicComponent component={src.replace('.tsx', '')} properties={alt.split(" ")} />
+    else if (data.type == 'component') {
+        return <DynamicComponent component={data.component} properties={data.properties} />
     }
     return (
         <InConstruction />
