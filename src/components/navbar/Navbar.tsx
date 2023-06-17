@@ -49,12 +49,12 @@ export default function Navbar() {
                 >
                     <NavbarItem
                         href={`/${locale}/courses/preschool2`}
-                        label={t("Preschool 2")}
+                        label={t("Preschool")}
                         active={isActif('preschool2')}
                     />
                     <NavbarItem
                         href={`/${locale}/courses/primary3`}
-                        label={t("Primary 3")}
+                        label={t("Primary")}
                         active={isActif('primary3')}
                     />
                     <NavbarItem

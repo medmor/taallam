@@ -26,7 +26,8 @@ export async function parseSummary(
     const block = document.content[i];
 
     if (block.nodeType == BLOCKS.PARAGRAPH) {
-      if (block.content[0].value) texts.push(block.content[0].value);
+      const value = block.content[0].value.trim();
+      if (value) texts.push(value);
     } else if (block.nodeType == BLOCKS.QUOTE) {
       const value = block.content[0].content[0].value as string;
       if (value.startsWith("component?")) {
@@ -69,6 +70,7 @@ export function parseQuizzes(doc: Block, quizzes: any[] = []): Quiz[] {
       const quiz = EmptyQuiz();
       quiz.category = start as QuizCategory;
       quiz.question = line.replace(start + "-", "").trim();
+      console.log(quiz.question);
       let j = i + 1;
       start = lines[j].substring(0, 3);
       while (lines[j] && !isQuestion(start)) {

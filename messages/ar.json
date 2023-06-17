@@ -9,15 +9,15 @@
     "language": "لغة"
   },
   "home": {
-    "Preschool 2": "التمهيدي 2",
-    "Primary 3": "الابتدائي 3",
+    "Preschool": "التمهيدي",
+    "Primary": "الابتدائي",
     "Stories": "قصص",
     "heading": "تعلم مع هبة وحمزة"
   },
   "navbar": {
     "Taallam": "تعلم",
-    "Preschool 2": "التمهيدي 2",
-    "Primary 3": "الابتدائي 3",
+    "Preschool": "التمهيدي",
+    "Primary": "الابتدائي",
     "Stories": "قصص",
     "language": "English",
     "logo": "/images/logoars.png"
