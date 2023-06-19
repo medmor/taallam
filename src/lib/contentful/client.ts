@@ -7,11 +7,12 @@ const client = createClient({
 });
 
 export const getEntries = async (
+  contentId: string,
   locale: string,
   tag?: string
 ): Promise<CourseType[]> => {
   const query: any = {
-    content_type: "course",
+    content_type: contentId,
     locale,
     select: "sys.id, fields.title",
   };
@@ -19,7 +20,6 @@ export const getEntries = async (
   if (tag) {
     query["metadata.tags.sys.id[all]"] = tag;
   }
-
   const { items } = await client.getEntries(query);
 
   //@ts-ignore

@@ -70,7 +70,6 @@ export function parseQuizzes(doc: Block, quizzes: any[] = []): Quiz[] {
       const quiz = EmptyQuiz();
       quiz.category = start as QuizCategory;
       quiz.question = line.replace(start + "-", "").trim();
-      console.log(quiz.question);
       let j = i + 1;
       start = lines[j].substring(0, 3);
       while (lines[j] && !isQuestion(start)) {
