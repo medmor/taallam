@@ -16,7 +16,7 @@ export default function StoryLessons({ lessons }: Storylessons) {
                     const parts = lesson.split(":")
                     return (
                         <div key={parts[0]} className="text-center text-lg bg-white p-2 rounded-lg my-2">
-                            <span className="font-bold">{parts[0]} :</span> {parts[1]}
+                            <span className="font-bold">{parts[0]} </span> {parts[1]}
                         </div>
                     )
                 })}

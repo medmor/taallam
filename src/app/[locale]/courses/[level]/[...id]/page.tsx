@@ -2,6 +2,7 @@ import { useLocale } from 'next-intl';
 import { getEntryById } from '@/lib/contentful/client'
 import Stroy from '../../../stories/[id]/components/Story';
 import { parseQuizzes, parseSummary } from '@/lib/contentful/helpers';
+import CourseContent from '@/components/content/CourseContent';
 
 interface StoryPageProps {
     params: {
@@ -21,7 +22,13 @@ export default async function CoursePage({ params }: StoryPageProps) {
 
     return (
         <>
-            <Stroy texts={texts.filter(t => t)} medias={medias} audios={audios} quizzes={quizzes} lessons={course.fields.objectifs} />
+            <CourseContent
+                texts={texts.filter(t => t)}
+                medias={medias}
+                audios={audios}
+                quizzes={quizzes}
+                lessons={course.fields.objectifs}
+            />
         </>
     )
 }

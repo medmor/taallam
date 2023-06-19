@@ -16,15 +16,12 @@ interface StoryViewerProps {
     medias: any[];
     texts: string[];
     audios: any;
-    canShowTest: boolean;
-    setCanShowTest: any
 }
 
-export default function Summary({ medias, texts, audios, canShowTest, setCanShowTest }: StoryViewerProps) {
+export default function Summary({ medias, texts, audios }: StoryViewerProps) {
     const t = useTranslations("storyViewer");
     const [index, setIndex] = useState(0);
     const [dir, setDirection] = useState('next');
-    const [quizButtonClickd, setQuizButtonClicked] = useState(false);
 
     let audio: HTMLAudioElement | undefined = undefined;
     if (audios[1]) { audio = new Audio(audios[0]); }
@@ -45,13 +42,7 @@ export default function Summary({ medias, texts, audios, canShowTest, setCanShow
         }
     }, [audio, audios, index, pause])
 
-    useEffect(() => {
-        if (index >= texts.length - 1) {
-            setTimeout(() => {
-                setCanShowTest();
-            }, 3000);
-        }
-    }, [index, setCanShowTest, texts.length]);
+
 
     return (
         <ContentPart id="story-viewer">
@@ -88,15 +79,6 @@ export default function Summary({ medias, texts, audios, canShowTest, setCanShow
                             </div>
                         </div>
                         <div className="relative">
-                            {
-                                canShowTest && !quizButtonClickd && (
-                                    <a className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
-                                        href="#story-test"
-                                    >
-                                        <Button label={t("quiz")} onClick={() => setQuizButtonClicked(true)} icon={BsArrowDownCircleFill} />
-                                    </a>
-                                )
-                            }
                             <ContentMedia data={medias[i]} />
                         </div>
                     </div>
