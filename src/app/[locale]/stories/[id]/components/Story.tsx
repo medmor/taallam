@@ -17,27 +17,18 @@ interface StoryProps {
 }
 export default function Story({ texts, medias, audios, quizzes, lessons }: StoryProps) {
 
-    const [canShowTest, setCanShowTest] = useState(false);
-    const updateShowTest = useCallback(() => {
-        setCanShowTest(true);
-    }, [])
+
     return (
         <>
             <Summary
                 texts={texts.filter(t => t)}
                 medias={medias}
                 audios={audios}
-                canShowTest={canShowTest}
-                setCanShowTest={updateShowTest}
             />
-            {
-                canShowTest && (
-                    <>
-                        <Test quizzes={quizzes} />
-                        <Objectifs lessons={lessons} />
-                    </>
-                )
-            }
+
+            <Test quizzes={quizzes} />
+            <Objectifs lessons={lessons} />
+
         </>
     )
 }
