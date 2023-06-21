@@ -13,9 +13,21 @@ export default function Home() {
         {t("heading")}
       </div>
       <div className="flex flex-wrap justify-center gap-5 p-10">
-        <HomeCard label={t("Preschool")} href={`/${locale}/courses/preschool2`} />
-        <HomeCard label={t("Primary")} href={`/${locale}/courses/primary3`} />
-        <HomeCard label={t("Stories")} href={`/${locale}/stories`} />
+        <HomeCard
+          label={t("Preschool")}
+          href={`/${locale}/courses/preschool2`}
+          imageUrl='/images/home/preschool.jpg'
+        />
+        <HomeCard
+          label={t("Primary")}
+          href={`/${locale}/courses/primary3`}
+          imageUrl='/images/home/primary.jpg'
+        />
+        <HomeCard
+          label={t("Stories")}
+          href={`/${locale}/stories`}
+          imageUrl='/images/home/stories.jpg'
+        />
       </div>
     </div>
   );

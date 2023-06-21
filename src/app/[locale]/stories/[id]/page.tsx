@@ -1,6 +1,5 @@
 import { useLocale } from 'next-intl';
 import { getEntryById } from '@/lib/contentful/client'
-import Stroy from './components/Story';
 import { parseQuizzes, parseSummary } from '@/lib/contentful/helpers';
 import CourseContent from '@/components/content/CourseContent';
 
