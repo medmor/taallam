@@ -1,14 +1,21 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { shuffle } from "@/lib/utils/array";
+import { GameState } from "@/types/GameState";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Countdown from 'react-countdown';
+import Button from "../Button";
+
 
 interface MultiplicationProps {
     properties: string[]
 }
 
 export default function Multiplication({ properties }: MultiplicationProps) {
+
     const numbers = useMemo(() => properties.map(n => Number(n)), [properties]);
-    const allNumbers = useMemo(() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [])
+    const allNumbers = useMemo(() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
+    const [state, setState] = useState<GameState>('pregame');
     const [firstNumber, setFirstNumber] = useState(0);
     const [secondNumber, setSecondNumber] = useState(0);
     const [answer, setAnswer] = useState(0);
@@ -16,6 +23,26 @@ export default function Multiplication({ properties }: MultiplicationProps) {
     const [wrong2, setWrong2] = useState(0)
     const [score, setScore] = useState(0);
     const [errors, setErrors] = useState(0);
+    const countdownRef = useRef(null);
+
+    const countdown = useMemo(() => (
+        <Countdown
+            date={Date.now() + 10000}
+            renderer={
+                (props) => (
+                    <div className="absolute top-1 left-1 font-semibold">
+                        {props.minutes} : {props.seconds}
+                    </div>
+                )
+            }
+            onComplete={
+                () => { setState('ended'); (countdownRef.current as any).stop(); }
+            }
+            autoStart={false}
+            ref={countdownRef}
+        />
+    ), []);
+
     const resetNumber = useCallback(() => {
         const numb1 = randomInNumbers(numbers);
         const numb2 = randomInNumbers(allNumbers);
@@ -28,6 +55,7 @@ export default function Multiplication({ properties }: MultiplicationProps) {
         setWrong1(w1)
         setWrong2(w2)
     }, [numbers, allNumbers]);
+
     const checkAnswer = useCallback((ans: number) => {
         if (ans == answer) {
             setScore((score) => score + 1)
@@ -35,23 +63,42 @@ export default function Multiplication({ properties }: MultiplicationProps) {
             setErrors((errors) => errors + 1)
         }
         resetNumber();
-    }, [answer, resetNumber])
+    }, [answer, resetNumber]);
+
     useEffect(() => {
         resetNumber();
-    }, [resetNumber])
+    }, [resetNumber]);
+
+
     return (
         <div className={`p-10 rounded-lg flex flex-col items-center justify-center bg-white min-w-[300px]`} dir="ltr">
+            {
+                state != 'running' && (
+                    <div className="z-10 absolute left-0 top-0 w-full h-full bg-slate-200 rounded-lg flex justify-center items-center">
+                        <div className="w-32">
+                            <Button
+                                label="Start"
+                                onClick={
+                                    () => { setState('running'); (countdownRef.current as any).start() }
+                                }
+                            />
+                        </div>
+                    </div>
+                )
+            }
+
+            {countdown}
             <div>{firstNumber} x {secondNumber}</div>
             <div>=</div>
             <div className="flex gap-3">
-                <div onClick={() => checkAnswer(wrong1)}>{wrong1}</div>
-                <div onClick={() => checkAnswer(answer)} >{answer}</div>
-                <div onClick={() => checkAnswer(wrong2)}>{wrong2}</div>
+                {
+                    shuffle([answer, wrong1, wrong2])
+                        .map((n, i) => <div onClick={() => checkAnswer(n)} key={i}>{n}</div>)
+                }
             </div>
             <div>
                 Score : {score} Errors : {errors}
             </div>
-            <button onClick={resetNumber}>refresh</button>
         </div>
     )
 }

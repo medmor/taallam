@@ -2,6 +2,7 @@
 import { Quiz } from "@/types/QuizType"
 import { useCallback, useEffect, useState } from 'react';
 import Choice from "./Choice";
+import { shuffle } from "@/lib/utils/array";
 
 
 interface McqProps {
@@ -26,7 +27,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
         }
     }, [quiz.answer, selected])
     useEffect(() => {
-        setChoices(shuffleChoices([...quiz.choices, quiz.answer]))
+        setChoices(shuffle([...quiz.choices, quiz.answer]))
     }, [quiz.choices, quiz.answer])
     return (
         (
@@ -67,10 +68,3 @@ export default function Mcq({ quiz, setScore }: McqProps) {
     )
 }
 
-function shuffleChoices(arr: string[]) {
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
