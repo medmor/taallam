@@ -11,6 +11,8 @@ interface MultiplicationProps {
     properties: string[]
 }
 
+const saveKey = 'MultiplicationBestScore'
+
 export default function Multiplication({ properties }: MultiplicationProps) {
 
     const numbers = useMemo(() => properties.map(n => Number(n)), [properties]);
@@ -22,9 +24,17 @@ export default function Multiplication({ properties }: MultiplicationProps) {
     const [wrong1, setWrong1] = useState(0)
     const [wrong2, setWrong2] = useState(0)
     const [score, setScore] = useState(0);
-    const [errors, setErrors] = useState(0);
+    const [bestScore, setBestScore] = useState(Infinity);
     const countdownRef = useRef(null);
 
+    const onComplete = useCallback(() => {
+        setState('ended');
+        (countdownRef.current as any).stop();
+        const bests = localStorage.getItem(saveKey);
+        console.log(bests, 'best');
+        console.log(score, 'score');
+        localStorage.setItem(saveKey, score.toString());
+    }, [])
     const countdown = useMemo(() => (
         <Countdown
             date={Date.now() + 10000}
@@ -35,13 +45,11 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                     </div>
                 )
             }
-            onComplete={
-                () => { setState('ended'); (countdownRef.current as any).stop(); }
-            }
+            onComplete={onComplete}
             autoStart={false}
             ref={countdownRef}
         />
-    ), []);
+    ), [onComplete]);
 
     const resetNumber = useCallback(() => {
         const numb1 = randomInNumbers(numbers);
@@ -60,7 +68,7 @@ export default function Multiplication({ properties }: MultiplicationProps) {
         if (ans == answer) {
             setScore((score) => score + 1)
         } else {
-            setErrors((errors) => errors + 1)
+            setScore((score) => score - 1)
         }
         resetNumber();
     }, [answer, resetNumber]);
@@ -74,12 +82,23 @@ export default function Multiplication({ properties }: MultiplicationProps) {
         <div className={`p-10 rounded-lg flex flex-col items-center justify-center bg-white min-w-[300px]`} dir="ltr">
             {
                 state != 'running' && (
-                    <div className="z-10 absolute left-0 top-0 w-full h-full bg-slate-200 rounded-lg flex justify-center items-center">
+                    <div className="z-10 absolute left-0 top-0 w-full h-full bg-slate-200 rounded-lg flex flex-col gap-4 justify-center items-center">
+                        {
+                            state == 'ended' && (
+                                <div>
+                                    Score : {score}
+                                </div>
+                            )
+                        }
                         <div className="w-32">
                             <Button
                                 label="Start"
                                 onClick={
-                                    () => { setState('running'); (countdownRef.current as any).start() }
+                                    () => {
+                                        setState('running');
+                                        setScore(0);
+                                        (countdownRef.current as any).start();
+                                    }
                                 }
                             />
                         </div>
@@ -97,7 +116,7 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                 }
             </div>
             <div>
-                Score : {score} Errors : {errors}
+                Score : {score}
             </div>
         </div>
     )
