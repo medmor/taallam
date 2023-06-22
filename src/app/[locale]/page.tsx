@@ -9,7 +9,7 @@ export default function Home() {
   const locale = useLocale()
 
   return (
-    <div className="min-h-[85vh] flex flex-col border-t-orange-200 sm:border-t ">
+    <div className="min-h-[85vh] flex flex-col border-t-orange-200 border-t ">
       <div className='bg-white text-2xl p-5 w-full m-auto font-bold text-center'>
         <Image
           className='rounded-full m-auto mb-5'
