@@ -11,7 +11,14 @@ export default function Home() {
   return (
     <div className="min-h-[85vh] flex flex-col border-t-orange-200 sm:border-t ">
       <div className='bg-white text-2xl p-5 w-full m-auto font-bold text-center'>
-        <Image className='rounded-full m-auto mb-5' src='/images/home/hibahamza.jpg' alt='hiba hamza image' width={300} height={300} />
+        <Image
+          className='rounded-full m-auto mb-5'
+          src='/images/home/hibahamza.jpg'
+          alt='hiba hamza image'
+          width={300}
+          height={300}
+          unoptimized
+        />
         {t("heading")}
       </div>
       <div className="flex flex-wrap justify-center gap-5 p-10">

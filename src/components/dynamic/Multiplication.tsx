@@ -5,6 +5,7 @@ import { GameState } from "@/types/GameState";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Countdown from 'react-countdown';
 import Button from "../Button";
+import Image from "next/image";
 
 
 interface MultiplicationProps {
@@ -26,30 +27,23 @@ export default function Multiplication({ properties }: MultiplicationProps) {
     const [score, setScore] = useState(0);
     const [bestScore, setBestScore] = useState(Infinity);
     const countdownRef = useRef(null);
+    const [countdownDate] = useState(Date.now() + 100000)
 
     const onComplete = useCallback(() => {
         setState('ended');
         (countdownRef.current as any).stop();
-        const bests = localStorage.getItem(saveKey);
-        console.log(bests, 'best');
-        console.log(score, 'score');
-        localStorage.setItem(saveKey, score.toString());
-    }, [])
-    const countdown = useMemo(() => (
-        <Countdown
-            date={Date.now() + 10000}
-            renderer={
-                (props) => (
-                    <div className="absolute top-1 left-1 font-semibold">
-                        {props.minutes} : {props.seconds}
-                    </div>
-                )
-            }
-            onComplete={onComplete}
-            autoStart={false}
-            ref={countdownRef}
-        />
-    ), [onComplete]);
+        let bests = Number(localStorage.getItem(saveKey));
+        if (bests == null) {
+            bests = 0;
+        }
+        if (bests > score) {
+            setBestScore(bests)
+        } else {
+            setBestScore(score)
+            localStorage.setItem(saveKey, score.toString());
+        }
+    }, [score]);
+
 
     const resetNumber = useCallback(() => {
         const numb1 = randomInNumbers(numbers);
@@ -82,17 +76,22 @@ export default function Multiplication({ properties }: MultiplicationProps) {
         <div className={`p-10 rounded-lg flex flex-col items-center justify-center bg-white min-w-[300px]`} dir="ltr">
             {
                 state != 'running' && (
-                    <div className="z-10 absolute left-0 top-0 w-full h-full bg-slate-200 rounded-lg flex flex-col gap-4 justify-center items-center">
+                    <div className="z-10 absolute left-0 top-0 w-full h-full bg-orange-100 rounded-lg flex flex-col gap-4 justify-center items-center">
                         {
                             state == 'ended' && (
                                 <div>
-                                    Score : {score}
+                                    <div className="font-bold text-lg">
+                                        Score : {score}
+                                    </div>
+                                    <div className="font-semibold">
+                                        Best Score : {bestScore}
+                                    </div>
                                 </div>
                             )
                         }
                         <div className="w-32">
                             <Button
-                                label="Start"
+                                label={state == 'ended' ? "Restart" : "Start"}
                                 onClick={
                                     () => {
                                         setState('running');
@@ -106,19 +105,68 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                 )
             }
 
-            {countdown}
-            <div>{firstNumber} x {secondNumber}</div>
-            <div>=</div>
-            <div className="flex gap-3">
-                {
-                    shuffle([answer, wrong1, wrong2])
-                        .map((n, i) => <div onClick={() => checkAnswer(n)} key={i}>{n}</div>)
+            <Countdown
+                date={countdownDate}
+                renderer={
+                    (props) => (
+                        <div className="absolute top-6 left-8 font-semibold">
+                            {props.minutes} : {props.seconds}
+                        </div>
+                    )
                 }
-            </div>
-            <div>
+                onComplete={() => onComplete()}
+                autoStart={false}
+                ref={countdownRef}
+            />
+
+            <div className="absolute top-1 left-5 font-semibold">
                 Score : {score}
             </div>
+
+            <div className="flex flex-col justify-between items-center gap-5">
+                <div className="flex gap-5">
+                    <NumberImage number={firstNumber.toString()} />
+                    <NumberImage number="x" />
+                    <NumberImage number={secondNumber.toString()} />
+                </div>
+                <div><NumberImage number="=" /></div>
+                <div className="flex gap-10">
+                    {
+                        shuffle([answer, wrong1, wrong2])
+                            .map((n, i) => (
+                                <div className="
+                                border
+                                border-orange-600
+                                rounded-full 
+                                p-4 
+                                cursor-pointer 
+                                flex 
+                                justify-center
+                                "
+                                    onClick={() => checkAnswer(n)} key={i}>
+                                    <NumberImage number={n.toString()} />
+                                </div>
+                            ))
+                    }
+                </div>
+            </div>
         </div>
+    )
+}
+
+function NumberImage({ number }: { number: string }) {
+    const arr = number.split("")
+    return (
+        arr.map((n, i) => (
+            <Image
+                src={`/images/content/numbers/${n}.png`}
+                alt={n}
+                key={i}
+                width={60}
+                height={60}
+                unoptimized
+            />
+        ))
     )
 }
 

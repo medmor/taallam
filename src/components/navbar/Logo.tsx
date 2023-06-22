@@ -14,6 +14,7 @@ const Logo = ({ src }: LogoProps) => {
             height="60"
             width="60"
             alt="logo"
+            unoptimized
         />
     );
 }
