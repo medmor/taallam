@@ -27,7 +27,10 @@ export default function Multiplication({ properties }: MultiplicationProps) {
     const [score, setScore] = useState(0);
     const [bestScore, setBestScore] = useState(Infinity);
     const countdownRef = useRef(null);
-    const [countdownDate] = useState(Date.now() + 100000)
+    const [countdownDate] = useState(Date.now() + 100000);
+
+    const wrongAudio = useMemo(() => new Audio("/audios/effects/wrong.mp3"), [])
+    const goodAudio = useMemo(() => new Audio("/audios/effects/good.mp3"), [])
 
     const onComplete = useCallback(() => {
         setState('ended');
@@ -60,12 +63,14 @@ export default function Multiplication({ properties }: MultiplicationProps) {
 
     const checkAnswer = useCallback((ans: number) => {
         if (ans == answer) {
+            goodAudio.play()
             setScore((score) => score + 1)
         } else {
+            wrongAudio.play()
             setScore((score) => score - 1)
         }
         resetNumber();
-    }, [answer, resetNumber]);
+    }, [answer, resetNumber, goodAudio, wrongAudio]);
 
     useEffect(() => {
         resetNumber();
@@ -123,10 +128,13 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                 Score : {score}
             </div>
 
-            <div className="flex flex-col justify-between items-center gap-5">
-                <div className="flex gap-5">
+            <div className="flex flex-col justify-between items-center gap-2">
+                <div className="flex">
                     <NumberImage number={firstNumber.toString()} />
-                    <NumberImage number="x" />
+                    <div className="p-0 pt-10">
+
+                        <NumberImage number="x" />
+                    </div>
                     <NumberImage number={secondNumber.toString()} />
                 </div>
                 <div><NumberImage number="=" /></div>
@@ -137,11 +145,12 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                                 <div className="
                                 border
                                 border-orange-600
-                                rounded-full 
-                                p-5 
+                                rounded-lg 
+                                p-4
                                 cursor-pointer 
                                 flex 
                                 justify-center
+                                min-w-[60px]
                                 "
                                     onClick={() => checkAnswer(n)} key={i}>
                                     <NumberImage number={n.toString()} />
@@ -165,6 +174,7 @@ function NumberImage({ number }: { number: string }) {
                 width={60}
                 height={60}
                 unoptimized
+                className="h-auto w-[60px]"
             />
         ))
     )
