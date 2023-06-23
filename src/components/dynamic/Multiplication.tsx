@@ -109,7 +109,7 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                 date={countdownDate}
                 renderer={
                     (props) => (
-                        <div className="absolute top-6 left-8 font-semibold">
+                        <div className="absolute top-1 right-5 md:top-6 md:left-8 font-semibold">
                             {props.minutes} : {props.seconds}
                         </div>
                     )
@@ -130,7 +130,7 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                     <NumberImage number={secondNumber.toString()} />
                 </div>
                 <div><NumberImage number="=" /></div>
-                <div className="flex gap-10">
+                <div className="flex gap-5">
                     {
                         shuffle([answer, wrong1, wrong2])
                             .map((n, i) => (
@@ -138,7 +138,7 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                                 border
                                 border-orange-600
                                 rounded-full 
-                                p-4 
+                                p-5 
                                 cursor-pointer 
                                 flex 
                                 justify-center
