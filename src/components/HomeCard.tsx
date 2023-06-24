@@ -18,7 +18,7 @@ export default function HomeCard({ label, href, imageUrl }: HomeCardProps) {
                 text-center
                 text-2xl
                 flex flex-col
-                justify-center 
+                justify-between 
                 items-center
                 hover:outline
                 hover:outline-4
