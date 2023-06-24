@@ -168,7 +168,7 @@ function NumberImage({ number }: { number: string }) {
     return (
         arr.map((n, i) => (
             <Image
-                src={`/images/content/numbers/${n}.png`}
+                src={`/images/content/numbers/small/${n}.png`}
                 alt={n}
                 key={i}
                 width={60}
