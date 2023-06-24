@@ -169,21 +169,17 @@ interface NumberImagePrps {
 function NumberImage({ number, className, onClick }: NumberImagePrps) {
     const arr = number.split("")
     return (
-        <div className={className} onClick={onClick}>
-            {
-                arr.map((n, i) => (
-                    <Image
-                        src={`/images/content/numbers/${n}.png`}
-                        alt={n}
-                        key={i}
-                        width={60}
-                        height={60}
-                        unoptimized
-                        className="h-auto w-[60px]"
-                    />
-                ))
-            }
-        </div>
+        arr.map((n, i) => (
+            <Image
+                src={`/images/content/numbers/${n}.png`}
+                alt={n}
+                key={i}
+                width={60}
+                height={60}
+                unoptimized
+                className="h-auto w-[60px]"
+            />
+        ))
     )
 }
 
