@@ -17,7 +17,7 @@ export default function Addition({ properties }: AdditionProps) {
 
     const saveKey = 'AdditionBestScore' + properties;
     const numbers = useMemo(() => properties.map(n => Number(n)), [properties]);
-    const allNumbers = useMemo(() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
+    //const allNumbers = useMemo(() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], []);
     const [state, setState] = useState<GameState>('pregame');
     const [firstNumber, setFirstNumber] = useState(0);
     const [secondNumber, setSecondNumber] = useState(0);
@@ -50,16 +50,16 @@ export default function Addition({ properties }: AdditionProps) {
 
     const resetNumber = useCallback(() => {
         const numb1 = randomInNumbers(numbers);
-        const numb2 = randomInNumbers(allNumbers);
-        const res = numb1 * numb2;
-        const w1 = randomBetween(0, numbers[numbers.length - 1] * 10, res, res);
-        const w2 = randomBetween(0, numbers[numbers.length - 1] * 10, res, w1)
+        const numb2 = randomInNumbers(numbers);
+        const res = numb1 + numb2;
+        const w1 = randomBetween(0, numbers[numbers.length - 1] + 20, res, res);
+        const w2 = randomBetween(0, numbers[numbers.length - 1] + 20, res, w1)
         setFirstNumber(numb1);
         setSecondNumber(numb2);
         setAnswer(res);
         setWrong1(w1)
         setWrong2(w2)
-    }, [numbers, allNumbers]);
+    }, [numbers]);
 
     const checkAnswer = useCallback((ans: number) => {
         if (ans == answer) {
@@ -122,7 +122,7 @@ export default function Addition({ properties }: AdditionProps) {
             <div className="flex flex-col justify-between items-center gap-2">
                 <div className="flex">
                     <NumberImage number={firstNumber.toString()} className="flex" onClick={() => console.log(firstNumber)} />
-                    <NumberImage number="x" className="p-0 pt-10" onClick={() => console.log("x")} />
+                    <NumberImage number="+" className="p-0 pt-10" onClick={() => console.log("+")} />
                     <NumberImage number={secondNumber.toString()} className="flex" onClick={() => console.log(secondNumber)} />
                 </div>
                 <div><NumberImage number="=" className="" onClick={() => console.log("=")} /></div>
