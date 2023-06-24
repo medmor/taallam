@@ -12,10 +12,10 @@ interface MultiplicationProps {
     properties: string[]
 }
 
-const saveKey = 'MultiplicationBestScore'
 
 export default function Multiplication({ properties }: MultiplicationProps) {
 
+    const saveKey = 'MultiplicationBestScore' + properties;
     const numbers = useMemo(() => properties.map(n => Number(n)), [properties]);
     const allNumbers = useMemo(() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
     const [state, setState] = useState<GameState>('pregame');
@@ -46,7 +46,7 @@ export default function Multiplication({ properties }: MultiplicationProps) {
             setBestScore(score)
             localStorage.setItem(saveKey, score.toString());
         }
-    }, [score]);
+    }, [score, saveKey]);
 
     const resetNumber = useCallback(() => {
         const numb1 = randomInNumbers(numbers);
@@ -141,7 +141,7 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                                         flex 
                                         justify-center
                                         min-w-[60px]
-                                        sm:min-w-[100px]
+                                        sm:min-w-[120px]
                                         "
                                     onClick={() => checkAnswer(n)} key={i} />
 
