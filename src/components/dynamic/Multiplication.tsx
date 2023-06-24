@@ -22,9 +22,10 @@ export default function Multiplication({ properties }: MultiplicationProps) {
     const [firstNumber, setFirstNumber] = useState(0);
     const [secondNumber, setSecondNumber] = useState(0);
     const [answer, setAnswer] = useState(0);
-    const [wrong1, setWrong1] = useState(0)
-    const [wrong2, setWrong2] = useState(0)
+    const [wrong1, setWrong1] = useState(0);
+    const [wrong2, setWrong2] = useState(0);
     const [score, setScore] = useState(0);
+    const [errors, setErrors] = useState(0)
     const [bestScore, setBestScore] = useState(Infinity);
     const countdownRef = useRef(null);
     const [countdownDate] = useState(Date.now() + 100000);
@@ -62,11 +63,13 @@ export default function Multiplication({ properties }: MultiplicationProps) {
 
     const checkAnswer = useCallback((ans: number) => {
         if (ans == answer) {
-            goodAudio.play()
-            setScore((score) => score + 1)
+            goodAudio.play();
+            setScore((score) => score + 1);
         } else {
-            wrongAudio.play()
-            setScore((score) => score - 1)
+            wrongAudio.play();
+            setScore((score) => score - 1);
+            setErrors((errors) => errors + 1);
+
         }
         resetNumber();
     }, [answer, resetNumber, goodAudio, wrongAudio]);
@@ -79,33 +82,15 @@ export default function Multiplication({ properties }: MultiplicationProps) {
     return (
         <div className={`p-10 rounded-lg flex flex-col items-center justify-center bg-white min-w-[300px]`} dir="ltr">
             {
-                state != 'running' && (
-                    <div className="z-10 absolute left-0 top-0 w-full h-full bg-orange-100 rounded-lg flex flex-col gap-4 justify-center items-center">
-                        {
-                            state == 'ended' && (
-                                <div>
-                                    <div className="font-bold text-lg">
-                                        Score : {score}
-                                    </div>
-                                    <div className="font-semibold">
-                                        Best Score : {bestScore}
-                                    </div>
-                                </div>
-                            )
-                        }
-                        <div className="w-32">
-                            <Button
-                                label={state == 'ended' ? "Restart" : "Start"}
-                                onClick={
-                                    () => {
-                                        setState('running');
-                                        setScore(0);
-                                        (countdownRef.current as any).start();
-                                    }
-                                }
-                            />
-                        </div>
-                    </div>
+                state != 'running' && (<Overlap
+                    state={state}
+                    score={score}
+                    bestScore={bestScore}
+                    setScore={setScore}
+                    setState={setState}
+                    countdownRef={countdownRef}
+
+                />
                 )
             }
 
@@ -113,7 +98,7 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                 date={countdownDate}
                 renderer={
                     (props) => (
-                        <div className="absolute top-1 right-5 md:top-6 md:left-8 font-semibold">
+                        <div className="absolute top-1 right-5  font-semibold">
                             {props.minutes} : {props.seconds}
                         </div>
                     )
@@ -122,16 +107,23 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                 autoStart={false}
                 ref={countdownRef}
             />
+            {
+                errors > 0 && (
 
+                    <div className="absolute top-1 left-[50%] font-semibold translate-x-[-50%] text-red-600">
+                        Errors : {errors}
+                    </div>
+                )
+            }
             <div className="absolute top-1 left-5 font-semibold">
                 Score : {score}
             </div>
 
             <div className="flex flex-col justify-between items-center gap-2">
                 <div className="flex">
-                    <NumberImage number={firstNumber.toString()} className="" onClick={() => console.log(firstNumber)} />
+                    <NumberImage number={firstNumber.toString()} className="flex" onClick={() => console.log(firstNumber)} />
                     <NumberImage number="x" className="p-0 pt-10" onClick={() => console.log("x")} />
-                    <NumberImage number={secondNumber.toString()} className="" onClick={() => console.log(secondNumber)} />
+                    <NumberImage number={secondNumber.toString()} className="flex" onClick={() => console.log(secondNumber)} />
                 </div>
                 <div><NumberImage number="=" className="" onClick={() => console.log("=")} /></div>
                 <div className="flex gap-5">
@@ -140,17 +132,17 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                             .map((n, i) => (
 
                                 <NumberImage number={n.toString()} className="
-                                border
-                                border-orange-600
-                                rounded-lg 
-                                p-4
-                                sm:p-8
-                                cursor-pointer 
-                                flex 
-                                justify-center
-                                min-w-[60px]
-                                sm:min-w-[100px]
-                                "
+                                        border
+                                        border-orange-600
+                                        rounded-lg 
+                                        p-4
+                                        sm:p-8
+                                        cursor-pointer 
+                                        flex 
+                                        justify-center
+                                        min-w-[60px]
+                                        sm:min-w-[100px]
+                                        "
                                     onClick={() => checkAnswer(n)} key={i} />
 
                             ))
@@ -161,6 +153,49 @@ export default function Multiplication({ properties }: MultiplicationProps) {
     )
 }
 
+
+////////////////////////// Overlap Component
+interface OverlapProps {
+    state: GameState;
+    score: number;
+    bestScore: number;
+    setState: any;
+    setScore: any;
+    countdownRef: any
+}
+function Overlap({ state, score, bestScore, setScore, setState, countdownRef }: OverlapProps) {
+    return (
+        <div className="z-10 absolute left-0 top-0 w-full h-full bg-orange-100 rounded-lg flex flex-col gap-4 justify-center items-center">
+            {
+                state == 'ended' && (
+                    <div>
+                        <div className="font-bold text-lg">
+                            Score : {score}
+                        </div>
+                        <div className="font-semibold">
+                            Best Score : {bestScore}
+                        </div>
+                    </div>
+                )
+            }
+            <div className="w-32">
+                <Button
+                    label={state == 'ended' ? "Restart" : "Start"}
+                    onClick={
+                        () => {
+                            setState('running');
+                            setScore(0);
+                            (countdownRef.current as any).start();
+                        }
+                    }
+                />
+            </div>
+        </div>
+    )
+}
+
+////////////////////////// NumberImage Component
+
 interface NumberImagePrps {
     number: string;
     className: string;
@@ -169,20 +204,25 @@ interface NumberImagePrps {
 function NumberImage({ number, className, onClick }: NumberImagePrps) {
     const arr = number.split("")
     return (
-        arr.map((n, i) => (
-            <Image
-                src={`/images/content/numbers/${n}.png`}
-                alt={n}
-                key={i}
-                width={60}
-                height={60}
-                unoptimized
-                className="h-auto w-[60px]"
-            />
-        ))
+        <div className={className} onClick={onClick}>
+
+            {arr.map((n, i) => (
+                <Image
+                    src={`/images/content/numbers/small/${n}.png`}
+                    alt={n}
+                    key={i}
+                    width={60}
+                    height={60}
+                    unoptimized
+                    className="h-auto w-[60px]"
+                />
+            ))}
+        </div>
     )
 }
 
+
+///////////////////////////// Helper functions
 function randomInNumbers(numbers: number[]): number {
     return numbers[Math.floor(Math.random() * numbers.length)];
 }
