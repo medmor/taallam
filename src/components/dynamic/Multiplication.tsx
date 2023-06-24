@@ -47,7 +47,6 @@ export default function Multiplication({ properties }: MultiplicationProps) {
         }
     }, [score]);
 
-
     const resetNumber = useCallback(() => {
         const numb1 = randomInNumbers(numbers);
         const numb2 = randomInNumbers(allNumbers);
@@ -130,31 +129,30 @@ export default function Multiplication({ properties }: MultiplicationProps) {
 
             <div className="flex flex-col justify-between items-center gap-2">
                 <div className="flex">
-                    <NumberImage number={firstNumber.toString()} />
-                    <div className="p-0 pt-10">
-
-                        <NumberImage number="x" />
-                    </div>
-                    <NumberImage number={secondNumber.toString()} />
+                    <NumberImage number={firstNumber.toString()} className="" onClick={() => console.log(firstNumber)} />
+                    <NumberImage number="x" className="p-0 pt-10" onClick={() => console.log("x")} />
+                    <NumberImage number={secondNumber.toString()} className="" onClick={() => console.log(secondNumber)} />
                 </div>
-                <div><NumberImage number="=" /></div>
+                <div><NumberImage number="=" className="" onClick={() => console.log("=")} /></div>
                 <div className="flex gap-5">
                     {
                         shuffle([answer, wrong1, wrong2])
                             .map((n, i) => (
-                                <div className="
+
+                                <NumberImage number={n.toString()} className="
                                 border
                                 border-orange-600
                                 rounded-lg 
                                 p-4
+                                sm:p-8
                                 cursor-pointer 
                                 flex 
                                 justify-center
                                 min-w-[60px]
+                                sm:min-w-[100px]
                                 "
-                                    onClick={() => checkAnswer(n)} key={i}>
-                                    <NumberImage number={n.toString()} />
-                                </div>
+                                    onClick={() => checkAnswer(n)} key={i} />
+
                             ))
                     }
                 </div>
@@ -163,20 +161,29 @@ export default function Multiplication({ properties }: MultiplicationProps) {
     )
 }
 
-function NumberImage({ number }: { number: string }) {
+interface NumberImagePrps {
+    number: string;
+    className: string;
+    onClick: any
+}
+function NumberImage({ number, className, onClick }: NumberImagePrps) {
     const arr = number.split("")
     return (
-        arr.map((n, i) => (
-            <Image
-                src={`/images/content/numbers/${n}.png`}
-                alt={n}
-                key={i}
-                width={60}
-                height={60}
-                unoptimized
-                className="h-auto w-[60px]"
-            />
-        ))
+        <div className={className} onClick={onClick}>
+            {
+                arr.map((n, i) => (
+                    <Image
+                        src={`/images/content/numbers/${n}.png`}
+                        alt={n}
+                        key={i}
+                        width={60}
+                        height={60}
+                        unoptimized
+                        className="h-auto w-[60px]"
+                    />
+                ))
+            }
+        </div>
     )
 }
 
