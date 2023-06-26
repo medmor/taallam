@@ -1,6 +1,6 @@
 import { getAsset } from "./client";
 import { ImageAsset } from "@/types/CourseType";
-import { BLOCKS, Block, INLINES } from "@/types/RichText";
+import { BLOCKS, Block } from "@/types/RichText";
 
 import {
   EmptyQuiz,
@@ -26,10 +26,10 @@ export async function parseSummary(
     const block = document.content[i];
 
     if (block.nodeType == BLOCKS.PARAGRAPH) {
-      const value = block.content[0].value.trim();
+      const value = getValue(block).trim();
       if (value) texts.push(value);
     } else if (block.nodeType == BLOCKS.QUOTE) {
-      const value = block.content[0].content[0].value as string;
+      const value = getValue(block.content[0]) as string;
       if (value.startsWith("component?")) {
         const data = value.split("?");
         medias.push({
@@ -88,20 +88,25 @@ export function parseQuizzes(doc: Block, quizzes: any[] = []): Quiz[] {
   return quizzes;
 }
 
-export function getAllDocLines(doc: Block, lines: string[] = []) {
+export function getAllDocLines(doc: Block) {
+  let lines = [];
   for (let i = 0; i < doc.content.length; i++) {
-    let node = doc.content[i];
-    if (node.nodeType == "text") {
-      const text = node.value.trim();
-      if (text.length) lines.push(text);
-    } else {
-      getAllDocLines(node as any, lines);
-    }
+    lines.push(getValue(doc.content[i] as any));
   }
   return lines;
 }
 
-export function isQuestion(start: string) {
+function isQuestion(start: string) {
   return start == "mcq";
   //return start in QuizCategoryConsts;
+}
+function getValue(block: Block) {
+  if (block.content.length > 1) {
+    let value = "";
+    for (let i = 0; i < block.content.length; i++) {
+      value += (block.content[i] as any).value;
+    }
+    return value;
+  }
+  return (block as any).content[0].value;
 }
