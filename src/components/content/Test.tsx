@@ -24,7 +24,8 @@ export default function StroyTest({ quizzes }: StoryTestProps) {
     return (
         <ContentPart id="story-test">
             <div className="mt-2 text-center font-bold bg-white rounded-t-lg">
-                {t('score')} <span dir="ltr">{score} / {quizzes.length * 2}</span>
+                <div className="border-b border-b-orange-400 py-2">{t("quiz")}</div>
+                {t('score')} <span dir="ltr">{score} / {quizzes.length}</span>
             </div>
             <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDir} oneDirection>
                 {quizzes.map(quiz => {

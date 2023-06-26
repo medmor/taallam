@@ -51,7 +51,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
                                 if (!selected) {
                                     setSelected(choice)
                                     if (choice == quiz.answer) {
-                                        setScore((score: number) => score + 2)
+                                        setScore((score: number) => score + 1)
                                     } else {
                                         setScore((score: number) => score - 1)
                                     }

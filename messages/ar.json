@@ -26,10 +26,11 @@
     "quiz": "أسئلة"
   },
   "storyTest": {
-    "score": "النتيجة : "
+    "score": "النتيجة : ",
+    "quiz": "أسئلة"
   },
   "storyLessons": {
-    "lessons": "العبر المستخلصة من القصة"
+    "lessons": "الدروس المستفادة"
   },
   "footer": {
     "logo": "/images/logoars.png"

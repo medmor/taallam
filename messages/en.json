@@ -28,10 +28,11 @@
     "quiz": "Quiz"
   },
   "storyTest": {
-    "score": "Your score : "
+    "score": "Your score : ",
+    "quiz": "Quiz"
   },
   "storyLessons": {
-    "lessons": "Lessons learned from the story"
+    "lessons": "Lessons learned"
   },
   "footer": {
     "logo": "/images/logos.png"

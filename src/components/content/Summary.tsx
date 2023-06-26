@@ -1,7 +1,7 @@
 
 'use client'
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useTranslations } from 'next-intl'
 import { BsArrowDownCircleFill } from 'react-icons/bs'
 import { GiSpeaker } from 'react-icons/gi'
@@ -23,9 +23,12 @@ export default function Summary({ medias, texts, audios }: StoryViewerProps) {
     const [index, setIndex] = useState(0);
     const [dir, setDirection] = useState('next');
 
-    let audio: HTMLAudioElement | undefined = undefined;
-    if (audios[1]) { audio = new Audio(audios[0]); }
-
+    let audio = useMemo(() => {
+        if (audios[1]) {
+            return new Audio(audios[0])
+        }
+        return undefined
+    }, [audios])
     const pause = useCallback(() => {
         if (audio)
             audio.pause();
