@@ -12,7 +12,9 @@
     "Preschool": "Preschool",
     "Primary": "Primary",
     "Stories": "Stories",
-    "heading": "Learn with Hiba and Hamza"
+    "heading": "Learn with Hiba and Hamza",
+    "metadataTitle": "Taallam",
+    "metadataDescription": "Learning for children, stories, primary, preparatory, science, mathematics, language"
   },
   "navbar": {
     "Taallam": "Taallam",
@@ -22,16 +24,12 @@
     "language": "العربية",
     "logo": "/images/logos.png"
   },
-  "storyViewer": {
-    "next": "Next",
-    "previous": "Previous",
-    "quiz": "Quiz"
-  },
-  "storyTest": {
+
+  "contentTest": {
     "score": "Your score : ",
     "quiz": "Quiz"
   },
-  "storyLessons": {
+  "contentLessons": {
     "lessons": "Lessons learned"
   },
   "footer": {

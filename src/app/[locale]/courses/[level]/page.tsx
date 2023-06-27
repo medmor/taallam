@@ -1,7 +1,17 @@
+import { useLocale } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import HomeCard from "@/components/HomeCard";
 import PreviewContent from "@/components/PreviewContent";
-import { getEntries, getImageUrl } from "@/lib/contentful/client";
-import { useLocale } from "next-intl";
+import { getEntries } from "@/lib/contentful/client";
+
+
+export async function generateMetadata() {
+    const t = await getTranslations('home');
+    return {
+        title: t("metadataTitle"),
+        description: t("metadataDescription")
+    }
+}
 
 interface CoursesPageProps {
     params: {

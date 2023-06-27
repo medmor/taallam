@@ -1,7 +1,17 @@
 import { useLocale } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { getEntries, getImageUrl } from '@/lib/contentful/client'
 import HomeCard from '@/components/HomeCard';
 import PreviewContent from '@/components/PreviewContent';
+
+
+export async function generateMetadata() {
+    const t = await getTranslations('home');
+    return {
+        title: t("metadataTitle"),
+        description: t("metadataDescription")
+    }
+}
 
 export default async function StoriesPage() {
     const locale = useLocale();

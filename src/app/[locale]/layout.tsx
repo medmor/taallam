@@ -28,6 +28,8 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
   if (params.locale !== locale) {
     locale = params.locale
   }
+
+
   return (
     <html lang={locale} dir={locale == 'ar' ? 'rtl' : 'ltr'}>
       <body className='bg-orange-600 '>

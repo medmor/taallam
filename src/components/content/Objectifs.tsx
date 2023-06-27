@@ -1,11 +1,11 @@
 import ContentPart from "./ContentPart";
 import { useTranslations } from "next-intl";
 
-interface Storylessons {
+interface ContentLessons {
     lessons: string[];
 }
-export default function StoryLessons({ lessons }: Storylessons) {
-    const t = useTranslations('storyLessons');
+export default function ContentLessons({ lessons }: ContentLessons) {
+    const t = useTranslations('contentLessons');
     return (
         <ContentPart id="story-lessons" >
             <div className="text-center bg-white rounded-t-lg text-xl p-2 font-bold">

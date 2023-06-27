@@ -9,12 +9,12 @@ import ContentPart from "./ContentPart";
 import { Quiz, QuizCategoryConsts } from "@/types/QuizType";
 
 
-interface StoryTestProps {
+interface ContentTestProps {
     quizzes: Quiz[];
 
 }
-export default function StroyTest({ quizzes }: StoryTestProps) {
-    const t = useTranslations('storyTest');
+export default function ContentTest({ quizzes }: ContentTestProps) {
+    const t = useTranslations('contentTest');
     const [index, setIndex] = useState(0);
     const [dir, setDir] = useState('next');
     const [score, setScore] = useState(0);

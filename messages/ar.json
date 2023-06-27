@@ -12,7 +12,9 @@
     "Preschool": "التمهيدي",
     "Primary": "الابتدائي",
     "Stories": "قصص",
-    "heading": "تعلم مع هبة وحمزة"
+    "heading": "تعلم مع هبة وحمزة",
+    "metadataTitle": "تعلم",
+    "metadataDescription": "تعلم للأطفال، قصص، ابتدائي، تمهيدي، علوم، رياضيات، لغة"
   },
   "navbar": {
     "Taallam": "تعلم",
@@ -22,14 +24,12 @@
     "language": "English",
     "logo": "/images/logoars.png"
   },
-  "storyViewer": {
-    "quiz": "أسئلة"
-  },
-  "storyTest": {
+
+  "contentTest": {
     "score": "النتيجة : ",
     "quiz": "أسئلة"
   },
-  "storyLessons": {
+  "contentLessons": {
     "lessons": "الدروس المستفادة"
   },
   "footer": {
