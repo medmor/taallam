@@ -19,10 +19,7 @@ export default function Navbar() {
 
     const isActif = (href: string) => pathname.includes(href);
 
-    //to be removed*******************************************************
-    if (window.location.href.includes('vercel.app')) {
-        window.location.href = "taallam.xyz"
-    }
+
     return (
         <nav className="
                 p-4
