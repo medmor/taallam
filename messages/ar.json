@@ -34,5 +34,8 @@
   },
   "footer": {
     "logo": "/images/logoars.png"
+  },
+  "commentBox": {
+    "refresh": "قم بتحديث الصفحة للتعليق"
   }
 }

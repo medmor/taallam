@@ -34,5 +34,8 @@
   },
   "footer": {
     "logo": "/images/logos.png"
+  },
+  "commentBox": {
+    "refresh": "Refresh The Page To Comment"
   }
 }
