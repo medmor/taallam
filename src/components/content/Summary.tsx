@@ -12,14 +12,13 @@ import ContentPart from "./ContentPart";
 import ContentMedia from './ContentMedia';
 
 
-interface StoryViewerProps {
+interface ContentViewerProps {
     medias: any[];
     texts: string[];
     audios: any;
 }
 
-export default function Summary({ medias, texts, audios }: StoryViewerProps) {
-    const t = useTranslations("storyViewer");
+export default function Summary({ medias, texts, audios }: ContentViewerProps) {
     const [index, setIndex] = useState(0);
     const [dir, setDirection] = useState('next');
 

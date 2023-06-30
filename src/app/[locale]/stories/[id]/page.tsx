@@ -24,8 +24,8 @@ export default async function StoryPage({ params }: StoryPageProps) {
     const locale = useLocale();
     const story = await getEntryById(params.id, locale == 'en' ? 'en-US' : locale);
 
-    const medias = [{ type: "image", src: `/images/content/${story.sys.id}/card.png`, alt: story.fields.title }]
-    const texts: any[] = [story.fields.title]
+    const medias: any = []
+    const texts: any[] = []
     const audios: any[] = [`/audios/${story.sys.id}/${locale}/audio.mp3`]
     await parseSummary(story.fields.summary, texts, medias, audios)
     const quizzes = parseQuizzes(story.fields.activities)
