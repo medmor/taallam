@@ -57,11 +57,10 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
                             items-center
                             justify-center
                             text-center
-                            p-2 pt-6 sm:p-10 space-y-5
+                            p-2 sm:px-10
                             rounded-xl
                             bg-white 
-                            text-2xl
-                            ${index == 0 ? 'font-bold' : ''}                    
+                            text-2xl leading-[2em]
                             `
                         }>
                             {

@@ -2,6 +2,8 @@
 import { Transition } from "@headlessui/react";
 import Button from "./Button";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
+import useSwipe from "@/hooks/useSwipe";
+import { useCallback } from "react";
 
 interface CarouselProps {
     index: number;
@@ -16,26 +18,40 @@ interface CarouselProps {
 
 export default function Carousel({ children, index, setIndex, setDir, loop, oneDirection, onSlide }: CarouselProps) {
 
+    const prev = useCallback(() => {
+        if (onSlide) {
+            onSlide();
+        }
+        setDir("prev");
+        if (loop && index <= 0) {
+            setIndex(() => children.length - 1)
+        } else if (index > 0) {
+            setIndex((index: number) => index - 1);
+        }
+    }, [children.length, index, loop, onSlide, setDir, setIndex])
+
+    const next = useCallback(() => {
+        if (onSlide) {
+            onSlide();
+        }
+        setDir('next');
+        if (loop && index >= children.length - 1) {
+            setIndex(() => 0)
+        } else if (index < children.length - 1) {
+            setIndex((index: number) => index + 1);
+        }
+    }, [children.length, index, loop, onSlide, setDir, setIndex])
+
+    const swipeHandlers = useSwipe({ onSwipedLeft: next, onSwipedRight: prev });
+
     return (
-        <div className='p-4'>
+        <div className='p-4' {...swipeHandlers}>
             <div dir="ltr" className='flex justify-around bg-white p-2 rounded-xl max-w-xl m-auto gap-5'>
                 {
                     !oneDirection && <Button
                         label={""}
                         disabled={(index <= 0 && !loop)}
-                        onClick={
-                            () => {
-                                if (onSlide) {
-                                    onSlide();
-                                }
-                                setDir("prev");
-                                if (loop && index <= 0) {
-                                    setIndex(() => children.length - 1)
-                                } else {
-                                    setIndex((index: number) => index - 1);
-                                }
-                            }
-                        }
+                        onClick={prev}
                         icon={AiOutlineArrowLeft}
                     />
                 }
@@ -43,19 +59,7 @@ export default function Carousel({ children, index, setIndex, setDir, loop, oneD
                 <Button
                     label={""}
                     disabled={(index > children.length - 2 && !loop)}
-                    onClick={
-                        () => {
-                            if (onSlide) {
-                                onSlide();
-                            }
-                            setDir('next');
-                            if (loop && index >= children.length - 1) {
-                                setIndex(() => 0)
-                            } else {
-                                setIndex((index: number) => index + 1);
-                            }
-                        }
-                    }
+                    onClick={next}
                     icon={AiOutlineArrowRight}
                 />
             </div>
