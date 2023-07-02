@@ -8,17 +8,20 @@ interface PreviewContentProps {
 export default async function PreviewContent({ href, locale }: PreviewContentProps) {
     const entries = await getEntries("course", locale, 'preview');
 
-    return (
-        <div className="flex flex-wrap justify-center gap-5 p-10">
-            {entries.map(async (course) => (
-                <div key={course.fields.title}>
-                    <HomeCard
-                        label={course.fields.title}
-                        href={`${href}${course.sys.id}`}
-                        imageUrl={`/images/content/${course.sys.id}/card.png`}
-                    />
-                </div>
-            ))}
-        </div>
-    )
+    if (entries.length > 0) {
+        return (
+            <div className="flex flex-wrap justify-center gap-5">
+                {entries.map(async (course) => (
+                    <div key={course.fields.title}>
+                        <HomeCard
+                            label={course.fields.title}
+                            href={`${href}${course.sys.id}`}
+                            imageUrl={`/images/content/${course.sys.id}/card.png`}
+                        />
+                    </div>
+                ))}
+            </div>
+        )
+    }
+    return <></>
 }
