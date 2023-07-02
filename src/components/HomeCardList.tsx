@@ -11,7 +11,7 @@ export default function HomeCardList({ entries, hrefBase }: HomeCardListProps) {
                 <div key={course.fields.title}>
                     <HomeCard
                         label={course.fields.title}
-                        href={`/${hrefBase}/${course.sys.id}`}
+                        href={`${hrefBase}/${course.sys.id}`}
                         imageUrl={`/images/content/${course.sys.id}/card.png`}
                     />
                 </div>
