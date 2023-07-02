@@ -38,8 +38,8 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
           <div className="h-full">
             {children}
           </div>
+          <Footer></Footer>
         </NextIntlClientProvider>
-        <Footer></Footer>
       </body>
     </html>
   )
