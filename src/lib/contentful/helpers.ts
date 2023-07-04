@@ -29,7 +29,7 @@ export async function parseSummary(
       const value = getValue(block).trim();
       if (value) texts.push(value);
     } else if (block.nodeType == BLOCKS.QUOTE) {
-      const value = getValue(block.content[0]) as string;
+      const value = getValue(block.content[0]).trim();
       if (value.startsWith("component?")) {
         const data = value.split("?");
         medias.push({
@@ -76,7 +76,7 @@ export function parseQuizzes(doc: Block, quizzes: any[] = []): Quiz[] {
         if (lines[j].endsWith("===")) {
           quiz.answer = lines[j].replace("===", "");
         } else {
-          quiz.choices.push(lines[j]);
+          if (lines[j].length > 0) quiz.choices.push(lines[j]);
         }
         j++;
         if (lines[j]) start = lines[j].substring(0, 3);
@@ -91,7 +91,7 @@ export function parseQuizzes(doc: Block, quizzes: any[] = []): Quiz[] {
 export function getAllDocLines(doc: Block) {
   let lines = [];
   for (let i = 0; i < doc.content.length; i++) {
-    lines.push(getValue(doc.content[i] as any));
+    lines.push(getValue(doc.content[i] as any).trim());
   }
   return lines;
 }

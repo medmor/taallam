@@ -2,11 +2,13 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import Carousel from "@/components/Carousel";
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 import Mcq from "@/components/quiz/Mcq";
 import ContentPart from "./ContentPart";
 
-import { Quiz, QuizCategoryConsts } from "@/types/QuizType";
+import { Quiz } from "@/types/QuizType";
 
 
 interface ContentTestProps {
@@ -15,11 +17,7 @@ interface ContentTestProps {
 }
 export default function ContentTest({ quizzes }: ContentTestProps) {
     const t = useTranslations('contentTest');
-    const [index, setIndex] = useState(0);
-    const [dir, setDir] = useState('next');
     const [score, setScore] = useState(0);
-
-
 
     return (
         <ContentPart id="story-test">
@@ -27,13 +25,17 @@ export default function ContentTest({ quizzes }: ContentTestProps) {
                 <div className="border-b border-b-orange-400 py-2">{t("quiz")}</div>
                 {t('score')} <span dir="ltr">{score} / {quizzes.length}</span>
             </div>
-            <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDir} oneDirection>
-                {quizzes.map(quiz => {
-                    if (quiz.category == QuizCategoryConsts.mcq) {
+            <div dir="ltr">
+                <Carousel
+                    showThumbs={false}
+                    useKeyboardArrows
+                    showStatus={false}
+                >
+                    {quizzes.map(quiz => {
                         return (<Mcq quiz={quiz} key={quiz.question} setScore={setScore} />)
-                    }
-                })}
-            </Carousel>
+                    })}
+                </Carousel>
+            </div>
         </ContentPart>
     )
 }

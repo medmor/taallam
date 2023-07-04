@@ -23,17 +23,8 @@ export default function SummaryImage({ src, alt }: SummaryImageProps) {
                 onLoad={() => updateLoaded()}
             />
             {
-                <Transition
-                    show={!loaded}
-                    enter="transition-opacity duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="transition-opacity duration-50"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                >
-                    <div className="dot absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"></div>
-                </Transition>
+                !loaded &&
+                <div className="dot absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"></div>
             }
         </>
     )
