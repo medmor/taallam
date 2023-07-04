@@ -14,11 +14,11 @@ export default function SummaryImage({ src, alt }: SummaryImageProps) {
     return (
         <>
             <Image
-                className={`rounded-xl border-2 p-1 m-auto sm:min-w-[350px] h-auto bg-white`}
+                className={`rounded-xl border-2 p-1 m-auto w-full h-auto bg-white`}
                 src={src}
                 alt={alt}
                 width={400}
-                height={350}
+                height={400}
                 unoptimized
                 onLoad={() => updateLoaded()}
             />

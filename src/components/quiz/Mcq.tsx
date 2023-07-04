@@ -31,7 +31,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
     }, [quiz.choices, quiz.answer])
     return (
         (
-            <div className='bg-white p-4 rounded-xl max-w-2xl mx-auto my-4' key={quiz.question}>
+            <div className='bg-white p-4 rounded-xl max-w-xl mx-auto my-4' key={quiz.question}>
                 <div className='font-semibold text-lg p-2 border-b-2 border-b-orange-600'>
                     {quiz.question}
                 </div>

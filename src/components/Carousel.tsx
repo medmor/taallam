@@ -45,7 +45,7 @@ export default function Carousel({ children, index, setIndex, setDir, loop, oneD
     const swipeHandlers = useSwipe({ onSwipedLeft: next, onSwipedRight: prev });
 
     return (
-        <div className='p-4' {...swipeHandlers}>
+        <div {...swipeHandlers}>
             <div dir="ltr" className='flex justify-around bg-white p-2 rounded-xl max-w-xl m-auto gap-5'>
                 {
                     !oneDirection && <Button
@@ -63,7 +63,7 @@ export default function Carousel({ children, index, setIndex, setDir, loop, oneD
                     icon={AiOutlineArrowRight}
                 />
             </div>
-            <div className="grid grid-cols-1">
+            <div className="grid grid-cols-1 p-2">
                 {children.map((child, i) => (
                     <Transition className={`row-start-1 col-start-1`}
                         key={i}

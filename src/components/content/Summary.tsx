@@ -50,7 +50,10 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
         <ContentPart id="story-viewer">
             <Carousel index={index} setIndex={setIndex} dir={dir} setDir={setDirection} onSlide={() => pause()}>
                 {texts.map((text, i) => (
-                    <div className="flex flex-col sm:flex-row gap-2 justify-center p-4 " key={i}>
+                    <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2 justify-center" key={i}>
+                        <div className="relative">
+                            <ContentMedia data={medias[i]} />
+                        </div>
                         <div className={
                             `relative
                             flex
@@ -60,7 +63,7 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
                             p-2 sm:px-10
                             rounded-xl
                             bg-white 
-                            text-2xl leading-[2em]
+                            text-2xl sm:leading-[2em]
                             `
                         }>
                             {
@@ -78,9 +81,6 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
                             <div >
                                 {text}
                             </div>
-                        </div>
-                        <div className="relative">
-                            <ContentMedia data={medias[i]} />
                         </div>
                     </div>
                 ))}
