@@ -20,7 +20,6 @@ interface ContentViewerProps {
 }
 
 export default function Summary({ medias, texts, audios }: ContentViewerProps) {
-    const [index, setIndex] = useState(0);
     const [playTimeout, setPlayTimeout]: any = useState()
 
     let audio = useMemo(() => {
@@ -34,7 +33,7 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
             audio.pause();
     }, [audio]);
 
-    const play = useCallback(() => {
+    const play = useCallback((index: number) => {
         if (playTimeout != null) {
             clearTimeout(playTimeout)
         }
@@ -48,7 +47,7 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
                 setPlayTimeout(null)
             }, (times.end - times.start) * 1000));
         }
-    }, [audio, audios, index, pause, playTimeout])
+    }, [audio, audios, pause, playTimeout])
 
     return (
         <ContentPart id="story-viewer">
@@ -58,8 +57,10 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
                     useKeyboardArrows
                     showStatus={false}
                     autoFocus
+                    preventMovementUntilSwipeScrollTolerance={true}
+                    swipeScrollTolerance={50}
                     showIndicators={texts.length > 1}
-                    onChange={(i) => setIndex(i)}
+                    onChange={(i) => play(i)}
                 >
                     {
                         texts.map((text, i) => (
@@ -67,10 +68,10 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
                                 <div className="relative">
                                     {
                                         audios[1] &&
-                                        <div className='absolute top-2 left-[50%]'>
+                                        <div className='absolute top-2 right-8'>
                                             <Button
                                                 label=''
-                                                onClick={() => play()}
+                                                onClick={() => play(i)}
                                                 icon={GiSpeaker}
                                                 small
 

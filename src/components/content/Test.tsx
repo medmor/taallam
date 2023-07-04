@@ -18,7 +18,6 @@ interface ContentTestProps {
 export default function ContentTest({ quizzes }: ContentTestProps) {
     const t = useTranslations('contentTest');
     const [score, setScore] = useState(0);
-
     return (
         <ContentPart id="story-test">
             <div className="mb-2 p-1 text-center font-bold bg-white rounded-t-lg">
@@ -30,6 +29,8 @@ export default function ContentTest({ quizzes }: ContentTestProps) {
                     showThumbs={false}
                     useKeyboardArrows
                     showStatus={false}
+                    preventMovementUntilSwipeScrollTolerance={true}
+                    swipeScrollTolerance={50}
                 >
                     {quizzes.map(quiz => {
                         return (<Mcq quiz={quiz} key={quiz.question} setScore={setScore} />)
