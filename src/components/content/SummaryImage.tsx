@@ -1,6 +1,5 @@
 'use client'
 
-import { Transition } from "@headlessui/react"
 import Image from "next/image"
 import { useCallback, useState } from "react";
 
