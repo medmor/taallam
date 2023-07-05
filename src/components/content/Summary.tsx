@@ -1,7 +1,7 @@
 
 'use client'
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { GiSpeaker } from 'react-icons/gi'
 
@@ -47,7 +47,13 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
                 setPlayTimeout(null)
             }, (times.end - times.start) * 1000));
         }
-    }, [audio, audios, pause, playTimeout])
+    }, [audio, audios, pause, playTimeout]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            play(0)
+        }, 100);
+    }, [])
 
     return (
         <ContentPart id="story-viewer">

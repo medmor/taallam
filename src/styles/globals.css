@@ -57,3 +57,12 @@ body {
       calc(2 * 100% / 3) 100%, calc(3 * 100% / 3) 100%;
   }
 }
+
+@media not all and (max-width: 640px) {
+  .carousel.carousel-slider .control-arrow {
+    background: rgba(0, 0, 0, 0.2) !important;
+  }
+  .carousel.carousel-slider .control-arrow:hover {
+    background: rgba(0, 0, 0, 0.3) !important;
+  }
+}
