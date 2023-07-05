@@ -11,6 +11,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Button from "@/components/Button";
 import ContentPart from "./ContentPart";
 import ContentMedia from './ContentMedia';
+import { useLocale } from "next-intl";
 
 
 interface ContentViewerProps {
@@ -20,6 +21,8 @@ interface ContentViewerProps {
 }
 
 export default function Summary({ medias, texts, audios }: ContentViewerProps) {
+    let locale = useLocale();
+
     const [playTimeout, setPlayTimeout]: any = useState()
 
     let audio = useMemo(() => {
@@ -70,7 +73,7 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
                 >
                     {
                         texts.map((text, i) => (
-                            <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2 justify-center" key={i}>
+                            <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2 justify-center" key={i} dir={locale == 'ar' ? 'rtl' : 'ltr'} >
                                 <div className="relative">
                                     {
                                         audios[1] &&
