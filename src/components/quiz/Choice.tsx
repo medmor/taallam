@@ -11,7 +11,11 @@ export default function Choice({ choice }: { choice: string }) {
     }
     else if (choice.startsWith('image?')) {
         const data = choice.split("?")
-        return <SummaryImage src={data[1]} alt={data[2]} />
+        return (
+            <div className=" max-w-[150px]">
+                <SummaryImage src={data[1]} alt={data[2]} />
+            </div>
+        )
     }
     return (
         <>

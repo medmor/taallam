@@ -31,7 +31,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
     }, [quiz.choices, quiz.answer])
     return (
         (
-            <div className='bg-white p-4 rounded-xl max-w-xl mx-auto my-4' key={quiz.question}>
+            <div className='bg-white p-4 rounded-xl mx-auto my-4 max-w-xl' key={quiz.question}>
                 <div className='font-semibold text-lg p-2 border-b-2 border-b-orange-600'>
                     {quiz.question}
                 </div>
@@ -40,7 +40,7 @@ export default function Mcq({ quiz, setScore }: McqProps) {
                         <div
                             className={`
                                 cursor-pointer
-                                p-2 mb-1 
+                                p-2 mb-1
                                 border rounded-lg 
                                 flex justify-center
                                 ${!selected ? 'hover:bg-slate-100' : ''}
