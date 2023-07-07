@@ -4,8 +4,14 @@ export interface HomeCardProps {
     label: string;
     href: string;
     imageUrl?: string;
+    createdAt?: string;
 }
-export default function HomeCard({ label, href, imageUrl }: HomeCardProps) {
+export default function HomeCard({ label, href, imageUrl, createdAt }: HomeCardProps) {
+    let createdAtSpan: any = undefined
+    if (createdAt) {
+        const date = new Date(createdAt);
+        createdAtSpan = <span dir='ltr'>{`${date.getDate()} / ${date.getMonth()} / ${date.getFullYear()}`}</span>
+    }
     return (
         <Link href={href}>
             <div className="
@@ -13,13 +19,8 @@ export default function HomeCard({ label, href, imageUrl }: HomeCardProps) {
                 rounded-3xl
                 p-4
                 bg-white
-                font-bold
-                text-purple-800
-                text-center
-                text-2xl
                 flex flex-col
                 justify-between 
-                items-center
                 hover:outline
                 hover:outline-4
                 hover:outline-red-400
@@ -38,7 +39,20 @@ export default function HomeCard({ label, href, imageUrl }: HomeCardProps) {
                         />
                     )
                 }
-                {label}
+                <div >
+                    <div className='font-bold text-xl'>
+                        {label}
+                    </div>
+                    {
+                        createdAtSpan && (
+                            <div className='text-xs'>
+                                {createdAtSpan}
+                            </div>
+                        )
+                    }
+
+                </div>
+
             </div>
         </Link>
     )

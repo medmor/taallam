@@ -7,12 +7,13 @@ interface HomeCardListProps {
 export default function HomeCardList({ entries, hrefBase }: HomeCardListProps) {
     return (
         <div className="flex flex-wrap justify-center gap-5 p-4 sm:p-10">
-            {entries.map(async (course) => (
-                <div key={course.fields.title}>
+            {entries.map(async (entrie) => (
+                <div key={entrie.fields.title}>
                     <HomeCard
-                        label={course.fields.title}
-                        href={`${hrefBase}/${course.sys.id}`}
-                        imageUrl={`/images/content/${course.sys.id}/card.png`}
+                        label={entrie.fields.title}
+                        href={`${hrefBase}/${entrie.sys.id}`}
+                        imageUrl={`/images/content/${entrie.sys.id}/card.png`}
+                        createdAt={entrie.sys.createdAt}
                     />
                 </div>
             ))}

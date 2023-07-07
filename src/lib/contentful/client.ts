@@ -14,7 +14,8 @@ export const getEntries = async (
   const query: any = {
     content_type: contentId,
     locale,
-    select: "sys.id, fields.title",
+    select: "sys.id, fields.title, sys.createdAt",
+    order: "sys.createdAt",
   };
 
   if (tag) {
@@ -22,8 +23,7 @@ export const getEntries = async (
   }
   const { items } = await client.getEntries(query);
 
-  //@ts-ignore
-  return items;
+  return items as any;
 };
 
 export const getEntryById = async (
