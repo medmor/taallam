@@ -3,7 +3,7 @@ import { FaSquareFull, FaHeart } from 'react-icons/fa'
 import { IoCaretUpSharp, IoStar } from 'react-icons/io5'
 
 export interface ShapesProps {
-    properties: string[]
+    properties: string[] //Properties are an array of two : the first item is shape string; the the second is the size of the shape
 }
 export default function Shapes({ properties }: ShapesProps) {
     const shape = properties[0];

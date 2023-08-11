@@ -9,7 +9,7 @@ import Image from "next/image";
 
 
 interface AdditionProps {
-    properties: string[]
+    properties: string[] // Properties are an array of number like : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 }
 
 
@@ -17,7 +17,7 @@ export default function Addition({ properties }: AdditionProps) {
 
     const saveKey = 'AdditionBestScore' + properties;
     const numbers = useMemo(() => properties.map(n => Number(n)), [properties]);
-    //const allNumbers = useMemo(() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], []);
+
     const [state, setState] = useState<GameState>('pregame');
     const [firstNumber, setFirstNumber] = useState(0);
     const [secondNumber, setSecondNumber] = useState(0);

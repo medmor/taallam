@@ -30,7 +30,7 @@ export default async function CoursesPage({ params }: CoursesPageProps) {
             {
                 process.env.NODE_ENV === 'development' && (
                     <PreviewContent
-                        href={`/${locale}/stories/`}
+                        href={`/${locale}/courses/${params.level}/`}
                         locale={uslocale}
                     />
                 )

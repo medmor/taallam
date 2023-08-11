@@ -8,7 +8,6 @@ export interface DynamicComponentProps {
 }
 
 export default function DynamicComponent({ component, properties }: DynamicComponentProps) {
-
     const Dynamic = useMemo(() => dynamic<any>(() => import(`./dynamic/${component}`), {
         loading: () => (
 
@@ -17,5 +16,8 @@ export default function DynamicComponent({ component, properties }: DynamicCompo
             </div>
         ),
     }), [component])
-    return <Dynamic properties={properties} />
+
+    return (
+        <Dynamic properties={properties} />
+    )
 }

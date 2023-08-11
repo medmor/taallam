@@ -9,7 +9,7 @@ import Image from "next/image";
 
 
 interface MultiplicationProps {
-    properties: string[]
+    properties: string[] // Properties are an array of number like : [0, 1, 2];
 }
 
 
