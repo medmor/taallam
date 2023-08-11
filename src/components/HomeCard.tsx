@@ -31,7 +31,7 @@ export default function HomeCard({ label, href, imageUrl, createdAt }: HomeCardP
                 {
                     imageUrl && (
                         <Image
-                            className="rounded-lg mb-2"
+                            className="rounded-lg mb-2 m-auto"
                             src={imageUrl} alt='label'
                             width="200"
                             height="200"

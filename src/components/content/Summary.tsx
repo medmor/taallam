@@ -12,6 +12,7 @@ import Button from "@/components/Button";
 import ContentPart from "./ContentPart";
 import ContentMedia from './ContentMedia';
 import { useLocale } from "next-intl";
+import { usePathname } from "next/navigation";
 
 
 interface ContentViewerProps {
@@ -21,7 +22,9 @@ interface ContentViewerProps {
 }
 
 export default function Summary({ medias, texts, audios }: ContentViewerProps) {
-    let locale = useLocale();
+    const locale = useLocale();
+
+    const pathname = usePathname();
 
     const [playTimeout, setPlayTimeout]: any = useState()
 
@@ -53,10 +56,8 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
     }, [audio, audios, pause, playTimeout]);
 
     useEffect(() => {
-        setTimeout(() => {
-            play(0)
-        }, 100);
-    }, [])
+            pause()
+    }, [pathname, pause])
 
     return (
         <ContentPart id="story-viewer">
@@ -69,7 +70,7 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
                     preventMovementUntilSwipeScrollTolerance={true}
                     swipeScrollTolerance={50}
                     showIndicators={texts.length > 1}
-                    onChange={(i) => play(i)}
+                    onChange={(i) => pause()}
                 >
                     {
                         texts.map((text, i) => (
