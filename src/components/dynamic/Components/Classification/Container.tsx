@@ -1,9 +1,8 @@
 import type { FC } from 'react'
 import { memo, useCallback, useState } from 'react'
-import { NativeTypes } from 'react-dnd-html5-backend'
 
 import { Box } from './Box'
-import { Dustbin } from './Dustbin'
+import { Dustbin, DustbinProps } from './Dustbin'
 import { ItemTypes } from './ItemTypes'
 
 interface DustbinState {
@@ -18,7 +17,6 @@ interface BoxState {
 
 export interface DustbinSpec {
     accepts: string[]
-    lastDroppedItem: any
 }
 export interface BoxSpec {
     name: string
@@ -31,20 +29,16 @@ export interface ContainerState {
 }
 
 export const Container: FC = memo(function Container() {
-    const [dustbins, setDustbins] = useState<DustbinState[]>([
-        { accepts: [ItemTypes.GLASS], lastDroppedItem: null },
-        { accepts: [ItemTypes.FOOD], lastDroppedItem: null },
-        {
-            accepts: [ItemTypes.PAPER, ItemTypes.GLASS, NativeTypes.URL],
-            lastDroppedItem: null,
-        },
-        { accepts: [ItemTypes.PAPER, NativeTypes.FILE], lastDroppedItem: null },
+    const [dustbins, setDustbins] = useState<DustbinSpec[]>([
+        { accepts: [ItemTypes.Triangle] },
+        { accepts: [ItemTypes.Square] },
+        { accepts: [ItemTypes.Circle], },
     ])
 
     const [boxes] = useState<BoxState[]>([
-        { name: 'Bottle', type: ItemTypes.GLASS },
-        { name: 'Banana', type: ItemTypes.FOOD },
-        { name: 'Magazine', type: ItemTypes.PAPER },
+        { name: 'Square', type: ItemTypes.Square },
+        { name: 'Circle', type: ItemTypes.Circle },
+        { name: 'Triangle', type: ItemTypes.Triangle },
     ])
 
     const [droppedBoxNames, setDroppedBoxNames] = useState<string[]>([])
@@ -58,7 +52,6 @@ export const Container: FC = memo(function Container() {
             const { name } = item
             setDroppedBoxNames((droppedBoxNames) => name ? [...droppedBoxNames, name] : [...droppedBoxNames])
             setDustbins((dustbins) => {
-                dustbins[index].lastDroppedItem = item;
                 return dustbins
             }
             )
@@ -68,18 +61,17 @@ export const Container: FC = memo(function Container() {
 
     return (
         <div>
-            <div style={{ overflow: 'hidden', clear: 'both' }}>
-                {dustbins.map(({ accepts, lastDroppedItem }, index) => (
+            <div className='flex justify-center gap-2 p-3 bg-white rounded-xl mb-2'>
+                {dustbins.map(({ accepts }, index) => (
                     <Dustbin
                         accept={accepts}
-                        lastDroppedItem={lastDroppedItem}
                         onDrop={(item) => handleDrop(index, item)}
                         key={index}
                     />
                 ))}
             </div>
 
-            <div style={{ overflow: 'hidden', clear: 'both' }}>
+            <div className='flex justify-center gap-3 p-3 bg-white rounded-xl'>
                 {boxes.map(({ name, type }, index) => (
                     <Box
                         name={name}

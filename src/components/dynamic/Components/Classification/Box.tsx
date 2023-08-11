@@ -1,16 +1,7 @@
 import type { CSSProperties, FC } from 'react'
 import { memo } from 'react'
 import { useDrag } from 'react-dnd'
-
-const style: CSSProperties = {
-  border: '1px dashed gray',
-  backgroundColor: 'white',
-  padding: '0.5rem 1rem',
-  marginRight: '1.5rem',
-  marginBottom: '1.5rem',
-  cursor: 'move',
-  float: 'left',
-}
+import Shapes from '../../Shapes'
 
 export interface BoxProps {
   name: string
@@ -31,8 +22,8 @@ export const Box: FC<BoxProps> = memo(function Box({ name, type, isDropped }) {
   )
 
   return (
-    <div ref={drag} style={{ ...style, opacity }} data-testid="box">
-      {isDropped ? <s>{name}</s> : name}
+    <div ref={drag} className=''>
+          <Shapes properties={["square", "red", "50"]} iconOnly />
     </div>
   )
 })

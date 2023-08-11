@@ -4,8 +4,9 @@ import { IoCaretUpSharp, IoStar } from 'react-icons/io5'
 
 export interface ShapesProps {
     properties: string[] //Properties are an array of two : the first item is shape string; the the second is the size of the shape
+    iconOnly?: boolean
 }
-export default function Shapes({ properties }: ShapesProps) {
+export default function Shapes({ properties, iconOnly: wrap }: ShapesProps) {
     const shape = properties[0];
     let color = properties[1];
     const size = Number(properties[2])
@@ -33,6 +34,9 @@ export default function Shapes({ properties }: ShapesProps) {
         }
     };
 
+    if(wrap){
+        return shapeIcon()
+    }
 
     return (
         <div className={`p-10 rounded-lg flex justify-center bg-white`}>
