@@ -6,12 +6,14 @@ import { useDrop } from 'react-dnd'
 
 export interface DustbinProps {
   accept: string[]
-  onDrop: (item: any) => void
+  onDrop: (item: any) => void,
+  components: React.ReactNode
 }
 
 export const Dustbin: FC<DustbinProps> = memo(function Dustbin({
   accept,
   onDrop,
+  components
 }) {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept,
@@ -26,7 +28,12 @@ export const Dustbin: FC<DustbinProps> = memo(function Dustbin({
 
   return (
     <div ref={drop} className='border-black border-2 rounded-xl p-2'>
-      Put {accept[0]}s here
+      {
+        (components==null)?
+          "Put {accept[0]}s here"
+          :components
+      }
+      
     </div>
   )
 })

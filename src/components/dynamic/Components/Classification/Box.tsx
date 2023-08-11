@@ -5,15 +5,15 @@ import Shapes from '../../Shapes'
 
 export interface BoxProps {
   name: string
-  type: string
-  isDropped: boolean
+  type: string,
+  component: React.ReactNode
 }
 
-export const Box: FC<BoxProps> = memo(function Box({ name, type, isDropped }) {
+export const Box: FC<BoxProps> = memo(function Box({ name, type, component }) {
   const [{ opacity }, drag] = useDrag(
     () => ({
       type,
-      item: { name },
+      item: { name, component },
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 0.4 : 1,
       }),
@@ -23,7 +23,7 @@ export const Box: FC<BoxProps> = memo(function Box({ name, type, isDropped }) {
 
   return (
     <div ref={drag} className=''>
-          <Shapes properties={["square", "red", "50"]} iconOnly />
+          {component}
     </div>
   )
 })
