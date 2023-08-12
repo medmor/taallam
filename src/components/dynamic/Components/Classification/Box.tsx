@@ -10,24 +10,17 @@ export interface BoxProps {
 }
 
 export const Box: FC<BoxProps> = memo(function Box({ name,  component }) {
-  console.log(component)
-  const [{ isDragging }, drag] = useDrag(
+  const [, drag] = useDrag(
     () => ({
       type: acceptTag,
       item: { name, component },
-      collect: (monitor) => ({
-        isDragging:monitor.isDragging()
-      }),
-      end:({},monitor)=>{
-        console.log(monitor.didDrop())
-      },
     }),
     [name],
   )
 
 
   return (
-    <div ref={drag} style={{cursor:isDragging?"move":"move"}}>
+    <div ref={drag} >
           {component}
     </div>
   )

@@ -36,10 +36,11 @@ export const Container: FC = memo(function Container() {
     )
 
     return (
-        <div>
-            <div className='flex justify-center gap-2 p-3 bg-white rounded-xl mb-2'>
-                {dustbins.map(({components }, index) => (
+        <div className='bg-white p-2 rounded-xl'>
+            <div className='flex flex-wrap justify-center gap-2 p-3 mb-2 border-b-2'>
+                {dustbins.map(({components, name }, index) => (
                     <Dustbin
+                    name={name}
                         onDrop={(item) => handleDrop(index, item)}
                         components={components}
                         key={index}
@@ -47,7 +48,7 @@ export const Container: FC = memo(function Container() {
                 ))}
             </div>
 
-            <div className='flex justify-center gap-3 p-3 bg-white rounded-xl'>
+            <div className='flex flex-wrap justify-center gap-3 p-3 '>
                 {boxes.map(({ name, component }, index) => (
                     <Box
                         name={name}
