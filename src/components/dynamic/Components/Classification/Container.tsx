@@ -6,10 +6,6 @@ import { Dustbin, DustbinProps } from './Dustbin'
 import { ItemTypes } from './ItemTypes'
 import Shapes from '../../Shapes'
 
-interface DustbinState {
-    accepts: string[]
-    lastDroppedItem: any
-}
 
 interface BoxState {
     name: string
@@ -32,27 +28,28 @@ export interface ContainerState {
 
 export const Container: FC = memo(function Container() {
     const [dustbins, setDustbins] = useState<DustbinSpec[]>([
-        { accepts: [ItemTypes.Triangle], components: [] },
-        { accepts: [ItemTypes.Square], components: [] },
-        { accepts: [ItemTypes.Circle], components: [] },
+        { accepts: [ItemTypes.Shape], components: [] },
+        { accepts: [ItemTypes.Shape], components: [] },
+        { accepts: [ItemTypes.Shape], components: [] },
     ])
 
     const [boxes, setBoxes] = useState<BoxState[]>([
-        { name: 'Square', type: ItemTypes.Square},
-        { name: 'Circle', type: ItemTypes.Circle },
-        { name: 'Triangle', type: ItemTypes.Triangle },
+        { name: 'Square', type: ItemTypes.Shape },
+        { name: 'Circle', type: ItemTypes.Shape },
+        { name: 'Triangle', type: ItemTypes.Shape },
     ])
 
 
     const handleDrop = useCallback(
-        (index: number, item: { name: string, component:React.ReactNode }) => {
+        (index: number, item: { name: string, component: React.ReactNode }) => {
             const { name, component } = item
-            setBoxes((boxes) => boxes.filter(b => b.name !== name))
-            setDustbins((dustbins) => {
-                dustbins[index].components = [...dustbins[index].components, item.component]
-                return dustbins
+            if (item.name=="Square") {
+                setBoxes((boxes) => boxes.filter(b => b.name !== name))
+                setDustbins((dustbins) => {
+                    dustbins[index].components = [...dustbins[index].components, component]
+                    return dustbins
+                })
             }
-            )
         },
         [],
     )

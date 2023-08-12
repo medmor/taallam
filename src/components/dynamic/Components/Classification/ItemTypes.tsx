@@ -3,6 +3,7 @@ export const ItemTypes = {
     Triangle:'triangle',
     Circle:'circle',
     Heart:'heart',
-    Star:'star'
+    Star:'star',
+    Shape: 'shape'
   }
   

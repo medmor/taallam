@@ -1,5 +1,5 @@
 import type { CSSProperties, FC } from 'react'
-import { memo } from 'react'
+import { memo, useCallback, useEffect } from 'react'
 import { useDrag } from 'react-dnd'
 import Shapes from '../../Shapes'
 
@@ -10,19 +10,23 @@ export interface BoxProps {
 }
 
 export const Box: FC<BoxProps> = memo(function Box({ name, type, component }) {
-  const [{ opacity }, drag] = useDrag(
+  const [{ isDragging }, drag] = useDrag(
     () => ({
       type,
       item: { name, component },
       collect: (monitor) => ({
-        opacity: monitor.isDragging() ? 0.4 : 1,
+        isDragging:monitor.isDragging()
       }),
+      end:({},monitor)=>{
+        console.log(monitor.didDrop())
+      },
     }),
     [name, type],
   )
 
+
   return (
-    <div ref={drag} className=''>
+    <div ref={drag} style={{cursor:isDragging?"move":"move"}}>
           {component}
     </div>
   )

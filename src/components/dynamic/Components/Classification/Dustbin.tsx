@@ -15,16 +15,15 @@ export const Dustbin: FC<DustbinProps> = memo(function Dustbin({
   onDrop,
   components
 }) {
-  const [{ isOver, canDrop }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept,
     drop: onDrop,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
     }),
+
   })
 
-  const isActive = isOver && canDrop
 
   return (
     <div ref={drop} className='border-black border-2 rounded-xl p-2'>
