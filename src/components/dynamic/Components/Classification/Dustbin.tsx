@@ -1,36 +1,29 @@
-import { type } from 'os'
+'use client'
 import type { FC } from 'react'
 import { memo } from 'react'
 import { useDrop } from 'react-dnd'
 
+export const acceptTag = 'classification'
 
 export interface DustbinProps {
-  accept: string[]
   onDrop: (item: any) => void,
-  components: React.ReactNode
+  components: React.ReactNode[]
 }
 
 export const Dustbin: FC<DustbinProps> = memo(function Dustbin({
-  accept,
   onDrop,
   components
 }) {
-  const [{ isOver }, drop] = useDrop({
-    accept,
+  const [, drop] = useDrop({
+    accept:acceptTag,
     drop: onDrop,
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-    }),
-
   })
 
 
   return (
     <div ref={drop} className='border-black border-2 rounded-xl p-2'>
       {
-        (components==null)?
-          "Put {accept[0]}s here"
-          :components
+        components
       }
       
     </div>

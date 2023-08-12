@@ -1,65 +1,45 @@
+'use client'
 import type { FC } from 'react'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 
 import { Box } from './Box'
-import { Dustbin, DustbinProps } from './Dustbin'
-import { ItemTypes } from './ItemTypes'
-import Shapes from '../../Shapes'
+import { Dustbin } from './Dustbin'
+import { generateDndModel } from './model'
 
-
-interface BoxState {
-    name: string
-    type: string
-}
-
-export interface DustbinSpec {
-    accepts: string[],
-    components: React.ReactNode[]
-}
-export interface BoxSpec {
-    name: string
-    type: string
-}
-export interface ContainerState {
-    droppedBoxNames: string[]
-    dustbins: DustbinSpec[]
-    boxes: BoxSpec[]
-}
 
 export const Container: FC = memo(function Container() {
-    const [dustbins, setDustbins] = useState<DustbinSpec[]>([
-        { accepts: [ItemTypes.Shape], components: [] },
-        { accepts: [ItemTypes.Shape], components: [] },
-        { accepts: [ItemTypes.Shape], components: [] },
-    ])
+    let wrongAudio = useMemo(() => new Audio("/audios/effects/wrong.mp3"), [])
+    const goodAudio = useMemo(() => new Audio("/audios/effects/good.mp3"), [])
 
-    const [boxes, setBoxes] = useState<BoxState[]>([
-        { name: 'Square', type: ItemTypes.Shape },
-        { name: 'Circle', type: ItemTypes.Shape },
-        { name: 'Triangle', type: ItemTypes.Shape },
-    ])
+    const dndModel = generateDndModel()
+
+    const [dustbins, setDustbins] = useState<any[]>(dndModel.dustbins)
+
+    const [boxes, setBoxes] = useState<any[]>(dndModel.boxes)
 
 
     const handleDrop = useCallback(
         (index: number, item: { name: string, component: React.ReactNode }) => {
             const { name, component } = item
-            if (item.name=="Square") {
+            if (item.name.startsWith( dustbins[index].name)) {
                 setBoxes((boxes) => boxes.filter(b => b.name !== name))
                 setDustbins((dustbins) => {
                     dustbins[index].components = [...dustbins[index].components, component]
                     return dustbins
                 })
+                goodAudio.play();
+            }else{
+                wrongAudio.play();
             }
         },
-        [],
+        [dustbins, goodAudio, wrongAudio],
     )
 
     return (
         <div>
             <div className='flex justify-center gap-2 p-3 bg-white rounded-xl mb-2'>
-                {dustbins.map(({ accepts, components }, index) => (
+                {dustbins.map(({components }, index) => (
                     <Dustbin
-                        accept={accepts}
                         onDrop={(item) => handleDrop(index, item)}
                         components={components}
                         key={index}
@@ -68,11 +48,10 @@ export const Container: FC = memo(function Container() {
             </div>
 
             <div className='flex justify-center gap-3 p-3 bg-white rounded-xl'>
-                {boxes.map(({ name, type }, index) => (
+                {boxes.map(({ name, component }, index) => (
                     <Box
                         name={name}
-                        type={type}
-                        component={<Shapes properties={["square", "red", "50"]} iconOnly />}
+                        component={component}
                         key={index}
                     />
                 ))}

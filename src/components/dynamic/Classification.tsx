@@ -1,3 +1,4 @@
+'use client'
 import { Container } from "./Components/Classification/Container"
 
 import { DndProvider } from 'react-dnd'
@@ -9,6 +10,7 @@ export interface ClassificationProps {
 }
 
 export default function Classification({ properties }: ClassificationProps) {
+
     return (
         <DndProvider backend={HTML5Backend}>
             <Container />

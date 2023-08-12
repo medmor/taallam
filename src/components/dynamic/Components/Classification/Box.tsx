@@ -1,18 +1,19 @@
-import type { CSSProperties, FC } from 'react'
-import { memo, useCallback, useEffect } from 'react'
+'use client'
+import type {  FC } from 'react'
+import { memo } from 'react'
 import { useDrag } from 'react-dnd'
-import Shapes from '../../Shapes'
+import { acceptTag } from './Dustbin'
 
 export interface BoxProps {
   name: string
-  type: string,
   component: React.ReactNode
 }
 
-export const Box: FC<BoxProps> = memo(function Box({ name, type, component }) {
+export const Box: FC<BoxProps> = memo(function Box({ name,  component }) {
+  console.log(component)
   const [{ isDragging }, drag] = useDrag(
     () => ({
-      type,
+      type: acceptTag,
       item: { name, component },
       collect: (monitor) => ({
         isDragging:monitor.isDragging()
@@ -21,7 +22,7 @@ export const Box: FC<BoxProps> = memo(function Box({ name, type, component }) {
         console.log(monitor.didDrop())
       },
     }),
-    [name, type],
+    [name],
   )
 
 
