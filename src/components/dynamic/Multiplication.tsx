@@ -1,11 +1,9 @@
 'use client'
 
 import { shuffle } from "@/lib/utils/array";
-import { GameState } from "@/types/GameState";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Countdown from 'react-countdown';
-import Button from "../Button";
 import Image from "next/image";
+import MiniGame, { MiniGameHandle } from "./Components/Shared/MiniGame";
 
 
 interface MultiplicationProps {
@@ -16,37 +14,17 @@ interface MultiplicationProps {
 export default function Multiplication({ properties }: MultiplicationProps) {
 
     const saveKey = 'MultiplicationBestScore' + properties;
+
+    const miniGameRef = useRef<MiniGameHandle>(null)
+
     const numbers = useMemo(() => properties.map(n => Number(n)), [properties]);
     const allNumbers = useMemo(() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], []);
-    const [state, setState] = useState<GameState>('pregame');
     const [firstNumber, setFirstNumber] = useState(0);
     const [secondNumber, setSecondNumber] = useState(0);
     const [answer, setAnswer] = useState(0);
     const [wrong1, setWrong1] = useState(0);
     const [wrong2, setWrong2] = useState(0);
-    const [score, setScore] = useState(0);
-    const [errors, setErrors] = useState(0)
-    const [bestScore, setBestScore] = useState(Infinity);
-    const countdownRef = useRef(null);
-    const [countdownDate] = useState(Date.now() + 100000);
-
-    const wrongAudio = useMemo(() => new Audio("/audios/effects/wrong.mp3"), [])
-    const goodAudio = useMemo(() => new Audio("/audios/effects/good.mp3"), [])
-
-    const onComplete = useCallback(() => {
-        setState('ended');
-        (countdownRef.current as any).stop();
-        let bests = Number(localStorage.getItem(saveKey));
-        if (bests == null) {
-            bests = 0;
-        }
-        if (bests > score) {
-            setBestScore(bests)
-        } else {
-            setBestScore(score)
-            localStorage.setItem(saveKey, score.toString());
-        }
-    }, [score, saveKey]);
+   
 
     const resetNumber = useCallback(() => {
         const numb1 = randomInNumbers(numbers);
@@ -63,16 +41,15 @@ export default function Multiplication({ properties }: MultiplicationProps) {
 
     const checkAnswer = useCallback((ans: number) => {
         if (ans == answer) {
-            goodAudio.play();
-            setScore((score) => score + 1);
+            miniGameRef.current?.playGoodSound()
+            miniGameRef.current?.changeScore(1)
         } else {
-            wrongAudio.play();
-            setScore((score) => score - 1);
-            setErrors((errors) => errors + 1);
-
+            miniGameRef.current?.playWrongSound()
+            miniGameRef.current?.changeScore(-1)
+            miniGameRef.current?.changeErrors(1)
         }
         resetNumber();
-    }, [answer, resetNumber, goodAudio, wrongAudio]);
+    }, [answer, resetNumber]);
 
     useEffect(() => {
         resetNumber();
@@ -80,44 +57,7 @@ export default function Multiplication({ properties }: MultiplicationProps) {
 
 
     return (
-        <div className={`p-10 rounded-lg flex flex-col items-center justify-center bg-white min-w-[300px]`} dir="ltr">
-            {
-                state != 'running' && (<Overlap
-                    state={state}
-                    score={score}
-                    bestScore={bestScore}
-                    setScore={setScore}
-                    setState={setState}
-                    countdownRef={countdownRef}
-
-                />
-                )
-            }
-
-            <Countdown
-                date={countdownDate}
-                renderer={
-                    (props) => (
-                        <div className="absolute top-1 right-5  font-semibold">
-                            {props.minutes} : {props.seconds}
-                        </div>
-                    )
-                }
-                onComplete={() => onComplete()}
-                autoStart={false}
-                ref={countdownRef}
-            />
-            {
-                errors > 0 && (
-
-                    <div className="absolute top-1 left-[50%] font-semibold translate-x-[-50%] text-red-600">
-                        Errors : {errors}
-                    </div>
-                )
-            }
-            <div className="absolute top-1 left-5 font-semibold">
-                Score : {score}
-            </div>
+        <MiniGame saveKey={saveKey} ref={miniGameRef}>
 
             <div className="flex flex-col justify-between items-center gap-2">
                 <div className="flex">
@@ -149,59 +89,19 @@ export default function Multiplication({ properties }: MultiplicationProps) {
                     }
                 </div>
             </div>
-        </div>
+            </MiniGame>
     )
 }
 
-
-////////////////////////// Overlap Component
-interface OverlapProps {
-    state: GameState;
-    score: number;
-    bestScore: number;
-    setState: any;
-    setScore: any;
-    countdownRef: any
-}
-function Overlap({ state, score, bestScore, setScore, setState, countdownRef }: OverlapProps) {
-    return (
-        <div className="z-10 absolute left-0 top-0 w-full h-full bg-orange-100 rounded-lg flex flex-col gap-4 justify-center items-center">
-            {
-                state == 'ended' && (
-                    <div>
-                        <div className="font-bold text-lg">
-                            Score : {score}
-                        </div>
-                        <div className="font-semibold">
-                            Best Score : {bestScore}
-                        </div>
-                    </div>
-                )
-            }
-            <div className="w-32">
-                <Button
-                    label={state == 'ended' ? "Restart" : "Start"}
-                    onClick={
-                        () => {
-                            setState('running');
-                            setScore(0);
-                            (countdownRef.current as any).start();
-                        }
-                    }
-                />
-            </div>
-        </div>
-    )
-}
 
 ////////////////////////// NumberImage Component
 
-interface NumberImagePrps {
+interface NumberImageProps {
     number: string;
     className: string;
     onClick: any
 }
-function NumberImage({ number, className, onClick }: NumberImagePrps) {
+function NumberImage({ number, className, onClick }: NumberImageProps) {
     const arr = number.split("")
     return (
         <div className={className} onClick={onClick}>

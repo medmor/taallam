@@ -1,21 +1,27 @@
 'use client'
 
-import { shuffle } from "@/lib/utils/array";
 import { GameState } from "@/types/GameState";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import Countdown from 'react-countdown';
 import Button from "../../../Button";
-import Image from "next/image";
 
 
 interface MiniGameProps {
     saveKey: string
     children: React.ReactNode
+    onTimeEnd?: () => void
+    onStart?: () => void
+}
+
+export interface MiniGameHandle {
+    playWrongSound: () => void
+    playGoodSound: () => void
+    changeScore: (amount: number) => void
+    changeErrors: (amount: number) => void
 }
 
 
-export default function Addition({ saveKey, children }: MiniGameProps) {
-
+const MiniGame = forwardRef<MiniGameHandle, MiniGameProps>(function MiniGame(props, ref) {
 
     const [state, setState] = useState<GameState>('pregame');
     const [score, setScore] = useState(0);
@@ -27,10 +33,16 @@ export default function Addition({ saveKey, children }: MiniGameProps) {
     const wrongAudio = useMemo(() => new Audio("/audios/effects/wrong.mp3"), [])
     const goodAudio = useMemo(() => new Audio("/audios/effects/good.mp3"), [])
 
-    const onComplete = useCallback(() => {
+    const onStart = useCallback(() => {
+        setState('running');
+        setScore(0);
+        setErrors(0);
+        (countdownRef.current as any).start();
+    }, [])
+    const onTimeEnd = useCallback(() => {
         setState('ended');
         (countdownRef.current as any).stop();
-        let bests = Number(localStorage.getItem(saveKey));
+        let bests = Number(localStorage.getItem(props.saveKey));
         if (bests == null) {
             bests = 0;
         }
@@ -38,9 +50,21 @@ export default function Addition({ saveKey, children }: MiniGameProps) {
             setBestScore(bests)
         } else {
             setBestScore(score)
-            localStorage.setItem(saveKey, score.toString());
+            localStorage.setItem(props.saveKey, score.toString());
         }
-    }, [score, saveKey]);
+        if (props.onTimeEnd) {
+            props.onTimeEnd();
+        }
+    }, [score, props]);
+
+    useImperativeHandle(ref, () => {
+        return {
+            playWrongSound: () => wrongAudio.play(),
+            playGoodSound: () => goodAudio.play(),
+            changeScore: (amount) => setScore(score => score + amount),
+            changeErrors: (amount) => setErrors(errors => errors + amount)
+        }
+    }, [goodAudio, wrongAudio])
 
     return (
         <div className={`p-10 rounded-lg flex flex-col items-center justify-center bg-white min-w-[300px]`} dir="ltr">
@@ -49,10 +73,7 @@ export default function Addition({ saveKey, children }: MiniGameProps) {
                     state={state}
                     score={score}
                     bestScore={bestScore}
-                    setScore={setScore}
-                    setState={setState}
-                    countdownRef={countdownRef}
-
+                    onStart={onStart}
                 />
                 )
             }
@@ -66,7 +87,7 @@ export default function Addition({ saveKey, children }: MiniGameProps) {
                         </div>
                     )
                 }
-                onComplete={() => onComplete()}
+                onComplete={() => onTimeEnd()}
                 autoStart={false}
                 ref={countdownRef}
             />
@@ -82,10 +103,12 @@ export default function Addition({ saveKey, children }: MiniGameProps) {
                 Score : {score}
             </div>
 
-            {children}
+            {props.children}
         </div>
     )
-}
+})
+
+export default MiniGame;
 
 
 ////////////////////////// Overlap Component
@@ -93,11 +116,9 @@ interface OverlapProps {
     state: GameState;
     score: number;
     bestScore: number;
-    setState: any;
-    setScore: any;
-    countdownRef: any
+    onStart: () => void
 }
-function Overlap({ state, score, bestScore, setScore, setState, countdownRef }: OverlapProps) {
+function Overlap({ state, score, bestScore, onStart }: OverlapProps) {
     return (
         <div className="z-10 absolute left-0 top-0 w-full h-full bg-orange-100 rounded-lg flex flex-col gap-4 justify-center items-center">
             {
@@ -115,13 +136,7 @@ function Overlap({ state, score, bestScore, setScore, setState, countdownRef }: 
             <div className="w-32">
                 <Button
                     label={state == 'ended' ? "Restart" : "Start"}
-                    onClick={
-                        () => {
-                            setState('running');
-                            setScore(0);
-                            (countdownRef.current as any).start();
-                        }
-                    }
+                    onClick={onStart}
                 />
             </div>
         </div>

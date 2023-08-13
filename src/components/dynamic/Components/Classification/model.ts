@@ -1,7 +1,7 @@
 import { ShapesTypes } from "../../Shapes";
 import Shapes from "../../Shapes";
 
-const shapesNames: ShapesTypes[] = [
+export const shapesNames: ShapesTypes[] = [
   "circle",
   "heart",
   "rectangle",
@@ -15,7 +15,7 @@ const sizes = [20, 24, 28, 32];
 const generateDustbins = (names: string[]) =>
   names.map((name) => new DustbinModel(name, []));
 
-function generateBoxes(names: string[], count: number) {
+export function generateBoxes(names: string[], count: number) {
   const boxes = [];
   for (let i = 0; i < count; i++) {
     const name = rndItem(names);
