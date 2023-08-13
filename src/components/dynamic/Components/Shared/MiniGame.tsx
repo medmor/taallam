@@ -1,7 +1,7 @@
 'use client'
 
 import { GameState } from "@/types/GameState";
-import { useCallback, useMemo, useRef, useState, forwardRef, useImperativeHandle } from "react";
+import { useCallback, useMemo, useRef, useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import Countdown from 'react-countdown';
 import Button from "../../../Button";
 
@@ -30,8 +30,8 @@ const MiniGame = forwardRef<MiniGameHandle, MiniGameProps>(function MiniGame(pro
     const countdownRef = useRef(null);
     const [countdownDate] = useState(Date.now() + 100000);
 
-    const wrongAudio = useMemo(() => new Audio("/audios/effects/wrong.mp3"), [])
-    const goodAudio = useMemo(() => new Audio("/audios/effects/good.mp3"), [])
+    const [wrongAudio, setWrongAudio] = useState<HTMLAudioElement>()
+    const [goodAudio , setGoodAudio] = useState<HTMLAudioElement>()
 
     const onStart = useCallback(() => {
         setState('running');
@@ -59,13 +59,17 @@ const MiniGame = forwardRef<MiniGameHandle, MiniGameProps>(function MiniGame(pro
 
     useImperativeHandle(ref, () => {
         return {
-            playWrongSound: () => wrongAudio.play(),
-            playGoodSound: () => goodAudio.play(),
+            playWrongSound: () => wrongAudio?.play(),
+            playGoodSound: () => goodAudio?.play(),
             changeScore: (amount) => setScore(score => score + amount),
             changeErrors: (amount) => setErrors(errors => errors + amount)
         }
     }, [goodAudio, wrongAudio])
 
+    useEffect(()=>{
+        setWrongAudio(new Audio("/audios/effects/wrong.mp3"))
+        setGoodAudio(new Audio("/audios/effects/good.mp3"))
+    }, [])
     return (
         <div className={`p-10 rounded-lg flex flex-col items-center justify-center bg-white min-w-[300px]`} dir="ltr">
             {

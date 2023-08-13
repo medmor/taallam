@@ -2,8 +2,9 @@
 
 import { shuffle } from "@/lib/utils/array";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import MiniGame, { MiniGameHandle } from "./Components/Shared/MiniGame";
+import NumberImage from "./Components/Shared/NumberImage";
+import { rndExclude, rndItem } from "@/helpers/random";
 
 
 interface MultiplicationProps {
@@ -27,11 +28,11 @@ export default function Multiplication({ properties }: MultiplicationProps) {
    
 
     const resetNumber = useCallback(() => {
-        const numb1 = randomInNumbers(numbers);
-        const numb2 = randomInNumbers(allNumbers);
+        const numb1 = rndItem(numbers);
+        const numb2 = rndItem(allNumbers);
         const res = numb1 * numb2;
-        const w1 = randomBetween(0, numbers[numbers.length - 1] * 10, res, res);
-        const w2 = randomBetween(0, numbers[numbers.length - 1] * 10, res, w1)
+        const w1 = rndExclude(0, numbers[numbers.length-1]*10, [res])
+        const w2 = rndExclude(0, numbers[numbers.length - 1] * 10, [res, w1])
         setFirstNumber(numb1);
         setSecondNumber(numb2);
         setAnswer(res);
@@ -94,43 +95,5 @@ export default function Multiplication({ properties }: MultiplicationProps) {
 }
 
 
-////////////////////////// NumberImage Component
-
-interface NumberImageProps {
-    number: string;
-    className: string;
-    onClick: any
-}
-function NumberImage({ number, className, onClick }: NumberImageProps) {
-    const arr = number.split("")
-    return (
-        <div className={className} onClick={onClick}>
-
-            {arr.map((n, i) => (
-                <Image
-                    src={`/images/content/numbers/small/${n}.png`}
-                    alt={n}
-                    key={i}
-                    width={60}
-                    height={60}
-                    unoptimized
-                    className="h-auto w-[60px]"
-                />
-            ))}
-        </div>
-    )
-}
 
 
-///////////////////////////// Helper functions
-function randomInNumbers(numbers: number[]): number {
-    return numbers[Math.floor(Math.random() * numbers.length)];
-}
-function randomBetween(min: number, max: number, dif1: number, dif2: number) {
-    const numb = Math.floor(Math.random() * (max - min) + min);
-    if (numb != dif1 && numb != dif2) {
-        return numb
-    } else {
-        return randomBetween(min, max, dif1, dif2)
-    }
-}

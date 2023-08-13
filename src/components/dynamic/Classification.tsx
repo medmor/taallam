@@ -1,9 +1,9 @@
 'use client'
+import { useEffect } from "react"
 import { Container } from "./Components/Classification/Container"
 
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { TouchBackend } from 'react-dnd-touch-backend'
 
 
 
@@ -12,13 +12,15 @@ export interface ClassificationProps {
 }
 
 export default function Classification({ properties }: ClassificationProps) {
-    if (isTouchDevice()) {
-        return (
-            <DndProvider backend={TouchBackend}>
-                <Container />
-            </DndProvider>
-        )
-    }
+
+    useEffect(()=>{
+        if (isTouchDevice()) {
+            const script = document.createElement("script");
+            script.setAttribute("src", "/lib/js/dragdrop.js");
+            document.body.appendChild(script);
+          }
+    },[])
+
     return (
         <DndProvider backend={HTML5Backend}>
             <Container />
@@ -27,7 +29,5 @@ export default function Classification({ properties }: ClassificationProps) {
 }
 
 function isTouchDevice() {
-    return (('ontouchstart' in window) ||
-        (navigator.maxTouchPoints > 0) ||
-        ((navigator as any).msMaxTouchPoints > 0));
+    return navigator.maxTouchPoints || "ontouchstart" in document.documentElement
 }

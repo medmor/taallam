@@ -1,3 +1,4 @@
+import { rnd, rndItem } from "@/helpers/random";
 import { ShapesTypes } from "../../Shapes";
 import Shapes from "../../Shapes";
 
@@ -58,5 +59,4 @@ export class BoxModel {
   constructor(public name: string, public component: React.ReactNode) {}
 }
 
-const rndItem = (arr: any[]) => arr[rnd(0, arr.length)];
-const rnd = (min: number, max: number) => min + Math.floor(Math.random() * max);
+
