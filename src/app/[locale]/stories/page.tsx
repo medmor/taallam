@@ -1,9 +1,9 @@
 import { useLocale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { getEntries, getImageUrl } from '@/lib/contentful/client'
-import HomeCard from '@/components/HomeCard';
-import PreviewContent from '@/components/PreviewContent';
-import HomeCardList from '@/components/HomeCardList';
+import HomeCard from '@/components/Shared/HomeCard';
+import PreviewContent from '@/components/Shared/PreviewContent';
+import HomeCardList from '@/components/Shared/HomeCardList';
 
 
 export async function generateMetadata() {

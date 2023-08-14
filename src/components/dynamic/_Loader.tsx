@@ -8,7 +8,7 @@ export interface DynamicComponentProps {
 }
 
 export default function DynamicComponent({ component, properties }: DynamicComponentProps) {
-    const Dynamic = useMemo(() => dynamic<any>(() => import(`./dynamic/${component}`), {
+    const Dynamic = useMemo(() => dynamic<any>(() => import(`./${component}`), {
         loading: () => (
 
             <div className="bg-white min-w-[200px] min-h-[200px]">

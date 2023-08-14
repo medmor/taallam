@@ -1,4 +1,4 @@
-import DynamicComponent from "../DynamicComponent";
+import DynamicComponent from "../dynamic/_Loader";
 import SummaryImage from "../content/SummaryImage";
 
 export default function Choice({ choice }: { choice: string }) {

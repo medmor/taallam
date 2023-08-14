@@ -6,7 +6,9 @@
     "arabic": "عربية",
     "french": "فرنسية",
     "english": "فرنسية",
-    "language": "لغة"
+    "language": "لغة",
+    "score":"النتيجة",
+    "bestScore":"احسن نتيجة"
   },
   "home": {
     "Preschool": "التمهيدي",
@@ -37,5 +39,13 @@
   },
   "commentBox": {
     "refresh": "قم بتحديث الصفحة للتعليق"
+  },
+  "shapes":{
+    "circle":"دائرة",
+    "heart":"قلب",
+    "rectangle":"مستطيل",
+    "square":"مربع",
+    "star":"نجمة",
+    "triangle":"مثلث"
   }
 }

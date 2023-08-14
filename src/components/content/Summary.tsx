@@ -8,7 +8,7 @@ import { GiSpeaker } from 'react-icons/gi'
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-import Button from "@/components/Button";
+import Button from "@/components/Shared/Button";
 import ContentPart from "./ContentPart";
 import ContentMedia from './ContentMedia';
 import { useLocale } from "next-intl";

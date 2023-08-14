@@ -2,8 +2,8 @@
 
 import { shuffle } from "@/lib/utils/array";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import MiniGame, { MiniGameHandle } from "./Components/Shared/MiniGame";
-import NumberImage from "./Components/Shared/NumberImage";
+import MiniGame, { MiniGameHandle } from "../Shared/MiniGame";
+import NumberImage from "../Shared/NumberImage";
 import { rndExclude, rndItem } from "@/helpers/random";
 
 

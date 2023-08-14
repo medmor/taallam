@@ -2,7 +2,7 @@
 import { useLocale, useTranslations, } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 
-import HomeCard from '@/components/HomeCard';
+import HomeCard from '@/components/Shared/HomeCard';
 import Image from 'next/image';
 
 

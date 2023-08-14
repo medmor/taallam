@@ -1,9 +1,10 @@
 'use client'
 
 import { GameState } from "@/types/GameState";
-import { useCallback, useMemo, useRef, useState, forwardRef, useImperativeHandle, useEffect } from "react";
+import { useCallback,  useRef, useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import Countdown from 'react-countdown';
-import Button from "../../../Button";
+import Button from "./Button";
+import { useTranslations } from "next-intl";
 
 
 interface MiniGameProps {
@@ -123,16 +124,17 @@ interface OverlapProps {
     onStart: () => void
 }
 function Overlap({ state, score, bestScore, onStart }: OverlapProps) {
+    const t = useTranslations("common");
     return (
         <div className="z-10 absolute left-0 top-0 w-full h-full bg-orange-100 rounded-lg flex flex-col gap-4 justify-center items-center">
             {
                 state == 'ended' && (
                     <div>
                         <div className="font-bold text-lg">
-                            Score : {score}
+                            {t("score")} : {score}
                         </div>
                         <div className="font-semibold">
-                            Best Score : {bestScore}
+                        {t("bestScore")} : {bestScore}
                         </div>
                     </div>
                 )

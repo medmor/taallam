@@ -1,6 +1,6 @@
 import Link from "next/link";
 import HtmlCommentsBox from "./HtmlCommentBox";
-import Logo from "./navbar/Logo";
+import Logo from "../navbar/Logo";
 import { useTranslations } from "next-intl";
 
 export default function Footer(props: any) {

@@ -1,9 +1,9 @@
 import { useLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import HomeCard from "@/components/HomeCard";
-import PreviewContent from "@/components/PreviewContent";
+import HomeCard from "@/components/Shared/HomeCard";
+import PreviewContent from "@/components/Shared/PreviewContent";
 import { getEntries } from "@/lib/contentful/client";
-import HomeCardList from "@/components/HomeCardList";
+import HomeCardList from "@/components/Shared/HomeCardList";
 
 
 export async function generateMetadata() {

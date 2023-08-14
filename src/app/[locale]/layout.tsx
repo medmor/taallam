@@ -5,7 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 
 
 import Navbar from '@/components/navbar/Navbar'
-import Footer from '@/components/Footer'
+import Footer from '@/components/layout/Footer'
 
 interface RootLayoutProps {
   children: React.ReactNode;
