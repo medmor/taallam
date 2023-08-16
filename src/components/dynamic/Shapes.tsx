@@ -1,17 +1,29 @@
+import { rndItem } from '@/helpers/random';
 import { BsCircleFill } from 'react-icons/bs'
 import { FaSquareFull, FaHeart } from 'react-icons/fa'
 import { IoCaretUpSharp, IoStar } from 'react-icons/io5'
 
 export type ShapesTypes = 'square' | 'triangle' | 'circle' | 'heart' | 'rectangle' | 'star'
 
+export const shapesNames: ShapesTypes[] = [
+    "circle",
+    "heart",
+    "rectangle",
+    "square",
+    "star",
+    "triangle",
+];
+const colors = ["red", "blue", "yellow", "purple", "green", "orange", "black"];
+const sizes = [20, 24, 28, 32];
+
 export interface ShapesProps {
     properties: string[] //Properties are an array of two : the first item is shape string; the the second is the size of the shape
-    iconOnly?: boolean
 }
-export default function Shapes({ properties, iconOnly }: ShapesProps) {
-    const shape: ShapesTypes = properties[0] as ShapesTypes;
-    let color = properties[1];
-    const size = Number(properties[2])
+export default function Shapes({ properties }: ShapesProps) {
+    const shape: ShapesTypes = properties[0] as ShapesTypes||rndItem(shapesNames);
+    let color = properties[1]||rndItem(colors);
+    const size = Number(properties[2])||rndItem(sizes)
+    const iconOnly = Boolean(properties[3])||false
 
 
 
