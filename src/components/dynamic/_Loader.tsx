@@ -1,23 +1,25 @@
 'use client'
 import dynamic from "next/dynamic";
-import { useMemo, } from "react";
 
 export interface DynamicComponentProps {
     component: string
-    properties: string[];
+    properties: string[]
+    noLoading?:Boolean
 }
 
-export default function DynamicComponent({ component, properties }: DynamicComponentProps) {
-    const Dynamic = useMemo(() => dynamic<any>(() => import(`./${component}`), {
-        loading: () => (
+ const DynamicComponent = ({ component, properties, noLoading }: DynamicComponentProps) =>{
+    const Dynamic =  dynamic<any>(() => import(`./${component}`), {
+        loading: noLoading?()=><div></div>: () => (
 
             <div className="bg-white min-w-[200px] min-h-[200px]">
                 <div className="dot absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"></div>
             </div>
         ),
-    }), [component])
+    })
 
     return (
         <Dynamic properties={properties} />
     )
 }
+
+export default DynamicComponent

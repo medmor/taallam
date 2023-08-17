@@ -20,12 +20,10 @@ export interface ShapesProps {
     properties: string[] //Properties are an array of two : the first item is shape string; the the second is the size of the shape
 }
 export default function Shapes({ properties }: ShapesProps) {
-    const shape: ShapesTypes = properties[0] as ShapesTypes||rndItem(shapesNames);
+    const shape = properties[0] ||rndItem(shapesNames);
     let color = properties[1]||rndItem(colors);
     const size = Number(properties[2])||rndItem(sizes)
     const iconOnly = Boolean(properties[3])||false
-
-
 
     let shapeIcon = () => {
         if (shape == 'square') {

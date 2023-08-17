@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState, memo } from "react"
 import MiniGame, { MiniGameHandle } from "../Shared/MiniGame"
 import Droppable from "../Shared/DragDrop/Droppable"
 import Draggable from "../Shared/DragDrop/Draggable"
@@ -33,7 +33,7 @@ export default function Classification({ properties }: ClassificationProps) {
                 name = rndItem(containersNames);
             }
             names.push(name);
-        }console.log(2)
+        }
         setContainers(generateContainers(names))
         setItems(generateItems(names, numberOfContainers * rnd(2, 4), itemComponent, itemComponentProperties))
     }, [containersCount, containersNames,itemComponent, itemComponentProperties])
@@ -46,13 +46,13 @@ export default function Classification({ properties }: ClassificationProps) {
                     if (bx.length == 0) {
                         setTimeout(() => {
                             reset()
-                        }, 200);
+                        }, 500);
                     }
                     return bx
                 })
-                setContainers((dustbins) => {
-                    dustbins[index].components = [...dustbins[index].components, currentItem?.component]
-                    return dustbins
+                setContainers((containers) => {
+                    containers[index].components = [...containers[index].components, currentItem?.component]
+                    return containers
                 })
                 miniGameRef.current?.playGoodSound()
                 miniGameRef.current?.changeScore(1)
@@ -71,7 +71,8 @@ export default function Classification({ properties }: ClassificationProps) {
             const script = document.createElement("script");
             script.setAttribute("src", "/lib/js/dragdrop.js");
             document.body.appendChild(script);
-        }
+        }        
+
     }, [reset])
 
     return (
@@ -90,7 +91,7 @@ export default function Classification({ properties }: ClassificationProps) {
                                 border-2 
                                 rounded-xl 
                                 p-2 
-                                min-w-[auto] 
+                                min-w-[50px] 
                                 min-h-[100px]
                                 max-w-[150px]"
                             onDrop={(e) => handleDrop(index)}
@@ -105,7 +106,7 @@ export default function Classification({ properties }: ClassificationProps) {
 
                 <div className='flex flex-wrap justify-center gap-3 p-3 '>
                     {items.map((item, index) => (
-                        <Draggable clasName="cursor-move" key={index} onDragStart={(e) => setCurrentItem(item)}>
+                        <Draggable clasName="cursor-move" key={item.name} onDragStart={(e) => setCurrentItem(item)}>
                             {item.component}
                         </Draggable>
                     ))}
@@ -118,7 +119,6 @@ export default function Classification({ properties }: ClassificationProps) {
 function isTouchDevice() {
     return navigator.maxTouchPoints || "ontouchstart" in document.documentElement
 }
-
 
 ///********************************************************* Model */
 
@@ -133,7 +133,7 @@ export function generateItems(names: string[], count: number, component:string, 
         boxes.push(
             new ItemModel(
                 name + i,
-                <_Loader component={component} properties={componentProperties}></_Loader>
+                <_Loader component={component} properties={[name, ...componentProperties.slice(1)]} noLoading={true}></_Loader>
             )
         );
     }
