@@ -3,7 +3,7 @@ import path from 'path';
 
 import SummaryImage from './SummaryImage';
 import InConstruction from '../Shared/InConstruction';
-import DynamicComponent from '../dynamic/_Loader';
+import DynamicComponent from '../Shared/_Loader';
 interface ContentMediaProps {
     data: any
 }

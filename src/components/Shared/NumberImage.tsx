@@ -2,14 +2,13 @@
 import Image from 'next/image'
 interface NumberImageProps {
     number: string;
-    className: string;
-    onClick: any
+    className?: string;
+    onClick?: any
 }
-export default function NumberImage({ number, className, onClick }: NumberImageProps) {
-    const arr = number.split("")
+export default function NumberImage(props: NumberImageProps) {
+    const arr = props.number.split("")
     return (
-        <div className={className} onClick={onClick}>
-
+        <div className={props.className} onClick={props.onClick}>
             {arr.map((n, i) => (
                 <Image
                     src={`/images/content/numbers/small/${n}.png`}

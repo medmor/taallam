@@ -1,23 +1,24 @@
 'use client'
 import { useCallback, useEffect, useRef, useState, memo } from "react"
-import MiniGame, { MiniGameHandle } from "../Shared/MiniGame"
-import Droppable from "../Shared/DragDrop/Droppable"
-import Draggable from "../Shared/DragDrop/Draggable"
+import MiniGame, { MiniGameHandle } from "./MiniGame"
+import Droppable from "./DragDrop/Droppable"
+import Draggable from "./DragDrop/Draggable"
 import { rnd, rndItem } from "@/helpers/random"
 import { useTranslations } from "next-intl"
 import _Loader from "./_Loader"
 
-
-
 export interface ClassificationProps {
-    properties: string[] //Properties are an array of 
+    containersNames: string
+    containersCount:string
+    itemComponent: string
+    itemComponentProps:string
 }
 
-export default function Classification({ properties }: ClassificationProps) {
-    const [containersNames] = useState(properties[0].split(","))
-    const [containersCount] = useState(properties[1].split(",").map(n=>Number(n)))
-    const [itemComponent]  = useState( properties[2])
-    const [itemComponentProperties] = useState( properties.slice(3))
+export default function Classification(props: ClassificationProps) {
+    const [contsNames] = useState(props.containersNames.split(","))
+    const [contsCount] = useState(props.containersCount.split(",").map(n=>Number(n)))
+    const [itemComp]  = useState(props.itemComponent)
+    const [itemCompProps] = useState(props.itemComponentProps)
     const t = useTranslations("shapes")
     const miniGameRef = useRef<MiniGameHandle>(null)
     const [containers, setContainers] = useState<any[]>([])
@@ -25,18 +26,18 @@ export default function Classification({ properties }: ClassificationProps) {
     const [currentItem, setCurrentItem] = useState<{ name: string, component: React.ReactNode }>()
     
     const reset = useCallback(() => {
-        const numberOfContainers = rnd(containersCount[0], containersCount[1]);
+        const numberOfContainers = rnd(contsCount[0], contsCount[1]);
         const names: string[] = [];
         for (let i = 0; i < numberOfContainers; i++) {
-            let name = rndItem(containersNames);
+            let name = rndItem(contsNames);
             while (names.includes(name)) {
-                name = rndItem(containersNames);
+                name = rndItem(contsNames);
             }
             names.push(name);
         }
         setContainers(generateContainers(names))
-        setItems(generateItems(names, numberOfContainers * rnd(2, 4), itemComponent, itemComponentProperties))
-    }, [containersCount, containersNames,itemComponent, itemComponentProperties])
+        setItems(generateItems(names, numberOfContainers * rnd(2, 4), itemComp, itemCompProps))
+    }, [contsCount, contsNames,itemComp, itemCompProps])
     
     const handleDrop = useCallback(
         (index: number) => {
@@ -46,7 +47,7 @@ export default function Classification({ properties }: ClassificationProps) {
                     if (bx.length == 0) {
                         setTimeout(() => {
                             reset()
-                        }, 500);
+                        }, 1000);
                     }
                     return bx
                 })
@@ -126,35 +127,35 @@ function isTouchDevice() {
 const generateContainers = (names: string[]) =>
     names.map((name) => new ContainerModel(name, []));
 
-export function generateItems(names: string[], count: number, component:string, componentProperties:string[]) {
+export function generateItems(names: string[], count: number, component:string, componentProperties:string) {
     const boxes = [];
     for (let i = 0; i < count; i++) {
         const name = rndItem(names);
         boxes.push(
             new ItemModel(
                 name + i,
-                <_Loader component={component} properties={[name, ...componentProperties.slice(1)]} noLoading={true}></_Loader>
+                <_Loader component={component} properties={componentProperties} noLoading={true}></_Loader>
             )
         );
     }
     return boxes;
 }
 
-export function generateDndModel(containersCount:number[], containersNames:string[], itemComponentName:string) {
-    const numberOfContainers = rnd(containersCount[0], containersCount[1]);
-    const names: string[] = [];
-    for (let i = 0; i < numberOfContainers; i++) {
-        let name = rndItem(containersNames);
-        while (names.includes(name)) {
-            name = rndItem(containersNames);
-        }
-        names.push(name);
-    }
-    return new DndModel(
-        generateContainers(names),
-        generateItems(names, numberOfContainers * rnd(2, 4), "shapes", [])
-    );
-}
+// export function generateDndModel(containersCount:number[], containersNames:string[], itemComponentName:string) {
+//     const numberOfContainers = rnd(containersCount[0], containersCount[1]);
+//     const names: string[] = [];
+//     for (let i = 0; i < numberOfContainers; i++) {
+//         let name = rndItem(containersNames);
+//         while (names.includes(name)) {
+//             name = rndItem(containersNames);
+//         }
+//         names.push(name);
+//     }
+//     return new DndModel(
+//         generateContainers(names),
+//         generateItems(names, numberOfContainers * rnd(2, 4), "shapes", [])
+//     );
+// }
 
 export class DndModel {
     constructor(public containers: ContainerModel[], public items: ItemModel[]) { }

@@ -18,12 +18,16 @@ const sizes = [20, 24, 28, 32];
 
 export interface ShapesProps {
     properties: string[] //Properties are an array of two : the first item is shape string; the the second is the size of the shape
+    shape?: string
+    color?: string
+    size?: string
+    iconOnly?: string
 }
-export default function Shapes({ properties }: ShapesProps) {
-    const shape = properties[0] ||rndItem(shapesNames);
-    let color = properties[1]||rndItem(colors);
-    const size = Number(properties[2])||rndItem(sizes)
-    const iconOnly = Boolean(properties[3])||false
+export default function Shapes(props: ShapesProps) {
+    const shape = props.shape || rndItem(shapesNames);
+    let color = props.color || rndItem(colors);
+    const size = Number(props.size) || rndItem(sizes)
+    const iconOnly = Boolean(props.iconOnly) || false
 
     let shapeIcon = () => {
         if (shape == 'square') {
