@@ -6,6 +6,7 @@ import Draggable from "./DragDrop/Draggable"
 import { rnd, rndItem } from "@/helpers/random"
 import { useTranslations } from "next-intl"
 import _Loader from "./_Loader"
+import Script from "next/script"
 
 export interface ClassificationProps {
     containersNames: string
@@ -71,12 +72,6 @@ export default function Classification(props: ClassificationProps) {
 
     useEffect(() => {
         reset();
-        if (isTouchDevice()) {
-            const script = document.createElement("script");
-            script.setAttribute("src", "/lib/js/dragdrop.js");
-            document.body.appendChild(script);
-        }
-
     }, [reset])
 
     return (
@@ -116,12 +111,12 @@ export default function Classification(props: ClassificationProps) {
                     ))}
                 </div>
             </div>
+            {(navigator.maxTouchPoints ||
+                'ontouchstart' in document.documentElement) && (
+                    <Script src="/DragDropTouch.js" />
+                )}
         </MiniGame>
     )
-}
-
-function isTouchDevice() {
-    return navigator.maxTouchPoints || "ontouchstart" in document.documentElement
 }
 
 ///********************************************************* Model */
@@ -138,7 +133,7 @@ export function generateItems(names: string[], count: number, component: string,
         boxes.push(
             new ItemModel(
                 name + i,
-                <_Loader component={component} properties={{...componentProperties}} noLoading={true}></_Loader>
+                <_Loader component={component} properties={{ ...componentProperties }} noLoading={true}></_Loader>
             )
         );
     }
