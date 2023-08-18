@@ -15,7 +15,7 @@ export interface DynamicComponentProps {
     noLoading?:Boolean
 }
 
- const DynamicComponent = ({ component, properties, noLoading }: DynamicComponentProps) =>{
+ const Loader = ({ component, properties, noLoading }: DynamicComponentProps) =>{
     const json = typeof properties == "string"? JSON.parse(properties):properties;
     // const Dynamic =  dynamic<any>(() => import(`./${component}`), {
     //     loading: noLoading?()=><div></div>: () => (
@@ -32,4 +32,4 @@ export interface DynamicComponentProps {
     )
 }
 
-export default DynamicComponent
+export default Loader

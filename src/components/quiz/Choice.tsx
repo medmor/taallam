@@ -1,13 +1,13 @@
-import DynamicComponent from "../Shared/_Loader";
+import Loader from "../Shared/_Loader";
 import SummaryImage from "../content/SummaryImage";
 
 export default function Choice({ choice }: { choice: string }) {
     if (choice.startsWith('component?')) {
         const data = choice.split('?')
         const component = data[1]
-        const props = data[2].split("&")
+        const props = data[2]
 
-        return <DynamicComponent component={component} properties={props} />
+        return <Loader component={component} properties={props} />
     }
     else if (choice.startsWith('image?')) {
         const data = choice.split("?")
