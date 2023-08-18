@@ -5,10 +5,9 @@ interface NumberImageProps {
     number: string | number[];
     className?: string;
     onClick?: any
-    name?: string//for components used in classification
 }
 export default function NumberImage(props: NumberImageProps) {
-    if (props.name) props.number = props.name;
+
     const arr = typeof props.number == "string" ? props.number.split("") : rndItem(props.number).toString().split("")
     return (
         <div className={props.className} onClick={props.onClick}>

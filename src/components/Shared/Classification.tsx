@@ -9,22 +9,25 @@ import _Loader from "./_Loader"
 
 export interface ClassificationProps {
     containersNames: string
-    containersCount:string
+    containersCount: string
     itemComponent: string
-    itemComponentProps:string
+    itemComponentProps: string
+    propToChange: string
 }
 
 export default function Classification(props: ClassificationProps) {
     const [contsNames] = useState(props.containersNames.split(","))
-    const [contsCount] = useState(props.containersCount.split(",").map(n=>Number(n)))
-    const [itemComp]  = useState(props.itemComponent)
+    const [contsCount] = useState(props.containersCount.split(",").map(n => Number(n)))
+    const [itemComp] = useState(props.itemComponent)
     const [itemCompProps] = useState(props.itemComponentProps)
+    const [propToChange] = useState(props.propToChange)
+
     const t = useTranslations("shapes")
     const miniGameRef = useRef<MiniGameHandle>(null)
     const [containers, setContainers] = useState<any[]>([])
     const [items, setItems] = useState<any[]>([])
     const [currentItem, setCurrentItem] = useState<{ name: string, component: React.ReactNode }>()
-    
+
     const reset = useCallback(() => {
         const numberOfContainers = rnd(contsCount[0], contsCount[1]);
         const names: string[] = [];
@@ -36,9 +39,9 @@ export default function Classification(props: ClassificationProps) {
             names.push(name);
         }
         setContainers(generateContainers(names))
-        setItems(generateItems(names, numberOfContainers * rnd(2, 4), itemComp, itemCompProps))
-    }, [contsCount, contsNames,itemComp, itemCompProps])
-    
+        setItems(generateItems(names, numberOfContainers * rnd(2, 4), itemComp, itemCompProps, propToChange))
+    }, [contsCount, contsNames, itemComp, itemCompProps, propToChange])
+
     const handleDrop = useCallback(
         (index: number) => {
             if (currentItem?.name.startsWith(containers[index].name)) {
@@ -47,7 +50,7 @@ export default function Classification(props: ClassificationProps) {
                     if (bx.length == 0) {
                         setTimeout(() => {
                             reset()
-                        }, 1000);
+                        }, 300);
                     }
                     return bx
                 })
@@ -72,7 +75,7 @@ export default function Classification(props: ClassificationProps) {
             const script = document.createElement("script");
             script.setAttribute("src", "/lib/js/dragdrop.js");
             document.body.appendChild(script);
-        }        
+        }
 
     }, [reset])
 
@@ -127,15 +130,15 @@ function isTouchDevice() {
 const generateContainers = (names: string[]) =>
     names.map((name) => new ContainerModel(name, []));
 
-export function generateItems(names: string[], count: number, component:string, componentProperties:any) {
+export function generateItems(names: string[], count: number, component: string, componentProperties: any, propToChange: string) {
     const boxes = [];
     for (let i = 0; i < count; i++) {
-        const name:string = rndItem(names)
-        const props = {name:name, ...componentProperties}
+        const name: string = rndItem(names)
+        componentProperties[propToChange] = name
         boxes.push(
             new ItemModel(
                 name + i,
-                <_Loader component={component} properties={props} noLoading={true}></_Loader>
+                <_Loader component={component} properties={{...componentProperties}} noLoading={true}></_Loader>
             )
         );
     }

@@ -21,10 +21,9 @@ export interface ShapesProps {
     color?: string
     size?: string
     iconOnly?: string
-    name?: string // for components used in classification
 }
 export default function Shapes(props: ShapesProps) {
-    if (props.name) props.shape = props.name;
+
     const shape = props.shape || rndItem(shapesNames);
     let color = props.color || rndItem(colors);
     const size = Number(props.size) || rndItem(sizes)
