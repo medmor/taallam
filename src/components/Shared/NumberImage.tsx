@@ -1,15 +1,18 @@
 
+import { rndItem } from '@/helpers/random';
 import Image from 'next/image'
 interface NumberImageProps {
-    number: string;
+    number: string | number[];
     className?: string;
     onClick?: any
+    name?: string//for components used in classification
 }
 export default function NumberImage(props: NumberImageProps) {
-    const arr = props.number.split("")
+    if (props.name) props.number = props.name;
+    const arr = typeof props.number == "string" ? props.number.split("") : rndItem(props.number).toString().split("")
     return (
         <div className={props.className} onClick={props.onClick}>
-            {arr.map((n, i) => (
+            {arr.map((n: string, i: number) => (
                 <Image
                     src={`/images/content/numbers/small/${n}.png`}
                     alt={n}

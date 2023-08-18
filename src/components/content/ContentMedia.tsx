@@ -1,9 +1,8 @@
 'use client'
-import path from 'path';
 
 import SummaryImage from './SummaryImage';
 import InConstruction from '../Shared/InConstruction';
-import DynamicComponent from '../Shared/_Loader';
+import _Loader from '../Shared/_Loader';
 interface ContentMediaProps {
     data: any
 }
@@ -14,7 +13,7 @@ export default function ContentMedia({ data }: ContentMediaProps) {
         )
     }
     else if (data.type == 'component') {
-        return <DynamicComponent component={data.component} properties={data.properties} />
+        return <_Loader component={data.component} properties={data.properties} />
     }
     return (
         <InConstruction />

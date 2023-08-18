@@ -35,7 +35,7 @@ export async function parseSummary(
         medias.push({
           type: "component",
           component: data[1],
-          properties: data[2].split("&"),
+          properties: data[2],
         });
       } else if (value.startsWith("image?")) {
         const data = value.split("?");
@@ -110,3 +110,4 @@ function getValue(block: Block) {
   }
   return (block as any).content[0].value;
 }
+const d = {"containersNames":"triangle,square,circle,rectangle,star","containersCount":"2,4","itemComponent":"Shapes","itemComponentProps":{"shape":"","color":"","size":"","iconOnly":"true"}}

@@ -16,6 +16,7 @@ export interface DynamicComponentProps {
 }
 
  const DynamicComponent = ({ component, properties, noLoading }: DynamicComponentProps) =>{
+    const json = typeof properties == "string"? JSON.parse(properties):properties;
     // const Dynamic =  dynamic<any>(() => import(`./${component}`), {
     //     loading: noLoading?()=><div></div>: () => (
 
@@ -26,7 +27,7 @@ export interface DynamicComponentProps {
     // })
     return (
         //@ts-ignore
-        Components[component](JSON.parse(properties))
+        Components[component](json)
         // <Dynamic properties={properties} />
     )
 }

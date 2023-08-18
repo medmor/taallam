@@ -127,14 +127,15 @@ function isTouchDevice() {
 const generateContainers = (names: string[]) =>
     names.map((name) => new ContainerModel(name, []));
 
-export function generateItems(names: string[], count: number, component:string, componentProperties:string) {
+export function generateItems(names: string[], count: number, component:string, componentProperties:any) {
     const boxes = [];
     for (let i = 0; i < count; i++) {
-        const name = rndItem(names);
+        const name:string = rndItem(names)
+        const props = {name:name, ...componentProperties}
         boxes.push(
             new ItemModel(
                 name + i,
-                <_Loader component={component} properties={componentProperties} noLoading={true}></_Loader>
+                <_Loader component={component} properties={props} noLoading={true}></_Loader>
             )
         );
     }
