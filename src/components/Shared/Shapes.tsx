@@ -13,8 +13,8 @@ export const shapesNames: ShapesTypes[] = [
     "star",
     "triangle",
 ];
-const colors = ["red", "blue", "yellow", "purple", "green", "orange", "black"];
-const sizes = [20, 24, 28, 32];
+export const colors = ["red", "blue", "yellow", "purple", "green", "orange", "black"];
+export const sizes = [20, 24, 28, 32];
 
 export interface ShapesProps {
     shape?: string

@@ -7,21 +7,13 @@ import { rnd, rndItem } from "@/helpers/random"
 import { useTranslations } from "next-intl"
 import _Loader from "./_Loader"
 import Script from "next/script"
+import Shapes, { colors, shapesNames, sizes } from "./Shapes"
 
-export interface ClassificationProps {
-    containersNames: string
-    containersCount: string
-    itemComponent: string
-    itemComponentProps: string
-    propToChange: string
+export interface ShapesClassificationProps {
+
 }
 
-export default function Classification(props: ClassificationProps) {
-    const [contsNames] = useState(props.containersNames.split(","))
-    const [contsCount] = useState(props.containersCount.split(",").map(n => Number(n)))
-    const [itemComp] = useState(props.itemComponent)
-    const [itemCompProps] = useState(props.itemComponentProps)
-    const [propToChange] = useState(props.propToChange)
+export default function ShapesClassification(props: ShapesClassificationProps) {
 
     const t = useTranslations("shapes")
     const miniGameRef = useRef<MiniGameHandle>(null)
@@ -30,18 +22,18 @@ export default function Classification(props: ClassificationProps) {
     const [currentItem, setCurrentItem] = useState<{ name: string, component: React.ReactNode }>()
 
     const reset = useCallback(() => {
-        const numberOfContainers = rnd(contsCount[0], contsCount[1]);
+        const numberOfContainers = rnd(2, 4);
         const names: string[] = [];
         for (let i = 0; i < numberOfContainers; i++) {
-            let name = rndItem(contsNames);
+            let name = rndItem(shapesNames);
             while (names.includes(name)) {
-                name = rndItem(contsNames);
+                name = rndItem(shapesNames);
             }
             names.push(name);
         }
         setContainers(generateContainers(names))
-        setItems(generateItems(names, numberOfContainers * rnd(2, 4), itemComp, itemCompProps, propToChange))
-    }, [contsCount, contsNames, itemComp, itemCompProps, propToChange])
+        setItems(generateItems(names, numberOfContainers * rnd(2, 4)))
+    }, [])
 
     const handleDrop = useCallback(
         (index: number) => {
@@ -104,7 +96,7 @@ export default function Classification(props: ClassificationProps) {
                 </div>
 
                 <div className='flex flex-wrap justify-center gap-3 p-3 '>
-                    {items.map((item, index) => (
+                    {items.map((item) => (
                         <Draggable clasName="cursor-move" key={item.name} onDragStart={(e) => setCurrentItem(item)}>
                             {item.component}
                         </Draggable>
@@ -125,40 +117,20 @@ export default function Classification(props: ClassificationProps) {
 const generateContainers = (names: string[]) =>
     names.map((name) => new ContainerModel(name, []));
 
-export function generateItems(names: string[], count: number, component: string, componentProperties: any, propToChange: string) {
+export function generateItems(names: string[], count: number) {
     const boxes = [];
     for (let i = 0; i < count; i++) {
         const name: string = rndItem(names)
-        componentProperties[propToChange] = name
         boxes.push(
             new ItemModel(
                 name + i,
-                <_Loader component={component} properties={{ ...componentProperties }} noLoading={true}></_Loader>
+                <Shapes shape={name.slice()} color={rndItem(colors)} size={rndItem(sizes)} iconOnly="true"></Shapes>
             )
         );
     }
     return boxes;
 }
 
-// export function generateDndModel(containersCount:number[], containersNames:string[], itemComponentName:string) {
-//     const numberOfContainers = rnd(containersCount[0], containersCount[1]);
-//     const names: string[] = [];
-//     for (let i = 0; i < numberOfContainers; i++) {
-//         let name = rndItem(containersNames);
-//         while (names.includes(name)) {
-//             name = rndItem(containersNames);
-//         }
-//         names.push(name);
-//     }
-//     return new DndModel(
-//         generateContainers(names),
-//         generateItems(names, numberOfContainers * rnd(2, 4), "shapes", [])
-//     );
-// }
-
-export class DndModel {
-    constructor(public containers: ContainerModel[], public items: ItemModel[]) { }
-}
 export class ContainerModel {
     constructor(public name: string, public components: React.ReactNode[]) { }
 }
