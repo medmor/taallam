@@ -105,7 +105,7 @@ export default function ShapesClassification(props: ShapesClassificationProps) {
             </div>
             {(navigator.maxTouchPoints ||
                 'ontouchstart' in document.documentElement) && (
-                    <Script src="/DragDropTouch.js" />
+                    <Script src="/lib/js/DragDropTouch.js" />
                 )}
         </MiniGame>
     )
