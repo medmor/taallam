@@ -1,8 +1,10 @@
-import { useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import MiniGame from "./MiniGame"
-import { oneDTo2D, twoDTo1D } from "@/helpers/array"
+import { oneDTo2D, twoDTo1D, swap } from "@/helpers/array"
 import { Directions } from "@/types/Directions"
-import { animated, useSpring } from '@react-spring/web'
+import { animated, easings, useSpring } from '@react-spring/web'
+
+const SlideDuration = 200;
 
 interface SlidingPuzzleProps {
     items: string[]
@@ -13,25 +15,13 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
 
     const freeCell = props.items[props.items.length - 1]
 
-    const [cells, setCells] = useState(
-        props.items
-            .map(
-                (item, i) => {
-                    const xy = oneDTo2D(i, gridSize)
-                    return new Cell(item, xy.x, xy.y)
-                }
-            )
-    )
-
-
+    const [items, setItems] = useState(     props.items    )
 
     return (
         // <MiniGame saveKey={"SlidingPuzzle"+props.items.toString()}>
         <div className={`grid grid-cols-${gridSize} w-[300px] h-[300px] m-auto gap-3`}>
-            {cells.map(cell => (
-                cell.item != freeCell && (
-                    <CellComponent key={cell.item} cell={cell} cells={cells} setCells={setCells} freeCell={freeCell} gridSize={gridSize} />
-                )
+            {items.map((item, i) => (
+                <CellComponent key={i} index={i} item={item} items={items} setItems={setItems} freeItem={freeCell} gridSize={gridSize} />
             ))}
         </div>
         // </MiniGame>
@@ -42,90 +32,100 @@ export default SlidingPuzzle
 ////////////////////////////////////////Cell Component
 
 interface CellComponentProps {
-    cell: Cell
-    cells: Cell[]
-    setCells: any
-    freeCell: string
+    index: number
+    item:string
+    items: string[]
+    setItems: any
+    freeItem: string
     gridSize: number
 }
 const CellComponent = (props: CellComponentProps) => {
-
-    const [hover, setHover] = useState(false)
-    const [direction, setDirection] = useState<Directions>()
-    const { x } = useSpring({
-        x: hover ? 1 : 0,
-        config: { duration: 500 },
-    })
-    const [springs, api] = useSpring(()=>({
-        from: {x:0}
+    
+    const coordinates = oneDTo2D(props.index, props.gridSize)
+    const divRef = useRef(null)
+    const [springs, api] = useSpring(() => ({
+        from: { x: 0, y: 0, scale: 1 },
+        config: { duration: SlideDuration, easing: easings.easeInBack }
     }))
-
-    const handleCellClick = (direction?: Directions) => {
-        api.start({
-            from: {
-              x: 0,
-            },
-            to: {
-              x: 100,
-            },
-          })
-        if (!direction) {
-            return
-        }
-        //swap
-        switch (direction) {
+    const onSlideEnd = useCallback((dir: Directions) => {
+        api.set({})
+        switch (dir) {
             case 'bottom':
-                console.log("slide bottom")
+                props.setItems((cells: any) => swapBottom(cells, coordinates.x, coordinates.y, props.gridSize))
                 break
             case 'left':
-                console.log("slide left")
+                props.setItems((cells: any) => swapLeft(cells,coordinates.x, coordinates.y, props.gridSize))
                 break
             case 'right':
-                console.log('slide right')
+                props.setItems((cells: any) => swapRight(cells, coordinates.x, coordinates.y, props.gridSize))
                 break
             case 'top':
-                console.log('slide top')
+                props.setItems((cells: any) => swapTop(cells, coordinates.x, coordinates.y, props.gridSize))
                 break
         }
-    }
+    }, [props, api,coordinates.x, coordinates.y])
 
-    const slideDir = (): Directions | undefined => {
+    const slideDir = useCallback((): Directions | undefined => {
         if (
-            props.cell.x < props.gridSize - 1
-            && props.cells[(twoDTo1D(props.cell.x + 1, props.cell.y, props.gridSize))].item == props.freeCell
+            coordinates.x < props.gridSize - 1
+            && props.items[(twoDTo1D(coordinates.x + 1, coordinates.y, props.gridSize))] == props.freeItem
         ) {
             return 'right';
         }
         else if (
-            props.cell.x > 0
-            && props.cells[(twoDTo1D(props.cell.x - 1, props.cell.y, props.gridSize))].item == props.freeCell
+            coordinates.x > 0
+            && props.items[(twoDTo1D(coordinates.x - 1, coordinates.y, props.gridSize))] == props.freeItem
         ) {
             return 'left'
         }
         else if (
-            props.cell.y < props.gridSize - 1
-            && props.cells[(twoDTo1D(props.cell.x, props.cell.y + 1, props.gridSize))].item == props.freeCell
+            coordinates.y < props.gridSize - 1
+            && props.items[(twoDTo1D(coordinates.x, coordinates.y + 1, props.gridSize))] == props.freeItem
         ) {
             return 'bottom'
         } else if (
-            props.cell.y > 0
-            && props.cells[(twoDTo1D(props.cell.x, props.cell.y - 1, props.gridSize))].item == props.freeCell
+            coordinates.y > 0
+            && props.items[(twoDTo1D(coordinates.x, coordinates.y - 1, props.gridSize))] == props.freeItem
         ) {
             return 'top'
         }
-    }
+    }, [props, coordinates.x, coordinates.y])
+    const handleCellClick = useCallback(() => {
+        const dir = slideDir()
+        let toX = 0, toY = 0;
+        if (!dir) {
+            return
+        }
+        switch (dir) {
+            case 'bottom':
+                toY = 100
+                break
+            case 'left':
+                toX = -100
+                break
+            case 'right':
+                toX = 100
+                break
+            case 'top':
+                toY = -100
+                break
+        }
+        api.start({
+            from: { x: 0, y: 0 },
+            to: [{ x: toX, y: toY }, {x:0, y:0}],
+        })
+        setTimeout(() => {
+            onSlideEnd(dir)
+        }, SlideDuration-10);
+    }, [api, onSlideEnd, slideDir])
 
     return (
         <animated.div
-            onMouseEnter={()=>setHover(hover=>!hover)}
+            ref={divRef}
             style={{
-                scale: x.to({
-                    range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
-                    output: [1, 0.97, 0.9, 1.1, 0.9, 1.1, 1.03, 1],
-                }),
                 ...springs
             }}
-            className="
+            className={`
                     bg-indigo-500
                     rounded-xl
                     flex
@@ -134,22 +134,52 @@ const CellComponent = (props: CellComponentProps) => {
                     text-4xl
                     font-bold
                     cursor-pointer
-                    "
-            onClick={() => handleCellClick(slideDir())}
+                    select-none
+                    ${props.freeItem == props.item ? "opacity-0" : ""}
+                    `}
+            onClick={() => handleCellClick()}
         >
-            {props.cell.item}
+            {props.item}
         </animated.div>
     )
 }
 
 //////////////////////////////////////////Model
-class Cell {
-    constructor(
-        public item: string,
-        public x: number,
-        public y: number
-    ) {
-    }
-}
 
-////////////////////////////////////////////Helpers
+//////////////////////////////////////////Helpers
+function swapBottom(cells: string[], x:number, y:number, gridSize: number) {
+    return [
+        ...swap(
+            cells,
+            twoDTo1D(x, y, gridSize),
+            twoDTo1D(x, y + 1, gridSize)
+        )
+    ]
+}
+function swapTop(cells: string[], x:number, y:number, gridSize: number) {
+    return [
+        ...swap(
+            cells,
+            twoDTo1D(x, y, gridSize),
+            twoDTo1D(x, y - 1, gridSize)
+        )
+    ]
+}
+function swapLeft(cells: string[], x:number, y:number, gridSize: number) {
+    return [
+        ...swap(
+            cells,
+            twoDTo1D(x, y, gridSize),
+            twoDTo1D(x - 1, y, gridSize)
+        )
+    ]
+}
+function swapRight(cells: string[], x:number, y:number, gridSize: number) {
+    return [
+        ...swap(
+            cells,
+            twoDTo1D(x, y, gridSize),
+            twoDTo1D(x + 1, y, gridSize)
+        )
+    ]
+}

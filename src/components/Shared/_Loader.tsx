@@ -5,6 +5,7 @@ import Addition from "./Addition";
 import Multiplication from "./Multiplication";
 import NumberImage from "./NumberImage";
 import SlidingPuzzle from "./SlidingPuzzle";
+import { memo } from "react";
 
 const Components = {
     Shapes, ShapesClassification, Addition, Multiplication, NumberImage, SlidingPuzzle
@@ -23,4 +24,4 @@ export interface DynamicComponentProps {
     )
 }
 
-export default Loader
+export default memo( Loader)
