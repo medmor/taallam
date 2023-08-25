@@ -20,6 +20,7 @@ export default function ShapesClassification(props: ShapesClassificationProps) {
     const [containers, setContainers] = useState<any[]>([])
     const [items, setItems] = useState<any[]>([])
     const [currentItem, setCurrentItem] = useState<{ name: string, component: React.ReactNode }>()
+    const [isMobile, setIsMobile] = useState(false)
 
     const reset = useCallback(() => {
         const numberOfContainers = rnd(2, 4);
@@ -64,6 +65,7 @@ export default function ShapesClassification(props: ShapesClassificationProps) {
 
     useEffect(() => {
         reset();
+        setIsMobile(navigator.maxTouchPoints > 0 || 'ontouchstart' in document.documentElement)
     }, [reset])
 
     return (
@@ -103,10 +105,7 @@ export default function ShapesClassification(props: ShapesClassificationProps) {
                     ))}
                 </div>
             </div>
-            {(navigator.maxTouchPoints ||
-                'ontouchstart' in document.documentElement) && (
-                    <Script src="/lib/js/DragDropTouch.js" />
-                )}
+            {(isMobile) && (<Script src="/lib/js/DragDropTouch.js" />)}
         </MiniGame>
     )
 }
