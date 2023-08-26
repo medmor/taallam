@@ -14,7 +14,7 @@ interface SlidingPuzzleProps {
 const SlidingPuzzle = (props: SlidingPuzzleProps) => {
     const miniGameRef = useRef<MiniGameHandle>(null)
     const gridSize = Math.sqrt(props.items.length)
-    const freeCell = props.items[props.items.length - 1]
+    const freeItem = props.items[props.items.length - 1]
     const initialState = [...props.items]
     const [items, setItems] = useState<string[]>([])
 
@@ -23,15 +23,70 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
             miniGameRef.current?.callEndGame()
         }
     }
+
+    const swapItems = (dir:Directions, x:number, y:number)=> { // change x and y to index only
+        switch (dir) {
+            case 'bottom':
+                setItems((cells: any) => swapBottom(cells, x, y, gridSize))
+                break
+            case 'left':
+                setItems((cells: any) => swapLeft(cells, x, y, gridSize))
+                break
+            case 'right':
+                setItems((cells: any) => swapRight(cells, x, y, gridSize))
+                break
+            case 'top':
+                setItems((cells: any) => swapTop(cells, x, y, gridSize))
+                break
+        }
+        checkWin()
+    }
+
+    const getSlideDirection = useCallback((x:number, y:number): Directions | undefined => {
+        if (
+            x < gridSize - 1
+            && items[(twoDTo1D(x + 1, y, gridSize))] == freeItem
+        ) {
+            return 'right';
+        }
+        else if (
+            x > 0
+            && items[(twoDTo1D(x - 1, y, gridSize))] == freeItem
+        ) {
+            return 'left'
+        }
+        else if (
+            y < gridSize - 1
+            && items[(twoDTo1D(x, y + 1, gridSize))] == freeItem
+        ) {
+            return 'bottom'
+        } else if (
+            y > 0
+            && items[(twoDTo1D(x, y - 1, gridSize))] == freeItem
+        ) {
+            return 'top'
+        }
+    }, [freeItem, items, gridSize])
+
     useEffect(() => {
         setItems([...suffle(props.items, props.items.length - 1, gridSize)])
     }, [])
     return (
-        <MiniGame saveKey={"SlidingPuzzle" + props.items.toString()} hideScore countdown={60000}>
+        <MiniGame saveKey={"SlidingPuzzle" + props.items.toString()} hideScore countdown={60000} ref={miniGameRef}>
             <div className={`grid grid-cols-${gridSize} w-[300px] h-[300px] m-auto gap-3`}>
-                {items.map((item, i) => (
-                    <ItemComponent key={i} index={i} item={item} items={items} setItems={setItems} freeItem={freeCell} gridSize={gridSize} />
-                ))}
+                {items.map((item, i) => {
+                    const {x, y} = oneDTo2D(i, gridSize)
+                    const slideDir = getSlideDirection(x, y)
+                    return (
+                    <ItemComponent 
+                    key={i} 
+                    item={item} 
+                    slidDirection={slideDir}
+                    onSlideEnd={()=>swapItems(slideDir as Directions, x, y)}  
+                    hiden={item==freeItem}
+                    />
+                    )
+})}
             </div>
         </MiniGame>
     )
@@ -42,16 +97,13 @@ export default SlidingPuzzle
 ////////////////////////////////////////Cell Component
 
 interface ItemComponentProps {
-    index: number
     item: string
-    items: string[]
-    setItems: any
-    freeItem: string
-    gridSize: number
+    hiden?:boolean
+    slidDirection:Directions|undefined
+    onSlideEnd:()=>void
 }
 const ItemComponent = (props: ItemComponentProps) => {
 
-    const coordinates = oneDTo2D(props.index, props.gridSize)
     const divRef = useRef(null)
     const [springs, api] = useSpring(() => ({
         from: { x: 0, y: 0, scale: 1 },
@@ -59,53 +111,16 @@ const ItemComponent = (props: ItemComponentProps) => {
     }))
     const onSlideEnd = useCallback((dir: Directions) => {
         api.set({})
-        switch (dir) {
-            case 'bottom':
-                props.setItems((cells: any) => swapBottom(cells, coordinates.x, coordinates.y, props.gridSize))
-                break
-            case 'left':
-                props.setItems((cells: any) => swapLeft(cells, coordinates.x, coordinates.y, props.gridSize))
-                break
-            case 'right':
-                props.setItems((cells: any) => swapRight(cells, coordinates.x, coordinates.y, props.gridSize))
-                break
-            case 'top':
-                props.setItems((cells: any) => swapTop(cells, coordinates.x, coordinates.y, props.gridSize))
-                break
-        }
-    }, [props, api, coordinates.x, coordinates.y])
+        props.onSlideEnd()
+    }, [api, props])
 
-    const slideDir = useCallback((): Directions | undefined => {
-        if (
-            coordinates.x < props.gridSize - 1
-            && props.items[(twoDTo1D(coordinates.x + 1, coordinates.y, props.gridSize))] == props.freeItem
-        ) {
-            return 'right';
-        }
-        else if (
-            coordinates.x > 0
-            && props.items[(twoDTo1D(coordinates.x - 1, coordinates.y, props.gridSize))] == props.freeItem
-        ) {
-            return 'left'
-        }
-        else if (
-            coordinates.y < props.gridSize - 1
-            && props.items[(twoDTo1D(coordinates.x, coordinates.y + 1, props.gridSize))] == props.freeItem
-        ) {
-            return 'bottom'
-        } else if (
-            coordinates.y > 0
-            && props.items[(twoDTo1D(coordinates.x, coordinates.y - 1, props.gridSize))] == props.freeItem
-        ) {
-            return 'top'
-        }
-    }, [props, coordinates.x, coordinates.y])
+
     const handleCellClick = useCallback(() => {
-        const dir = slideDir()
-        let toX = 0, toY = 0;
+        const dir = props.slidDirection
         if (!dir) {
             return
         }
+        let toX = 0, toY = 0;
         switch (dir) {
             case 'bottom':
                 toY = 100
@@ -127,7 +142,7 @@ const ItemComponent = (props: ItemComponentProps) => {
         setTimeout(() => {
             onSlideEnd(dir)
         }, SlideDuration - 10);
-    }, [api, onSlideEnd, slideDir])
+    }, [api, onSlideEnd, props])
 
     return (
         <animated.div
@@ -145,7 +160,7 @@ const ItemComponent = (props: ItemComponentProps) => {
                     font-bold
                     cursor-pointer
                     select-none
-                    ${props.freeItem == props.item ? "opacity-0" : ""}
+                    ${props.hiden ? "opacity-0" : ""}
                     `}
             onClick={() => handleCellClick()}
         >

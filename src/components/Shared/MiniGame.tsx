@@ -45,7 +45,7 @@ const MiniGame = forwardRef<MiniGameHandle, MiniGameProps>(function MiniGame(pro
         }
         (countdownRef.current as any).start();
     }, [props.hideScore])
-    const gameEnded = useCallback(() => {
+    const gameEnded = useCallback(() => {console.log('game ended')
         setState('ended');
         (countdownRef.current as any).stop();
         if (props.hideScore != true) {
