@@ -1,6 +1,6 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from "react"
-import MiniGame from "./MiniGame"
+import MiniGame, { MiniGameHandle } from "./MiniGame"
 import { oneDTo2D, twoDTo1D, swap, suffle } from "@/helpers/array"
 import { Directions } from "@/types/Directions"
 import { animated, easings, useSpring } from '@react-spring/web'
@@ -12,21 +12,27 @@ interface SlidingPuzzleProps {
 }
 
 const SlidingPuzzle = (props: SlidingPuzzleProps) => {
+    const miniGameRef = useRef<MiniGameHandle>(null)
     const gridSize = Math.sqrt(props.items.length)
-
     const freeCell = props.items[props.items.length - 1]
     const initialState = [...props.items]
     const [items, setItems] = useState<string[]>([])
+
+    const checkWin = ()=> {
+        if(initialState.every((item, i)=>item==items[i])){
+            miniGameRef.current?.callEndGame()
+        }
+    }
     useEffect(() => {
         setItems([...suffle(props.items, props.items.length - 1, gridSize)])
     }, [])
     return (
-        <MiniGame saveKey={"SlidingPuzzle"+props.items.toString()}>
-        <div className={`grid grid-cols-${gridSize} w-[300px] h-[300px] m-auto gap-3`}>
-            {items.map((item, i) => (
-                <CellComponent key={i} index={i} item={item} items={items} setItems={setItems} freeItem={freeCell} gridSize={gridSize} />
-            ))}
-        </div>
+        <MiniGame saveKey={"SlidingPuzzle" + props.items.toString()} hideScore countdown={60000}>
+            <div className={`grid grid-cols-${gridSize} w-[300px] h-[300px] m-auto gap-3`}>
+                {items.map((item, i) => (
+                    <ItemComponent key={i} index={i} item={item} items={items} setItems={setItems} freeItem={freeCell} gridSize={gridSize} />
+                ))}
+            </div>
         </MiniGame>
     )
 
@@ -35,7 +41,7 @@ export default SlidingPuzzle
 
 ////////////////////////////////////////Cell Component
 
-interface CellComponentProps {
+interface ItemComponentProps {
     index: number
     item: string
     items: string[]
@@ -43,7 +49,7 @@ interface CellComponentProps {
     freeItem: string
     gridSize: number
 }
-const CellComponent = (props: CellComponentProps) => {
+const ItemComponent = (props: ItemComponentProps) => {
 
     const coordinates = oneDTo2D(props.index, props.gridSize)
     const divRef = useRef(null)

@@ -69,7 +69,7 @@ export default function ShapesClassification(props: ShapesClassificationProps) {
     }, [reset])
 
     return (
-        <MiniGame saveKey='classificationBestScore' onTimeEnd={reset} ref={miniGameRef}>
+        <MiniGame saveKey='classificationBestScore' onGameEnded={reset} ref={miniGameRef}>
             <div className='bg-white p-2 rounded-xl'>
                 <div className='flex flex-wrap justify-center gap-2 p-3 mb-2 border-b-2'>
                     {containers.map(({ components, name }, index) => (
