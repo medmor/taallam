@@ -4,6 +4,7 @@ import MiniGame, { MiniGameHandle } from "./MiniGame"
 import { oneDTo2D, twoDTo1D, swap, suffle } from "@/helpers/array"
 import { Directions } from "@/types/Directions"
 import { animated, easings, useSpring } from '@react-spring/web'
+import Image from "next/image"
 
 const SlideDuration = 200;
 
@@ -14,17 +15,28 @@ interface SlidingPuzzleProps {
 const SlidingPuzzle = (props: SlidingPuzzleProps) => {
     const miniGameRef = useRef<MiniGameHandle>(null)
     const gridSize = Math.sqrt(props.items.length)
-    const freeItem = props.items[props.items.length - 1]
+    const [freeItem, setFreeItem] = useState(props.items[props.items.length - 1])
     const initialState = [...props.items]
     const [items, setItems] = useState<string[]>([])
+    const [loseAudio, setLoseAudio] = useState<HTMLAudioElement>();
+    const [winAudio, setWinAudi] = useState<HTMLAudioElement>();
+    const [slideAudio, setSlideAudio] = useState<HTMLAudioElement>();
+    const [showWinGif, setShwoWinGif] = useState(false)
 
-    const checkWin = ()=> {
-        if(initialState.every((item, i)=>item==items[i])){
-            miniGameRef.current?.callEndGame()
+
+    const checkWin = () => {
+        if (initialState.every((item, i) => item == items[i])) {
+            miniGameRef.current?.stopCounter()
+            winAudio?.play()
+            setFreeItem("none")
+            setShwoWinGif(true)
+            setTimeout(() => {
+                miniGameRef.current?.callEndGame()
+            }, 3000);
         }
     }
 
-    const swapItems = (dir:Directions, x:number, y:number)=> { // change x and y to index only
+    const swapItems = (dir: Directions, x: number, y: number) => {
         switch (dir) {
             case 'bottom':
                 setItems((cells: any) => swapBottom(cells, x, y, gridSize))
@@ -42,7 +54,7 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
         checkWin()
     }
 
-    const getSlideDirection = useCallback((x:number, y:number): Directions | undefined => {
+    const getSlideDirection = useCallback((x: number, y: number): Directions | undefined => {
         if (
             x < gridSize - 1
             && items[(twoDTo1D(x + 1, y, gridSize))] == freeItem
@@ -68,25 +80,53 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
         }
     }, [freeItem, items, gridSize])
 
+    const reset = useCallback(() => {
+        setItems([...suffle([...props.items], props.items.length - 1, gridSize)])
+        setFreeItem(props.items[props.items.length - 1])
+        setShwoWinGif(false)
+    }, [gridSize, props.items])
+
     useEffect(() => {
-        setItems([...suffle(props.items, props.items.length - 1, gridSize)])
+        setWinAudi(new Audio("/audios/effects/applause.mp3"))
+        setLoseAudio(new Audio("/audios/effects/lose.mp3"))
+        setSlideAudio(new Audio("/audios/effects/slide.mp3"))
     }, [])
+
     return (
-        <MiniGame saveKey={"SlidingPuzzle" + props.items.toString()} hideScore countdown={60000} ref={miniGameRef}>
+        <MiniGame
+            saveKey={"SlidingPuzzle" + props.items.toString()}
+            hideScore countdown={60000}
+            ref={miniGameRef}
+            onStart={() => reset()}
+            onGameEnded={() => loseAudio?.play()}
+        >
             <div className={`grid grid-cols-${gridSize} w-[300px] h-[300px] m-auto gap-3`}>
+                {
+                    showWinGif && (
+                        <Image
+                            src="https://i.gifer.com/6SSp.gif"
+                            alt="win gif"
+                            className="absolute w-full h-full top-0 left-0"
+                            width={300}
+                            height={300}
+                        />
+                    )
+                }
+
                 {items.map((item, i) => {
-                    const {x, y} = oneDTo2D(i, gridSize)
+                    const { x, y } = oneDTo2D(i, gridSize)
                     const slideDir = getSlideDirection(x, y)
                     return (
-                    <ItemComponent 
-                    key={i} 
-                    item={item} 
-                    slidDirection={slideDir}
-                    onSlideEnd={()=>swapItems(slideDir as Directions, x, y)}  
-                    hiden={item==freeItem}
-                    />
+                        <ItemComponent
+                            key={i}
+                            item={item}
+                            slidDirection={slideDir}
+                            onSlideEnd={() => swapItems(slideDir as Directions, x, y)}
+                            hiden={item == freeItem}
+                            slideAudio={slideAudio as HTMLAudioElement}
+                        />
                     )
-})}
+                })}
             </div>
         </MiniGame>
     )
@@ -98,9 +138,10 @@ export default SlidingPuzzle
 
 interface ItemComponentProps {
     item: string
-    hiden?:boolean
-    slidDirection:Directions|undefined
-    onSlideEnd:()=>void
+    hiden?: boolean
+    slidDirection: Directions | undefined
+    onSlideEnd: () => void
+    slideAudio: HTMLAudioElement
 }
 const ItemComponent = (props: ItemComponentProps) => {
 
@@ -120,6 +161,8 @@ const ItemComponent = (props: ItemComponentProps) => {
         if (!dir) {
             return
         }
+        props.slideAudio.currentTime = 0
+        props.slideAudio.play()
         let toX = 0, toY = 0;
         switch (dir) {
             case 'bottom':

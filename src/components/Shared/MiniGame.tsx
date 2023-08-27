@@ -23,6 +23,7 @@ export interface MiniGameHandle {
     changeScore: (amount: number) => void
     changeErrors: (amount: number) => void
     callEndGame: () => void
+    stopCounter:()=>void
 }
 
 
@@ -44,8 +45,11 @@ const MiniGame = forwardRef<MiniGameHandle, MiniGameProps>(function MiniGame(pro
             setErrors(0);
         }
         (countdownRef.current as any).start();
-    }, [props.hideScore])
-    const gameEnded = useCallback(() => {console.log('game ended')
+        if(props.onStart){
+            props.onStart()
+        }
+    }, [ props ])
+    const gameEnded = useCallback(() => {
         setState('ended');
         (countdownRef.current as any).stop();
         if (props.hideScore != true) {
@@ -72,7 +76,8 @@ const MiniGame = forwardRef<MiniGameHandle, MiniGameProps>(function MiniGame(pro
             playGoodSound: () => goodAudio?.play(),
             changeScore: (amount) => setScore(score => score + amount),
             changeErrors: (amount) => setErrors(errors => errors + amount),
-            callEndGame: ()=> gameEnded()
+            callEndGame: ()=> gameEnded(),
+            stopCounter:()=>(countdownRef.current as any).stop()
         }
     }, [goodAudio, wrongAudio, gameEnded])
 
