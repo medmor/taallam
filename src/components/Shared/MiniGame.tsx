@@ -2,7 +2,7 @@
 
 import { GameState } from "@/types/GameState";
 import { useCallback, useRef, useState, forwardRef, useImperativeHandle, useEffect } from "react";
-import Countdown from 'react-countdown';
+import Countdown, {zeroPad} from 'react-countdown';
 import Button from "./Button";
 import { useTranslations } from "next-intl";
 
@@ -33,7 +33,7 @@ const MiniGame = forwardRef<MiniGameHandle, MiniGameProps>(function MiniGame(pro
     const [errors, setErrors] = useState(0)
     const [bestScore, setBestScore] = useState(Infinity);
     const countdownRef = useRef(null);
-    const [countdownDate] = useState(Date.now() + (props.countdown ? props.countdown : 100000));
+    const [countdownDate] = useState(Date.now() + (props.countdown ? props.countdown : 300000));
 
     const [wrongAudio, setWrongAudio] = useState<HTMLAudioElement>()
     const [goodAudio, setGoodAudio] = useState<HTMLAudioElement>()
@@ -105,7 +105,7 @@ const MiniGame = forwardRef<MiniGameHandle, MiniGameProps>(function MiniGame(pro
                         renderer={
                             (props) => (
                                 <div className="absolute top-1 right-5  font-semibold">
-                                    {props.minutes} : {props.seconds}
+                                    {zeroPad(props.minutes)} : {zeroPad(props.seconds)}
                                 </div>
                             )
                         }

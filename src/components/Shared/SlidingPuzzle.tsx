@@ -32,7 +32,7 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
             setShwoWinGif(true)
             setTimeout(() => {
                 miniGameRef.current?.callEndGame()
-            }, 3000);
+            }, 5000);
         }
     }
 
@@ -95,7 +95,8 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
     return (
         <MiniGame
             saveKey={"SlidingPuzzle" + props.items.toString()}
-            hideScore countdown={60000}
+            hideScore
+            countdown={200000}
             ref={miniGameRef}
             onStart={() => reset()}
             onGameEnded={() => loseAudio?.play()}
@@ -194,12 +195,13 @@ const ItemComponent = (props: ItemComponentProps) => {
                 ...springs
             }}
             className={`
-                    bg-indigo-500
+                    bg-cyan-300
                     rounded-xl
                     flex
                     items-center
                     justify-center
                     text-4xl
+                    text-blue-800
                     font-bold
                     cursor-pointer
                     select-none
