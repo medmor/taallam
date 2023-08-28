@@ -99,7 +99,7 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
             countdown={200000}
             ref={miniGameRef}
             onStart={() => reset()}
-            onGameEnded={() => loseAudio?.play()}
+            onGameEnded={() => { if (!showWinGif) loseAudio?.play() }}
         >
             <div className={`grid grid-cols-${gridSize} w-[300px] h-[300px] m-auto gap-3`}>
                 {
