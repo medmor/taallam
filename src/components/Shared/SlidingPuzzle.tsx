@@ -5,6 +5,7 @@ import { oneDTo2D, twoDTo1D, swap, suffle } from "@/helpers/array"
 import { Directions } from "@/types/Directions"
 import { animated, easings, useSpring } from '@react-spring/web'
 import Image from "next/image"
+import { useLocale } from "next-intl"
 
 const SlideDuration = 200;
 
@@ -13,6 +14,7 @@ interface SlidingPuzzleProps {
 }
 
 const SlidingPuzzle = (props: SlidingPuzzleProps) => {
+    const locale = useLocale()
     const miniGameRef = useRef<MiniGameHandle>(null)
     const gridSize = Math.sqrt(props.items.length)
     const [freeItem, setFreeItem] = useState(props.items[props.items.length - 1])
@@ -22,7 +24,7 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
     const [winAudio, setWinAudi] = useState<HTMLAudioElement>();
     const [slideAudio, setSlideAudio] = useState<HTMLAudioElement>();
     const [showWinGif, setShwoWinGif] = useState(false)
-
+    console.log(locale)
 
     const checkWin = () => {
         if (initialState.every((item, i) => item == items[i])) {
@@ -101,7 +103,7 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
             onStart={() => reset()}
             onGameEnded={() => { if (!showWinGif) loseAudio?.play() }}
         >
-            <div className={`grid grid-cols-${gridSize} w-[300px] h-[300px] m-auto gap-3`}>
+            <div className={`grid grid-cols-${gridSize} w-[300px] h-[300px] m-auto gap-3`} dir={locale=="en"?"ltr":"rtl"}>
                 {
                     showWinGif && (
                         <Image

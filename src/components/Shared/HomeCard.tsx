@@ -1,5 +1,7 @@
+'use client'
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 export interface HomeCardProps {
     label: string;
     href: string;
@@ -7,6 +9,7 @@ export interface HomeCardProps {
     createdAt?: string;
 }
 export default function HomeCard({ label, href, imageUrl, createdAt }: HomeCardProps) {
+    const [src, setSrc] = useState(imageUrl)
     let createdAtSpan: any = undefined
     if (createdAt) {
         const date = new Date(createdAt);
@@ -29,13 +32,14 @@ export default function HomeCard({ label, href, imageUrl, createdAt }: HomeCardP
                 h-full"
             >
                 {
-                    imageUrl && (
+                    src && (
                         <Image
                             className="rounded-lg mb-2 m-auto"
-                            src={imageUrl} alt='label'
+                            src={src} alt='label'
                             width="200"
                             height="200"
                             unoptimized
+                            onError={()=>setSrc("/images/logo.png")}
                         />
                     )
                 }
