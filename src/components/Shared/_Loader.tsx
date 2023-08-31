@@ -16,12 +16,12 @@ export interface DynamicComponentProps {
     properties: string
 }
 
- const Loader = ({ component, properties }: DynamicComponentProps) =>{
-    const json = typeof properties == "string"? JSON.parse(properties):properties;
+const Loader = ({ component, properties }: DynamicComponentProps) => {
+    const json = typeof properties == "string" ? JSON.parse(properties) : properties;
     return (
         //@ts-ignore
         Components[component](json)
     )
 }
 
-export default memo( Loader)
+export default memo(Loader)
