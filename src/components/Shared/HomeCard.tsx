@@ -9,7 +9,7 @@ export interface HomeCardProps {
     createdAt?: string;
 }
 export default function HomeCard({ label, href, imageUrl, createdAt }: HomeCardProps) {
-    const [src, setSrc] = useState(imageUrl)
+    const [src, setSrc] = useState(imageUrl || "")
     let createdAtSpan: any = undefined
     if (createdAt) {
         const date = new Date(createdAt);
@@ -32,16 +32,14 @@ export default function HomeCard({ label, href, imageUrl, createdAt }: HomeCardP
                 h-full"
             >
                 {
-                    src && (
-                        <Image
-                            className="rounded-lg mb-2 m-auto"
-                            src={src} alt='label'
-                            width="200"
-                            height="200"
-                            unoptimized
-                            onError={()=>setSrc("/images/logo.png")}
-                        />
-                    )
+                    <Image
+                        className="rounded-lg mb-2 m-auto"
+                        src={src} alt='label'
+                        width="200"
+                        height="200"
+                        unoptimized
+                        onError={() => setSrc("/images/logo.png")}
+                    />
                 }
                 <div >
                     <div className='font-bold text-xl'>

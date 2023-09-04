@@ -14,7 +14,7 @@ export const getEntries = async (
   const query: any = {
     content_type: contentId,
     locale,
-    select: "sys.id, fields.title, sys.createdAt",
+    select: "sys.id, sys.createdAt, fields.title, fields.cardImage",
     order: "sys.createdAt",
   };
 

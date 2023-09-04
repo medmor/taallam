@@ -24,7 +24,6 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
     const [winAudio, setWinAudi] = useState<HTMLAudioElement>();
     const [slideAudio, setSlideAudio] = useState<HTMLAudioElement>();
     const [showWinGif, setShwoWinGif] = useState(false)
-    console.log(locale)
 
     const checkWin = () => {
         if (initialState.every((item, i) => item == items[i])) {

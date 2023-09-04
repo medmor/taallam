@@ -1,13 +1,13 @@
 import { useLocale } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
+import { getTranslator } from 'next-intl/server';
 
 import { getEntryById } from '@/lib/contentful/client'
 import { parseQuizzes, parseSummary } from '@/lib/contentful/helpers';
 import CourseContent from '@/components/content/CourseContent';
 
 
-export async function generateMetadata() {
-    const t = await getTranslations('home');
+export async function generateMetadata({ params: { locale } }: any) {
+    const t = await getTranslator(locale, 'home');
     return {
         title: t("metadataTitle"),
         description: t("metadataDescription")
