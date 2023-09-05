@@ -9,7 +9,7 @@
     "node_modules": true,
     ".vscode": true,
     ".eslintrc.json": true,
-    ".gitignore": true,
+    ".gitignore": false,
     "next-env.d.ts": true,
     "tsconfig.json": true,
     "pnpm-lock.yaml": true,
