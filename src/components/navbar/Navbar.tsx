@@ -65,9 +65,9 @@ export default function Navbar() {
                         active={isActif('stories')}
                     />
                 </ul>
-                <div className="flex justify-end">
+                {/* <div className="flex justify-end">
                     <ChangeLanguage />
-                </div>
+                </div> */}
             </div>
         </nav>
     )

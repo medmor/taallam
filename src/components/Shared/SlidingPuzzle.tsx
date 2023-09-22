@@ -40,16 +40,16 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
     const swapItems = (dir: Directions, x: number, y: number) => {
         switch (dir) {
             case 'bottom':
-                setItems((cells: any) => swapBottom(cells, x, y, gridSize))
+                setItems(swapBottom(items, x, y, gridSize))
                 break
             case 'left':
-                setItems((cells: any) => swapLeft(cells, x, y, gridSize))
+                setItems(swapLeft(items, x, y, gridSize))
                 break
             case 'right':
-                setItems((cells: any) => swapRight(cells, x, y, gridSize))
+                setItems(swapRight(items, x, y, gridSize))
                 break
             case 'top':
-                setItems((cells: any) => swapTop(cells, x, y, gridSize))
+                setItems(swapTop(items, x, y, gridSize))
                 break
         }
         checkWin()
@@ -102,7 +102,7 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
             onStart={() => reset()}
             onGameEnded={() => { if (!showWinGif) loseAudio?.play() }}
         >
-            <div className={`grid grid-cols-${gridSize} w-[300px] h-[300px] m-auto gap-3`} dir={locale=="en"?"ltr":"rtl"}>
+            <div className={`grid grid-cols-${gridSize} w-[300px] h-[300px] m-auto gap-3`} dir={locale == "en" ? "ltr" : "rtl"}>
                 {
                     showWinGif && (
                         <Image
@@ -148,14 +148,14 @@ interface ItemComponentProps {
 const ItemComponent = (props: ItemComponentProps) => {
 
     const divRef = useRef(null)
-    const [springs, api] = useSpring(() => ({
-        from: { x: 0, y: 0, scale: 1 },
-        config: { duration: SlideDuration, easing: easings.easeInBack }
-    }))
-    const onSlideEnd = useCallback((dir: Directions) => {
-        api.set({})
+    // const [springs, api] = useSpring(() => ({
+    //     from: { x: 0, y: 0, scale: 1 },
+    //     config: { duration: SlideDuration, easing: easings.easeInBack }
+    // }))
+    const onSlideEnd = useCallback(() => {
+        // api.set({})
         props.onSlideEnd()
-    }, [api, props])
+    }, [/*api, */props])
 
 
     const handleCellClick = useCallback(() => {
@@ -165,36 +165,36 @@ const ItemComponent = (props: ItemComponentProps) => {
         }
         props.slideAudio.currentTime = 0
         props.slideAudio.play()
-        let toX = 0, toY = 0;
-        switch (dir) {
-            case 'bottom':
-                toY = 100
-                break
-            case 'left':
-                toX = -100
-                break
-            case 'right':
-                toX = 100
-                break
-            case 'top':
-                toY = -100
-                break
-        }
-        api.start({
-            from: { x: 0, y: 0 },
-            to: [{ x: toX, y: toY }, { x: 0, y: 0 }],
-        })
-        setTimeout(() => {
-            onSlideEnd(dir)
-        }, SlideDuration - 10);
-    }, [api, onSlideEnd, props])
+        // let toX = 0, toY = 0;
+        // switch (dir) {
+        //     case 'bottom':
+        //         toY = 100
+        //         break
+        //     case 'left':
+        //         toX = -100
+        //         break
+        //     case 'right':
+        //         toX = 100
+        //         break
+        //     case 'top':
+        //         toY = -100
+        //         break
+        // }
+        // api.start({
+        //     from: { x: 0, y: 0 },
+        //     to: [{ x: toX, y: toY }, { x: 0, y: 0 }],
+        // })
+        // setTimeout(() => {
+        onSlideEnd()
+        // }, SlideDuration - 10);
+    }, [/*api,*/ onSlideEnd, props])
 
     return (
         <animated.div
             ref={divRef}
-            style={{
-                ...springs
-            }}
+            // style={{
+            //     ...springs
+            // }}
             className={`
                     bg-cyan-300
                     rounded-xl
