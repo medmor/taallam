@@ -1,8 +1,10 @@
 'use client'
 
-import { useLocale, useTranslations } from "next-intl"
 import { useEffect } from "react";
+import { useLocale, useTranslations } from "next-intl"
 import { usePathname } from "next/navigation";
+import "@/styles/commentBox.css"
+
 export default function HtmlCommentsBox(params: any) {
     const pathName = usePathname();
     const t = useTranslations("commentBox");
@@ -37,7 +39,9 @@ export default function HtmlCommentsBox(params: any) {
 
                 msg_thankyou: "شكرا على التعليق",
                 msg_approval: "ملاحظة: لا يتم نشر هذا التعليق حتى تتم الموافقة عليه",
-                msg_approval_required: "شكرا على التعليق! سيظهر تعليقك بمجرد الموافقة عليه من قبل الوسيط."
+                msg_approval_required: "شكرا على التعليق! سيظهر تعليقك بمجرد الموافقة عليه من قبل الوسيط.",
+
+                anonymous: "مجهول الاسم :"
             };
         }
         const s = document.createElement("script"),

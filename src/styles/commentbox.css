@@ -1,0 +1,17 @@
+.comment {
+  padding: 5px;
+  margin: 10px !important;
+  border: 2px Gainsboro solid;
+  border: radius 5px;
+}
+.home-desc {
+  display: none;
+}
+#HCB_comment_box a {
+    display: none;
+}
+#HCB_comment_box span {
+  display: inline-block;
+  direction: rtl;
+  margin: 0 5px;
+}
