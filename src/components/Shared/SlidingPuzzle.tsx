@@ -106,7 +106,7 @@ const SlidingPuzzle = (props: SlidingPuzzleProps) => {
                 {
                     showWinGif && (
                         <Image
-                            src="https://i.gifer.com/6SSp.gif"
+                            src="/images/win.gif"
                             alt="win gif"
                             className="absolute w-full h-full top-0 left-0"
                             width={300}
