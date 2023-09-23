@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl"
 import { usePathname } from "next/navigation";
-import "@/styles/commentBox.css"
+import "@/styles/commentbox.css"
 
 export default function HtmlCommentsBox(params: any) {
     const pathName = usePathname();
