@@ -17,4 +17,5 @@
 }
 .likes {
   left: 5px !important;
+  right: auto !important;
 }
