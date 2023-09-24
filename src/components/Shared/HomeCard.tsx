@@ -33,7 +33,7 @@ export default function HomeCard({ label, href, imageUrl, createdAt }: HomeCardP
             >
                 {
                     <Image
-                        className="rounded-lg mb-2 m-auto"
+                        className="rounded-lg mb-2 m-auto sm:w-52 w-full"
                         src={src} alt='label'
                         width="200"
                         height="200"
