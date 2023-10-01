@@ -52,9 +52,10 @@ export default function Mcq({ quiz, setScore }: McqProps) {
                                     setSelected(choice)
                                     if (choice == quiz.answer) {
                                         setScore((score: number) => score + 1)
-                                    } else {
-                                        setScore((score: number) => score - 1)
-                                    }
+                                    } 
+                                    // else {
+                                    //     setScore((score: number) => score - 1)
+                                    // }
                                 }
                             }
                             }
