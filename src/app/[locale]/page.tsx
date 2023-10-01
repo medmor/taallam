@@ -24,11 +24,11 @@ export default function Home() {
           className='rounded-full m-auto mb-5'
           src='/images/home/hibahamza.jpg'
           alt='hiba hamza image'
-          width={300}
-          height={300}
+          width={400}
+          height={400}
           unoptimized
         />
-        {t("heading")}
+        {/* {t("heading")} */}
       </div>
       <div className="flex flex-wrap justify-center gap-5 p-10">
         <HomeCard
