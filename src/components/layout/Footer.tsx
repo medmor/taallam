@@ -14,7 +14,7 @@ export default function Footer(props: any) {
             </Link>
             <div>Images from
                 <a className="mx-4 text-orange-600 font-semibold" target="blank" href="https://www.freepik.com/">
-                    Designed Freepik
+                    Designed by Freepik
                 </a>
             </div>
         </div>
