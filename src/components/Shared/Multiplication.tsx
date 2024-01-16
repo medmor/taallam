@@ -58,7 +58,7 @@ export default function Multiplication(props: MultiplicationProps) {
 
 
     return (
-        <MiniGame saveKey={saveKey} ref={miniGameRef}>
+        <MiniGame saveKey={saveKey} ref={miniGameRef} countdown={60000}>
 
             <div className="flex flex-col justify-between items-center gap-2">
                 <div className="flex">

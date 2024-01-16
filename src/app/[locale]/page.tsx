@@ -1,13 +1,13 @@
 
 import { useLocale, useTranslations, } from 'next-intl';
-import { getTranslator } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 
 import HomeCard from '@/components/Shared/HomeCard';
 import Image from 'next/image';
 
 
-export async function generateMetadata({ params: { locale } }: any) {
-  const t = await getTranslator(locale, 'home');
+export async function generateMetadata() {
+  const t = await getTranslations('home');
   return {
     title: t("metadataTitle"),
     description: t("metadataDescription")
