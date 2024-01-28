@@ -16,7 +16,8 @@
     "postcss.config.js": true,
     "README.md": true,
     ".next": true,
-    "i18n.ts": true
+    "i18n.ts": true,
+    "package-lock.json": true
   },
   "explorerExclude.backup": {},
   "typescript.tsdk": "node_modules\\.pnpm\\typescript@5.1.3\\node_modules\\typescript\\lib",
