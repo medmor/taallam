@@ -1,5 +1,5 @@
 
-import { useLocale, useTranslations, } from 'next-intl';
+import { useTranslations, } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 
 import HomeCard from '@/components/Shared/HomeCard';
@@ -13,9 +13,14 @@ export async function generateMetadata() {
     description: t("metadataDescription")
   }
 }
-export default function Home() {
+
+interface HomeProps {
+  params: {
+    locale: string;
+  }
+}
+export default function Home({ params }: HomeProps) {
   const t = useTranslations('home');
-  const locale = useLocale()
 
   return (
     <div className="min-h-[85vh] flex flex-col border-t-orange-200 border-t ">
@@ -33,17 +38,17 @@ export default function Home() {
       <div className="flex flex-wrap justify-center gap-5 p-10">
         <HomeCard
           label={t("Preschool")}
-          href={`/${locale}/courses/preschool2`}
+          href={`/${params.locale}/courses/preschool2`}
           imageUrl='/images/home/preschool.jpg'
         />
         <HomeCard
           label={t("Primary")}
-          href={`/${locale}/courses/primary3`}
+          href={`/${params.locale}/courses/primary3`}
           imageUrl='/images/home/primary.jpg'
         />
         <HomeCard
           label={t("Stories")}
-          href={`/${locale}/stories`}
+          href={`/${params.locale}/stories`}
           imageUrl='/images/home/stories.jpg'
         />
       </div>

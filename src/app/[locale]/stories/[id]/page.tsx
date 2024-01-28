@@ -1,4 +1,3 @@
-import { useLocale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 
 import { getEntryById } from '@/lib/contentful/client'
@@ -17,16 +16,16 @@ export async function generateMetadata() {
 interface StoryPageProps {
     params: {
         id: string;
+        locale: string
     }
 }
 
 export default async function StoryPage({ params }: StoryPageProps) {
-    const locale = useLocale();
-    const story = await getEntryById(params.id, locale == 'en' ? 'en-US' : locale);
+    const story = await getEntryById(params.id, params.locale == 'en' ? 'en-US' : params.locale);
 
     const medias: any = []
     const texts: any[] = []
-    const audios: any[] = [`/audios/${story.sys.id}/${locale}/audio.mp3`]
+    const audios: any[] = [`/audios/${story.sys.id}/${params.locale}/audio.mp3`]
     await parseSummary(story.fields.summary, texts, medias, audios)
     const quizzes = parseQuizzes(story.fields.activities)
 

@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { usePathname } from "next/navigation";
 import "@/styles/commentbox.css"
 
-export default function HtmlCommentsBox(params: any) {
+export default function HtmlCommentsBox() {
     const pathName = usePathname();
     const t = useTranslations("commentBox");
     const locale = useLocale();

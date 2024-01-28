@@ -1,7 +1,5 @@
-import { useLocale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
-import { getEntries, getImageUrl } from '@/lib/contentful/client'
-import HomeCard from '@/components/Shared/HomeCard';
+import { getEntries } from '@/lib/contentful/client'
 import PreviewContent from '@/components/Shared/PreviewContent';
 import HomeCardList from '@/components/Shared/HomeCardList';
 
@@ -14,18 +12,22 @@ export async function generateMetadata() {
     }
 }
 
-export default async function StoriesPage() {
-    const locale = useLocale();
-    const uslocale = locale == 'en' ? 'en-US' : locale;
-    const entries = await getEntries('course', locale == 'en' ? 'en-US' : locale, 'story');
+interface StoriesPageProps {
+    params: {
+        locale: string
+    }
+}
+export default async function StoriesPage({ params }: StoriesPageProps) {
+    const uslocale = params.locale == 'en' ? 'en-US' : params.locale;
+    const entries = await getEntries('course', uslocale, 'story');
 
     return (
         <>
-            <HomeCardList entries={entries} hrefBase={`/${locale}/stories`} />
+            <HomeCardList entries={entries} hrefBase={`/${params.locale}/stories`} />
             {
                 process.env.NODE_ENV === 'development' && (
                     <PreviewContent
-                        href={`/${locale}/stories/`}
+                        href={`/${params.locale}/stories/`}
                         locale={uslocale}
                     />
                 )
