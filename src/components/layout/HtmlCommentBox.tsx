@@ -59,7 +59,7 @@ export default function HtmlCommentsBox() {
         }
     }, [pathName, locale])
     return (
-        <div className="shadow-lg bg-white p-4 mt-5 sm:min-w-[500px]">
+        <div className="shadow-lg bg-white p-4 mt-5 w-full">
             <div id="HCB_comment_box" className="mt-2 ">
                 <div className="p-4 border border-orange-200">
                     {t("refresh")}

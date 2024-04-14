@@ -8,7 +8,7 @@
   display: none;
 }
 #HCB_comment_box a {
-    display: none;
+  //display: none;
 }
 #HCB_comment_box span {
   display: inline-block;
