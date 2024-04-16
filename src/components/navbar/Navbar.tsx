@@ -23,7 +23,7 @@ export default function Navbar() {
     return (
         <nav className="
                 p-4
-                bg-white
+                bg-orange-500 
                 flex-col sm:flex-row sm:flex
                 justify-center"
         >
@@ -44,7 +44,7 @@ export default function Navbar() {
                     </button>
                 </div>
             </div>
-            <div className={`sm:flex text-neutral-600  ${collapsed ? "hidden" : ""}`}>
+            <div className={`sm:flex text-white  ${collapsed ? "hidden" : ""}`}>
                 <ul className="me-5
                     sm:flex gap-4 items-center
                     px-10 py-2 sm:space-y-0 space-y-2 sm:p-1"

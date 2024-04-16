@@ -22,7 +22,7 @@ export default function Home({ params }: HomeProps) {
   const t = useTranslations('home');
 
   return (
-    <div className="min-h-screen bg-no-repeat bg-cover relative" style={{ backgroundImage: 'url("/images/home/banner.jpg")' }}>
+    <div className="h-full overflow-hidden">
       <CloudHomeImage
         label={t("Preschool")}
         href={`/${params.locale}/courses/preschool2`}

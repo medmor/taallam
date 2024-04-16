@@ -6,6 +6,11 @@ export interface HomeCardProps {
     label: string;
     href: string;
     imageUrl: string;
+    transition: {
+        initial: number,
+        animate: number,
+        duration: number
+    }
 }
 export default function CloudHomeImage({ label, href, imageUrl }: HomeCardProps) {
 
@@ -14,8 +19,8 @@ export default function CloudHomeImage({ label, href, imageUrl }: HomeCardProps)
             <motion.div
                 className='flex justify-center items-center bg-cover bg-no-repeat w-[400px] h-[120px] absolute gap-4'
                 style={{ backgroundImage: "url('/images/home/cloud.png')" }}
-                initial={{ right: "30%" }}
-                animate={{ right: "70%" }}
+                initial={{ right: -200 }}
+                animate={{ right: 200 }}
                 transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
             >
                 {

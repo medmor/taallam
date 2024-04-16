@@ -32,8 +32,10 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
     <html lang={params.locale} dir={params.locale == 'ar' ? 'rtl' : 'ltr'} >
       <body className='bg-orange-600 '>
         <NextIntlClientProvider locale={params.locale} messages={messages}>
-          <Navbar />
-          <div>
+          <div
+            className="min-h-screen bg-no-repeat bg-cover relative overflow-hidden"
+            style={{ backgroundImage: 'url("/images/home/banner.jpg")' }}>
+            <Navbar />
             {children}
           </div>
           <Footer></Footer>
