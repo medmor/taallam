@@ -18,7 +18,6 @@ export default function SummaryImage({ src, alt }: SummaryImageProps) {
                 alt={alt}
                 width={400}
                 height={400}
-                unoptimized
                 onLoad={() => updateLoaded()}
             />
             {

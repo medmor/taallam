@@ -10,7 +10,6 @@ export default function InConstruction() {
                 alt="in construction image"
                 width={600}
                 height={600}
-                unoptimized
             />
         </div>
     )

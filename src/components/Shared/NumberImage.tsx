@@ -18,7 +18,6 @@ export default function NumberImage(props: NumberImageProps) {
                     key={i}
                     width={60}
                     height={60}
-                    unoptimized
                     className="h-auto w-[60px]"
                 />
             ))}

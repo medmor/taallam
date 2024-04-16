@@ -33,7 +33,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
       <body className='bg-orange-600 '>
         <NextIntlClientProvider locale={params.locale} messages={messages}>
           <Navbar />
-          <div className="h-full">
+          <div>
             {children}
           </div>
           <Footer></Footer>

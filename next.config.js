@@ -5,6 +5,7 @@ const withNextIntl = require("next-intl/plugin")(
 
 module.exports = withNextIntl({
   images: {
-    domains: ["images.ctfassets.net", "i.gifer.com"],
+    domains: [],
+    unoptimized: true,
   },
 });
