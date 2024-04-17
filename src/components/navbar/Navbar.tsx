@@ -23,7 +23,6 @@ export default function Navbar() {
     return (
         <nav className="
                 p-4
-                bg-orange-500 
                 flex-col sm:flex-row sm:flex
                 justify-around"
         >

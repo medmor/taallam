@@ -47,12 +47,24 @@ export default function Home({ params }: HomeProps) {
         transition={randomTransion()}
       />
       <EmptyCloudHomeImage
-        top={90}
-        transition={{ duration: rnd(8, 12), initial: '-400px', animate: 'calc(100vw + 400px)' }}
+        ease='linear'
+        top={80}
+        transition={{ duration: rnd(12, 20), initial: '-400px', animate: 'calc(100vw + 400px)' }}
       />
       <EmptyCloudHomeImage
-        top={230}
-        transition={{ duration: rnd(8, 12), initial: '-400px', animate: 'calc(100vw + 400px)' }}
+        ease='linear'
+        top={200}
+        transition={{ duration: rnd(12, 20), initial: '-400px', animate: 'calc(100vw + 400px)' }}
+      />
+      <EmptyCloudHomeImage
+        ease='linear'
+        top={80}
+        transition={{ duration: rnd(12, 20), initial: '-400px', animate: 'calc(100vw + 400px)' }}
+      />
+      <EmptyCloudHomeImage
+        ease='linear'
+        top={200}
+        transition={{ duration: rnd(12, 20), initial: '-400px', animate: 'calc(100vw + 400px)' }}
       />
       <div className='flex absolute bottom-0 w-full justify-around items-end'>
         <Image

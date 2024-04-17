@@ -30,7 +30,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
 
   return (
     <html lang={params.locale} dir={params.locale == 'ar' ? 'rtl' : 'ltr'} >
-      <body className='bg-orange-600 '>
+      <body className='bg-orange-500 '>
         <NextIntlClientProvider locale={params.locale} messages={messages}>
           <Navbar />
           <div
