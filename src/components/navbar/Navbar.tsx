@@ -25,9 +25,9 @@ export default function Navbar() {
                 p-4
                 bg-orange-500 
                 flex-col sm:flex-row sm:flex
-                justify-center"
+                justify-around"
         >
-            <div className="flex justify-between me-5">
+            <div className="flex justify-between items-center">
                 <Link href={`/${locale}`} >
                     <Logo src={t("logo")} />
                 </Link>
@@ -44,8 +44,8 @@ export default function Navbar() {
                     </button>
                 </div>
             </div>
-            <div className={`sm:flex text-white  ${collapsed ? "hidden" : ""}`}>
-                <ul className="me-5
+            <div className={`sm:flex ${collapsed ? "hidden" : ""}`}>
+                <ul className="
                     sm:flex gap-4 items-center
                     px-10 py-2 sm:space-y-0 space-y-2 sm:p-1"
                 >

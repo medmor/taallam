@@ -7,9 +7,12 @@ interface NavbarItemProps {
     active: boolean
 }
 export default function NavbarItem({ href, label, active }: NavbarItemProps) {
-    return (
-        <li className={`hover:text-lg ${active ? "text-orange-600" : ""}`}>
-            <Link href={href} >{label}</Link>
+    return (<Link href={href}  >
+        <li className={`hover:opacity-90 bg-center bg-cover w-[100px] h-[75px] flex justify-center items-center ${active ? "text-orange-700 font-bold" : ""}`}
+            style={{ backgroundImage: "url('/images/home/cloudNav.png')" }}
+        >
+            {label}
         </li>
+    </Link>
     )
 }

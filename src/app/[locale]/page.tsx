@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { CloudHomeImage, EmptyCloudHomeImage } from '@/components/Shared/CloudHomeImage';
 import { rnd } from '@/helpers/random';
+import Image from 'next/image';
 
 
 export async function generateMetadata() {
@@ -23,37 +24,50 @@ export default function Home({ params }: HomeProps) {
   const t = useTranslations('home');
 
   return (
-    <div className="h-full overflow-hidden">
+    <div className="h-full w-full overflow-hidden" dir='ltr'>
       <CloudHomeImage
         label={t("Preschool")}
         href={`/${params.locale}/courses/preschool2`}
         imageUrl='/images/home/preschool.png'
-        top={90}
+        top={20}
         transition={randomTransion()}
       />
       <CloudHomeImage
         label={t("Primary")}
         href={`/${params.locale}/courses/primary3`}
         imageUrl='/images/home/primary.jpg'
-        top={190}
+        top={120}
         transition={randomTransion()}
       />
       <CloudHomeImage
         label={t("Stories")}
         href={`/${params.locale}/stories`}
         imageUrl='/images/home/stories.jpg'
-        top={290}
+        top={220}
         transition={randomTransion()}
       />
       <EmptyCloudHomeImage
-        top={150}
-        transition={{ duration: rnd(8, 12), animate: 'calc(100vw + 400px)', initial: '0vw' }}
+        top={90}
+        transition={{ duration: rnd(8, 12), initial: '-400px', animate: 'calc(100vw + 400px)' }}
       />
       <EmptyCloudHomeImage
         top={230}
-        transition={{ duration: rnd(8, 12), animate: 'calc(100vw + 400px)', initial: '0vw' }}
+        transition={{ duration: rnd(8, 12), initial: '-400px', animate: 'calc(100vw + 400px)' }}
       />
-
+      <div className='flex absolute bottom-0 w-full justify-around items-end'>
+        <Image
+          className="w-[400px] h-auto "
+          src="/images/home/kids.png" alt="kids"
+          width={400}
+          height={400}
+        />
+        <Image
+          className="w-[400px] h-auto hidden md:block "
+          src="/images/home/kids1.png" alt="kids"
+          width={400}
+          height={400}
+        />
+      </div>
     </div>
   );
 }
@@ -61,8 +75,8 @@ export default function Home({ params }: HomeProps) {
 const randomTransion = () => (
   {
     duration: rnd(8, 12),
-    initial: `calc(${rnd(0, 8)}vw - 200px)`,
-    animate: `calc(${rnd(50, 60)}vw)`,
+    initial: 'calc(50vw-300px)',
+    animate: `calc(50vw + 0px)`,
 
   }
 )

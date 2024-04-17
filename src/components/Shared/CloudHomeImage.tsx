@@ -23,7 +23,7 @@ interface CloudHomeImageProps extends EmptyCloudHomeImageProps {
 }
 export function CloudHomeImage({ label, href, imageUrl, top, transition }: CloudHomeImageProps) {
     return (
-        <Link href={href}>
+        <Link href={href} dir='rtl'>
             <EmptyCloudHomeImage top={top} transition={transition} zIndex={10} repeatType='reverse'>
                 {
                     <Image
@@ -50,8 +50,8 @@ export const EmptyCloudHomeImage = ({ top, transition, children, zIndex, repeatT
         <motion.div
             className='flex justify-center items-center bg-cover bg-no-repeat w-[400px] h-[120px] absolute gap-4'
             style={{ backgroundImage: "url('/images/home/cloud.png')", top, zIndex }}
-            initial={{ right: transition.initial }}
-            animate={{ right: transition.animate }}
+            initial={{ x: transition.initial }}
+            animate={{ x: transition.animate }}
             transition={{ duration: transition.duration, repeat: Infinity, repeatType, ease: 'easeInOut' }}
         >
             {children}
