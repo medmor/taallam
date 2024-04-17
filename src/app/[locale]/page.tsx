@@ -2,7 +2,7 @@
 import { useTranslations, } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 
-import CloudHomeImage from '@/components/Shared/CloudHomeImage';
+import { CloudHomeImage } from '@/components/Shared/CloudHomeImage';
 
 
 export async function generateMetadata() {
@@ -27,17 +27,23 @@ export default function Home({ params }: HomeProps) {
         label={t("Preschool")}
         href={`/${params.locale}/courses/preschool2`}
         imageUrl='/images/home/preschool.png'
+        top={100}
+        transition={{ duration: 10, animate: '70vw', initial: '30vw' }}
       />
-      {/* <CloudHomeImage
-          label={t("Primary")}
-          href={`/${params.locale}/courses/primary3`}
-          imageUrl='/images/home/primary.jpg'
-        />
-        <CloudHomeImage
-          label={t("Stories")}
-          href={`/${params.locale}/stories`}
-          imageUrl='/images/home/stories.jpg'
-        /> */}
+      <CloudHomeImage
+        label={t("Primary")}
+        href={`/${params.locale}/courses/primary3`}
+        imageUrl='/images/home/primary.jpg'
+        top={200}
+        transition={{ duration: 10, animate: '30vw', initial: '70vw' }}
+      />
+      <CloudHomeImage
+        label={t("Stories")}
+        href={`/${params.locale}/stories`}
+        imageUrl='/images/home/stories.jpg'
+        top={300}
+        transition={{ duration: 10, animate: '70vw', initial: '30vw' }}
+      />
     </div>
   );
 }
