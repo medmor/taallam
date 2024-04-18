@@ -25,8 +25,8 @@ export default function HomeCard({ label, href, imageUrl, createdAt }: HomeCardP
                 flex flex-col
                 justify-between 
                 hover:outline
-                hover:outline-4
-                hover:outline-red-400
+                outline-4
+                outline-red-400
                 hover:border-0
                 cursor-pointer 
                 h-full"

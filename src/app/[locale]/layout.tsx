@@ -35,9 +35,13 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
           <Navbar />
           <div
             className="min-h-screen bg-no-repeat bg-cover relative overflow-hidden"
-            style={{ backgroundImage: 'url("/images/home/banner.jpg")' }}>
+            style={{ backgroundImage: 'url("/images/home/bannerT.jpg")' }}>
             {children}
           </div>
+          <div
+            className="bg-no-repeat bg-cover h-[200px] -mt-1"
+            style={{ backgroundImage: 'url("/images/home/bannerB.jpg")' }}
+          ></div>
           <Footer></Footer>
         </NextIntlClientProvider>
       </body>
