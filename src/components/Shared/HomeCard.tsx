@@ -2,6 +2,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { motion } from "framer-motion";
+import { rnd } from '@/helpers/random';
+
 export interface HomeCardProps {
     label: string;
     href: string;
@@ -17,23 +20,21 @@ export default function HomeCard({ label, href, imageUrl, createdAt }: HomeCardP
     }
     return (
         <Link href={href}>
-            <div className="
-                border 
-                rounded-3xl
-                p-4
-                bg-white
-                flex flex-col
-                justify-between 
-                hover:outline
-                outline-4
-                outline-red-400
-                hover:border-0
-                cursor-pointer 
-                h-full"
+            <motion.div className="w-[310px] h-[370px] bg-cover bg-no-repeat flex flex-col justify-center items-center"
+                style={{ backgroundImage: 'url("/images/home/cloudCard.png")' }}
+                initial={{ rotateZ: -10 }}
+                animate={{ rotateZ: 2 }}
+                transition={{
+                    ease: [0, 0.71, 0.2, 1.01],
+                    repeat: Infinity,
+                    repeatType: 'reverse',
+                    stiffness: 50,
+                    damping: 5, type: 'spring'
+                }}
             >
                 {
                     <Image
-                        className="rounded-lg mb-2 m-auto sm:w-52 w-full"
+                        className="rounded-lg w-[60%]"
                         src={src} alt='label'
                         width="200"
                         height="200"
@@ -41,21 +42,17 @@ export default function HomeCard({ label, href, imageUrl, createdAt }: HomeCardP
                         onError={() => setSrc("/images/logo.png")}
                     />
                 }
-                <div >
-                    <div className='font-bold text-xl'>
-                        {label}
-                    </div>
-                    {
-                        createdAtSpan && (
-                            <div className='text-xs'>
-                                {createdAtSpan}
-                            </div>
-                        )
-                    }
-
+                <div className='font-bold text-xl'>
+                    {label}
                 </div>
-
-            </div>
+                {
+                    createdAtSpan && (
+                        <div className='text-xs'>
+                            {createdAtSpan}
+                        </div>
+                    )
+                }
+            </motion.div>
         </Link>
     )
 }

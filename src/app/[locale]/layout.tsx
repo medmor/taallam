@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 
 import Navbar from '@/components/navbar/Navbar'
 import Footer from '@/components/layout/Footer'
+import Image from 'next/image';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -34,14 +35,29 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
         <NextIntlClientProvider locale={params.locale} messages={messages}>
           <Navbar />
           <div
-            className="min-h-screen bg-no-repeat bg-cover relative overflow-hidden"
+            className="min-h-[80vh] bg-no-repeat bg-cover relative overflow-hidden"
             style={{ backgroundImage: 'url("/images/home/bannerT.jpg")' }}>
             {children}
           </div>
           <div
-            className="bg-no-repeat bg-cover h-[200px] -mt-1"
+            className="bg-no-repeat bg-cover h-[200px] -mt-1 relative"
             style={{ backgroundImage: 'url("/images/home/bannerB.jpg")' }}
-          ></div>
+          >
+            <div className='flex absolute bottom-0 w-full justify-around items-end'>
+              <Image
+                className="w-[400px] h-auto "
+                src="/images/home/kids.png" alt="kids"
+                width={400}
+                height={400}
+              />
+              <Image
+                className="w-[400px] h-auto hidden md:block "
+                src="/images/home/kids1.png" alt="kids"
+                width={400}
+                height={400}
+              />
+            </div>
+          </div>
           <Footer></Footer>
         </NextIntlClientProvider>
       </body>

@@ -29,57 +29,43 @@ export default function Home({ params }: HomeProps) {
         label={t("Preschool")}
         href={`/${params.locale}/courses/preschool2`}
         imageUrl='/images/home/preschool.png'
-        top={20}
+        top={30}
         transition={randomTransion()}
       />
       <CloudHomeImage
         label={t("Primary")}
         href={`/${params.locale}/courses/primary3`}
         imageUrl='/images/home/primary.jpg'
-        top={120}
+        top={160}
         transition={randomTransion()}
       />
       <CloudHomeImage
         label={t("Stories")}
         href={`/${params.locale}/stories`}
         imageUrl='/images/home/stories.jpg'
-        top={220}
+        top={280}
         transition={randomTransion()}
       />
       <EmptyCloudHomeImage
         ease='linear'
-        top={80}
+        top={100}
         transition={{ duration: rnd(12, 20), initial: '-400px', animate: 'calc(100vw + 400px)' }}
       />
       <EmptyCloudHomeImage
         ease='linear'
-        top={200}
+        top={220}
         transition={{ duration: rnd(12, 20), initial: '-400px', animate: 'calc(100vw + 400px)' }}
       />
       <EmptyCloudHomeImage
         ease='linear'
-        top={80}
+        top={120}
         transition={{ duration: rnd(12, 20), initial: '-400px', animate: 'calc(100vw + 400px)' }}
       />
       <EmptyCloudHomeImage
         ease='linear'
-        top={200}
+        top={240}
         transition={{ duration: rnd(12, 20), initial: '-400px', animate: 'calc(100vw + 400px)' }}
       />
-      <div className='flex absolute bottom-0 w-full justify-around items-end'>
-        <Image
-          className="w-[400px] h-auto "
-          src="/images/home/kids.png" alt="kids"
-          width={400}
-          height={400}
-        />
-        <Image
-          className="w-[400px] h-auto hidden md:block "
-          src="/images/home/kids1.png" alt="kids"
-          width={400}
-          height={400}
-        />
-      </div>
     </div>
   );
 }
