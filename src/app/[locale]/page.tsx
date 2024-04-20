@@ -72,7 +72,7 @@ export default function Home({ params }: HomeProps) {
 
 const randomTransion = () => (
   {
-    duration: rnd(8, 12),
+    duration: rnd(4, 8),
     initial: 'calc(50vw-300px)',
     animate: `calc(50vw + 0px)`,
 
