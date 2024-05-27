@@ -7,6 +7,8 @@ import Navbar from '@/components/navbar/Navbar'
 import Footer from '@/components/layout/Footer'
 import Image from 'next/image';
 
+import Preloader from '@/components/layout/Preloader'
+
 interface RootLayoutProps {
   children: React.ReactNode;
   params: {
@@ -31,8 +33,10 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
 
   return (
     <html lang={params.locale} dir={params.locale == 'ar' ? 'rtl' : 'ltr'} >
-      <body className='bg-orange-500 '>
+      <body style={{ backgroundColor: "#94D8FB" }}>
         <NextIntlClientProvider locale={params.locale} messages={messages}>
+          <Preloader />
+
           <Navbar />
           <div
             className="min-h-[80vh] bg-no-repeat bg-cover relative overflow-hidden"

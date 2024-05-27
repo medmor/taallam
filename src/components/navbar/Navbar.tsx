@@ -1,10 +1,9 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link"
 import { useTranslations, useLocale } from 'next-intl';
 import { AiOutlineMenu } from 'react-icons/ai'
 
-import ChangeLanguage from "./ChangeLanguage"
 import Logo from "./Logo";
 import NavbarItem from "./NavbarItem";
 import { usePathname } from "next/navigation";
@@ -22,7 +21,7 @@ export default function Navbar() {
 
     return (
         <nav className="
-                p-4
+                p-4 border-b
                 flex-col sm:flex-row sm:flex
                 justify-around"
         >
