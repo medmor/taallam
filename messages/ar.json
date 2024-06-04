@@ -7,8 +7,8 @@
     "french": "فرنسية",
     "english": "فرنسية",
     "language": "لغة",
-    "score":"النتيجة",
-    "bestScore":"احسن نتيجة"
+    "score": "النتيجة",
+    "bestScore": "احسن نتيجة"
   },
   "home": {
     "Preschool": "التمهيدي",
@@ -40,12 +40,15 @@
   "commentBox": {
     "refresh": "قم بتحديث الصفحة للتعليق"
   },
-  "shapes":{
-    "circle":"دائرة",
-    "heart":"قلب",
-    "rectangle":"مستطيل",
-    "square":"مربع",
-    "star":"نجمة",
-    "triangle":"مثلث"
+  "shapes": {
+    "circle": "دائرة",
+    "heart": "قلب",
+    "rectangle": "مستطيل",
+    "square": "مربع",
+    "star": "نجمة",
+    "triangle": "مثلث"
+  },
+  "loading": {
+    "loading": "التحميل..."
   }
 }

@@ -1,6 +1,3 @@
-'use client'
-import { useCallback, useMemo, useState } from "react";
-
 import { Quiz } from "@/types/QuizType";
 
 import Summary from "@/components/content/Summary";

@@ -7,8 +7,8 @@
     "french": "French",
     "english": "English",
     "language": "Language",
-    "score":"Score",
-    "bestScore":"Best Score"
+    "score": "Score",
+    "bestScore": "Best Score"
   },
   "home": {
     "Preschool": "Preschool",
@@ -40,12 +40,15 @@
   "commentBox": {
     "refresh": "Refresh The Page To Comment"
   },
-  "shapes":{
-    "circle":"CIRCLE",
-    "heart":"HEART",
-    "rectangle":"RECTANGLE",
-    "square":"SQUARE",
-    "star":"STAR",
-    "triangle":"TRIANGLE"
+  "shapes": {
+    "circle": "CIRCLE",
+    "heart": "HEART",
+    "rectangle": "RECTANGLE",
+    "square": "SQUARE",
+    "star": "STAR",
+    "triangle": "TRIANGLE"
+  },
+  "loading": {
+    "loading": "Loading..."
   }
 }

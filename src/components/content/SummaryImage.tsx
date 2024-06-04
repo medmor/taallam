@@ -13,7 +13,7 @@ export default function SummaryImage({ src, alt }: SummaryImageProps) {
     return (
         <>
             <Image
-                className={`rounded-xl border-2 p-1 m-auto w-full h-auto bg-white`}
+                className={`rounded-xl shadow-2xl`}
                 src={src}
                 alt={alt}
                 width={400}

@@ -56,61 +56,49 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
     }, [audio, audios, pause, playTimeout]);
 
     useEffect(() => {
-            pause()
+        pause()
     }, [pathname, pause])
 
     return (
         <ContentPart id="story-viewer">
-            <div dir="ltr">
-                <Carousel
-                    showThumbs={false}
-                    useKeyboardArrows
-                    showStatus={false}
-                    autoFocus
-                    preventMovementUntilSwipeScrollTolerance={true}
-                    swipeScrollTolerance={50}
-                    showIndicators={texts.length > 1}
-                    onChange={(i) => pause()}
-                >
-                    {
-                        texts.map((text, i) => (
-                            <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2 justify-center" key={i} dir={locale == 'ar' ? 'rtl' : 'ltr'} >
-                                <div className="relative">
-                                    {
-                                        audios[1] &&
-                                        <div className='absolute top-2 right-8'>
-                                            <Button
-                                                label=''
-                                                onClick={() => play(i)}
-                                                icon={GiSpeaker}
-                                                small
 
-                                            />
-                                        </div>
-                                    }
-                                    <ContentMedia data={medias[i]} />
+            {
+                texts.map((text, i) => (
+                    <div className="flex flex-col  gap-2 p-4 min-h-screen items-center justify-center" key={i} dir={locale == 'ar' ? 'rtl' : 'ltr'} >
+                        <div className="relative">
+                            {
+                                audios[1] &&
+                                <div className='absolute top-2 right-2'>
+                                    <Button
+                                        label=''
+                                        onClick={() => play(i)}
+                                        icon={GiSpeaker}
+                                        small
+
+                                    />
                                 </div>
-                                <div className={
-                                    `relative
+                            }
+                            <ContentMedia data={medias[i]} />
+                        </div>
+                        <div className={
+                            `relative
                                         flex
                                         items-center
                                         justify-center
                                         text-center
                                         p-2 sm:px-10
                                         rounded-xl
-                                        bg-white 
                                         text-2xl sm:leading-[2em]
                                         `
-                                }>
-                                    <div >
-                                        {text}
-                                    </div>
-                                </div>
+                        }>
+                            <div >
+                                {text}
                             </div>
-                        ))
-                    }
-                </Carousel >
-            </div>
+                        </div>
+                    </div>
+                ))
+            }
+
         </ContentPart>
     )
 }
