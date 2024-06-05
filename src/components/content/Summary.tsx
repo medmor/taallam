@@ -13,6 +13,7 @@ import ContentPart from "./ContentPart";
 import ContentMedia from './ContentMedia';
 import { useLocale } from "next-intl";
 import { usePathname } from "next/navigation";
+import { Reveal } from "../Shared/Reveal";
 
 
 interface ContentViewerProps {
@@ -61,27 +62,27 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
 
     return (
         <ContentPart id="story-viewer">
-
             {
                 texts.map((text, i) => (
-                    <div className="flex flex-col  gap-2 p-4 min-h-screen items-center justify-center" key={i} dir={locale == 'ar' ? 'rtl' : 'ltr'} >
-                        <div className="relative">
-                            {
-                                audios[1] &&
-                                <div className='absolute top-2 right-2'>
-                                    <Button
-                                        label=''
-                                        onClick={() => play(i)}
-                                        icon={GiSpeaker}
-                                        small
+                    <Reveal key={i}>
+                        <div className="flex flex-col  gap-2 p-4 min-h-screen items-center justify-center" dir={locale == 'ar' ? 'rtl' : 'ltr'} >
+                            <div className="relative">
+                                {
+                                    audios[1] &&
+                                    <div className='absolute top-2 right-2'>
+                                        <Button
+                                            label=''
+                                            onClick={() => play(i)}
+                                            icon={GiSpeaker}
+                                            small
 
-                                    />
-                                </div>
-                            }
-                            <ContentMedia data={medias[i]} />
-                        </div>
-                        <div className={
-                            `relative
+                                        />
+                                    </div>
+                                }
+                                <ContentMedia data={medias[i]} />
+                            </div>
+                            <div className={
+                                `relative
                                         flex
                                         items-center
                                         justify-center
@@ -90,15 +91,15 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
                                         rounded-xl
                                         text-2xl sm:leading-[2em]
                                         `
-                        }>
-                            <div >
-                                {text}
+                            }>
+                                <div >
+                                    {text}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </Reveal>
                 ))
             }
-
         </ContentPart>
     )
 }
