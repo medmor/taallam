@@ -68,22 +68,22 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
   return (
     <ContentPart id="story-viewer">
       {texts.map((text, i) => (
-        <Reveal key={i}>
-          <div
-            className=" flex min-h-screen items-center justify-center"
-            dir={locale == "ar" ? "rtl" : "ltr"}
-          >
+        <div
+          className=" flex min-h-screen items-center justify-center border-b"
+          dir={locale == "ar" ? "rtl" : "ltr"}
+        >
+          <Reveal key={i}>
             <div className="flex flex-col items-center justify-center">
               <div className="relative">
                 <AudioButton audios={audios} play={play} i={i} />
                 <ContentMedia data={medias[i]} />
               </div>
-              <div className="relative flex items-center justify-center rounded-xl p-2 text-center text-2xl sm:px-10 sm:leading-[2em]                                        ">
+              <div className="relative flex items-center justify-center rounded-xl p-2 text-center text-2xl sm:px-10 sm:leading-[2em]">
                 {text}
               </div>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       ))}
     </ContentPart>
   );

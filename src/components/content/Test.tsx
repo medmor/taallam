@@ -19,24 +19,20 @@ export default function ContentTest({ quizzes }: ContentTestProps) {
     const t = useTranslations('contentTest');
     const [score, setScore] = useState(0);
     return (
-        <ContentPart id="story-test">
-            <div className="mb-2 p-1 text-center font-bold bg-white rounded-t-lg">
-                <div className="border-b border-b-orange-400 py-2">{t("quiz")}</div>
+        <div className="relative">
+            <div className="fixed top-[50vh]">
                 {t('score')} <span dir="ltr">{score} / {quizzes.length}</span>
             </div>
-            <div dir="ltr">
-                <Carousel
-                    showThumbs={false}
-                    useKeyboardArrows
-                    showStatus={false}
-                    preventMovementUntilSwipeScrollTolerance={true}
-                    swipeScrollTolerance={50}
-                >
-                    {quizzes.map(quiz => {
-                        return (<Mcq quiz={quiz} key={quiz.question} setScore={setScore} />)
-                    })}
-                </Carousel>
+            <div className="mb-2 p-1 text-center font-bold bg-white">
+                <div className="border-b border-b-orange-400 py-2">{t("quiz")}</div>
+
             </div>
-        </ContentPart>
+            <div dir="ltr">
+
+                {quizzes.map(quiz => {
+                    return (<Mcq quiz={quiz} key={quiz.question} setScore={setScore} />)
+                })}
+            </div>
+        </div>
     )
 }
