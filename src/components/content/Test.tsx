@@ -17,7 +17,7 @@ export default function ContentTest({ quizzes }: ContentTestProps) {
   const t = useTranslations("contentTest");
   const [score, setScore] = useState(0);
   return (
-    <div className="no-scrollbar relative m-4 max-h-[90svh] snap-y snap-mandatory overflow-y-scroll rounded-xl bg-white p-2">
+    <div className="no-scrollbar relative m-4 h-[90svh] snap-y snap-mandatory overflow-y-scroll rounded-xl bg-white p-2">
       <div className="font-start sticky top-0 flex justify-start">
         <div className="rounded-full border bg-white p-4 text-center font-bold">
           {t("score")} <br />
