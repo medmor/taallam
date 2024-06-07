@@ -66,26 +66,25 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
   }, [pathname, pause]);
 
   return (
-    <ContentPart id="story-viewer">
+    <div
+      id="story-viewer"
+      className="no-scrollbar m-4 h-[80svh] snap-y snap-mandatory overflow-y-scroll rounded-xl bg-white p-2"
+    >
       {texts.map((text, i) => (
-        <div
-          className=" flex min-h-screen items-center justify-center border-b"
-          dir={locale == "ar" ? "rtl" : "ltr"}
+        <section
+          className="flex h-full snap-center flex-col items-center justify-center"
+          key={i}
         >
-          <Reveal key={i}>
-            <div className="flex flex-col items-center justify-center">
-              <div className="relative">
-                <AudioButton audios={audios} play={play} i={i} />
-                <ContentMedia data={medias[i]} />
-              </div>
-              <div className="relative flex items-center justify-center rounded-xl p-2 text-center text-2xl sm:px-10 sm:leading-[2em]">
-                {text}
-              </div>
-            </div>
-          </Reveal>
-        </div>
+          <div className="relative">
+            <AudioButton audios={audios} play={play} i={i} />
+            <ContentMedia data={medias[i]} />
+          </div>
+          <div className="relative flex items-center justify-center rounded-xl p-2 text-center text-2xl sm:px-10 sm:leading-[2em]">
+            {text}
+          </div>
+        </section>
       ))}
-    </ContentPart>
+    </div>
   );
 }
 

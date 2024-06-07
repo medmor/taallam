@@ -1,26 +1,25 @@
-import { motion, Variants } from "framer-motion";
+import { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  MotionValue,
+} from "framer-motion";
 
-const cardVariants: Variants = {
-  offscreen: {
-    x: 500,
-  },
-  onscreen: {
-    x: 0,
-    transition: {
-      duration: 2,
-    },
-  },
-};
+function useParallax(value: MotionValue<number>, distance: number) {
+  return useTransform(value, [0, 1], [-distance, distance]);
+}
 
 export function Reveal({ children }: { children: React.ReactNode }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref });
+  const y = useParallax(scrollYProgress, 300);
+
   return (
-    <motion.div
-      initial="offscreen"
-      whileInView="onscreen"
-    >
-      <motion.div variants={cardVariants}>
-        {children}
-      </motion.div>
-    </motion.div>
+    <section className="relative h-screen snap-center" ref={ref}>
+      <div ref={ref}>{children}</div>
+      <motion.h2 style={{ y }}>{`#00$`}</motion.h2>
+    </section>
   );
 }
