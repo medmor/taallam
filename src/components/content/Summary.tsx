@@ -4,15 +4,11 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { GiSpeaker } from "react-icons/gi";
 
-import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import Button from "@/components/Shared/Button";
-import ContentPart from "./ContentPart";
 import ContentMedia from "./ContentMedia";
-import { useLocale } from "next-intl";
 import { usePathname } from "next/navigation";
-import { Reveal } from "../Shared/Reveal";
 
 interface ContentViewerProps {
   medias: any[];
@@ -21,14 +17,12 @@ interface ContentViewerProps {
 }
 
 export default function Summary({ medias, texts, audios }: ContentViewerProps) {
-  const locale = useLocale();
-
   const pathname = usePathname();
 
   const [playTimeout, setPlayTimeout]: any = useState();
 
   let audio = useMemo(() => {
-    if (audios[1]) {
+    if (audios[1] && typeof window !== "undefined") {
       return new Audio(audios[0]);
     }
     return undefined;
