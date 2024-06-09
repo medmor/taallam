@@ -40,7 +40,7 @@ export default async function RootLayout({
 
           <Navbar />
           <div
-            className="relative min-h-[80vh] overflow-hidden bg-cover bg-no-repeat"
+            className="relative m-auto min-h-[80vh] max-w-5xl overflow-hidden bg-cover bg-no-repeat"
             style={{ backgroundImage: 'url("/images/home/bannerT.jpg")' }}
           >
             {children}
