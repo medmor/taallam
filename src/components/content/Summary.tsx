@@ -62,7 +62,7 @@ export default function Summary({ medias, texts, audios }: ContentViewerProps) {
   return (
     <div
       id="story-viewer"
-      className="no-scrollbar m-4 h-[80svh] snap-y snap-mandatory overflow-y-scroll rounded-xl bg-white p-2"
+      className="no-scrollbar m-4 mx-auto h-[80svh] max-w-5xl snap-y snap-mandatory overflow-y-scroll rounded-xl bg-white/50 p-2"
     >
       {texts.map((text, i) => (
         <section

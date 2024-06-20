@@ -101,12 +101,12 @@ body {
 }
 
 .no-scrollbar::-webkit-scrollbar-track {
-  background-color: black;
+  background-color: transparent;
   border-radius: 10px;
 }
 
 .no-scrollbar::-webkit-scrollbar-thumb {
-  background-color: white;
+  background-color: red;
   border: 3px solid transparent;
   border-radius: 9px;
   background-clip: content-box;

@@ -7,7 +7,7 @@ interface ContentLessons {
 export default function ContentLessons({ lessons }: ContentLessons) {
   const t = useTranslations("contentLessons");
   return (
-    <div className="mt-20">
+    <div className="my-20">
       <div className="bg-white p-2 text-center text-xl font-bold">
         {t("lessons")}
       </div>
