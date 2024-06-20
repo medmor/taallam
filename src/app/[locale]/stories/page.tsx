@@ -17,7 +17,7 @@ interface StoriesPageProps {
   };
 }
 export default async function StoriesPage({ params }: StoriesPageProps) {
-  const uslocale = params.locale == "en" ? "en-US" : params.locale;
+  const uslocale = params.locale == "en" || params.locale == "fr" ? "en-US" : params.locale;
   const entries = await getEntries("course", uslocale, "story");
 
   return (
