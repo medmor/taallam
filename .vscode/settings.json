@@ -21,7 +21,8 @@
     ".env": true,
     "next.config.js": true,
     "package.json": true,
-    ".prettierrc.json": true
+    ".prettierrc.json": true,
+    ".env.example": true
   },
   "explorerExclude.backup": {},
   "typescript.tsdk": "node_modules\\.pnpm\\typescript@5.1.3\\node_modules\\typescript\\lib",
