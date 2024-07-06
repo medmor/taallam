@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import Mcq from "@/components/quiz/Mcq";
 import ContentPart from "./ContentPart";
