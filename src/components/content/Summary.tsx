@@ -4,8 +4,6 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 
 import { GiSpeaker } from "react-icons/gi";
 
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-
 import Button from "@/components/Shared/Button";
 import ContentMedia from "./ContentMedia";
 import { usePathname } from "next/navigation";
