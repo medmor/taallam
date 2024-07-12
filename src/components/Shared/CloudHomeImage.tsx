@@ -34,11 +34,10 @@ export function CloudHomeImage({ label, href, imageUrl, top, transition }: Cloud
                     />
                 }
                 <div >
-                    <div className='font-bold text-xl'>
+                    <div className='font-bold text-xl pt-4'>
                         {label}
                     </div>
                 </div>
-
             </EmptyCloudHomeImage>
         </Link>
     )
