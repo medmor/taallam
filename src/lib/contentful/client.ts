@@ -9,7 +9,7 @@ const client = createClient({
 export const getEntries = async (
   contentId: string,
   locale: string,
-  tag?: string
+  tag?: string,
 ): Promise<CourseType[]> => {
   const query: any = {
     content_type: contentId,
@@ -28,17 +28,19 @@ export const getEntries = async (
 
 export const getEntryById = async (
   id: string,
-  locale: string
+  locale: string,
 ): Promise<CourseType> => {
   //@ts-ignore
   return await client.getEntry(id, { locale });
 };
 
-export const getAsset = async (id: string) => {
-  return await client.getAsset(id);
-};
+export const getGames = async (locale: string) => {
+  const query: any = {
+    content_type: "game",
+    locale,
+    order: "sys.createdAt",
+  };
+  const { items } = await client.getEntries(query);
 
-export async function getImageUrl(id: string) {
-  const asset = await getAsset(id);
-  return asset.fields.file?.url;
-}
+  return items as any;
+};

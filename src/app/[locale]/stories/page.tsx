@@ -11,13 +11,13 @@ export async function generateMetadata() {
   };
 }
 
-interface StoriesPageProps {
-  params: {
-    locale: string;
-  };
-}
-export default async function StoriesPage({ params }: StoriesPageProps) {
-  const uslocale = params.locale == "en" || params.locale == "fr" ? "en-US" : params.locale;
+export default async function StoriesPage({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const uslocale =
+    params.locale == "en" || params.locale == "fr" ? "en-US" : params.locale;
   const entries = await getEntries("course", uslocale, "story");
 
   return (

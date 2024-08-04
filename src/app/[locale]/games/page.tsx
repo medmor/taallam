@@ -1,14 +1,15 @@
-export default async function GamesPage() {
+import { getGames } from "@/lib/contentful/client";
+import GameCard from "./components/GameCard";
+import GamesList from "./components/GamesList";
 
-    return (
-        <>
-            <div className="w-full h-screen flex justify-center items-center">
-                <iframe
-                    src="https://itch.io/embed-upload/4024870?color=333333"
-                    allowFullScreen width="960" height="620">
-                    <a href="https://medmor.itch.io/maze-learn">Play Maze Learn on itch.io</a>
-                </iframe>
-            </div>
-        </>
-    );
+export default async function GamesPage({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const uslocale =
+    params.locale == "en" || params.locale == "fr" ? "en-US" : params.locale;
+  const entries = await getGames(uslocale);
+
+  return <GamesList games={entries} />;
 }
