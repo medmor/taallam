@@ -34,7 +34,6 @@ export default function GameCard({
           alt={title}
           width="200"
           height="200"
-          unoptimized
         />
       }
       <div className="text-center text-xl font-bold">{title}</div>

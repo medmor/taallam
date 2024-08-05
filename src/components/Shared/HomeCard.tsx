@@ -47,7 +47,6 @@ export default function HomeCard({
             alt="label"
             width="200"
             height="200"
-            unoptimized
             onError={() => setSrc("/images/logo.png")}
           />
         }

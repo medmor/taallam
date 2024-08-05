@@ -63,6 +63,11 @@ export default function Navbar() {
             label={t("Stories")}
             active={isActif("stories")}
           />
+          <NavbarItem
+            href={`/${locale}/games`}
+            label={t("games")}
+            active={isActif("games")}
+          />
         </ul>
         <div className="flex items-center justify-end">
           <ChangeLanguage />
