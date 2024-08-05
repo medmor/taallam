@@ -1,4 +1,4 @@
-import { getAsset } from "./client";
+//import { getAsset } from "./client";
 import { ImageAsset } from "@/types/CourseType";
 import { BLOCKS, Block } from "@/types/RichText";
 
@@ -6,7 +6,6 @@ import {
   EmptyQuiz,
   Quiz,
   QuizCategory,
-  QuizCategoryConsts,
 } from "@/types/QuizType";
 
 export async function getImageUrl(img: ImageAsset, locale: string) {
@@ -110,4 +109,4 @@ function getValue(block: Block) {
   }
   return (block as any).content[0].value;
 }
-const d = {"containersNames":"triangle,square,circle,rectangle,star","containersCount":"2,4","itemComponent":"Shapes","itemComponentProps":{"shape":"","color":"","size":"","iconOnly":"true"}}
+//const d = {"containersNames":"triangle,square,circle,rectangle,star","containersCount":"2,4","itemComponent":"Shapes","itemComponentProps":{"shape":"","color":"","size":"","iconOnly":"true"}}
