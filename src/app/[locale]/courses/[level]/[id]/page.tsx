@@ -12,21 +12,22 @@ export async function generateMetadata() {
 }
 
 interface StoryPageProps {
-  params: {
+  params: Promise<{
     id: string;
     locale: string;
-  };
+  }>;
 }
 
 export default async function CoursePage({ params }: StoryPageProps) {
+  const {id, locale} = await params;
   const course = await getEntryById(
-    params.id,
-    params.locale == "en" || params.locale == "fr" ? "en-US" : params.locale,
+    id,
+    locale == "en" || locale == "fr" ? "en-US" : locale,
   );
 
   const medias: any = [];
   const texts: any[] = [];
-  const audios: any[] = [`/audios/${course.sys.id}/${params.locale}/audio.mp3`];
+  const audios: any[] = [`/audios/${course.sys.id}/${locale}/audio.mp3`];
   await parseSummary(course.fields.summary, texts, medias, audios);
   const quizzes = parseQuizzes(course.fields.activities);
 

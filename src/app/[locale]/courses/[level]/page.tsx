@@ -12,25 +12,26 @@ export async function generateMetadata() {
 }
 
 interface CoursesPageProps {
-  params: {
+  params: Promise<{
     level: string;
     locale: string;
-  };
+  }>;
 }
 export default async function CoursesPage({ params }: CoursesPageProps) {
+  const {level, locale} = await params
   const uslocale =
-    params.locale == "en" || params.locale == "fr" ? "en-US" : params.locale;
-  const entries = await getEntries("course", uslocale, params.level);
+    locale == "en" || locale == "fr" ? "en-US" : locale;
+  const entries = await getEntries("course", uslocale, level);
 
   return (
     <>
       <HomeCardList
         entries={entries}
-        hrefBase={`/${params.locale}/courses/${params.level}`}
+        hrefBase={`/${locale}/courses/${level}`}
       />
       {process.env.NODE_ENV === "development" && (
         <PreviewContent
-          href={`/${params.locale}/courses/${params.level}/`}
+          href={`/${locale}/courses/${level}/`}
           locale={uslocale}
         />
       )}

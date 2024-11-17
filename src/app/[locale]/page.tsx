@@ -1,4 +1,3 @@
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
 import {
@@ -6,7 +5,6 @@ import {
   EmptyCloudHomeImage,
 } from "@/components/Shared/CloudHomeImage";
 import { rnd } from "@/helpers/random";
-import Image from "next/image";
 
 export async function generateMetadata() {
   const t = await getTranslations("home");
@@ -17,32 +15,32 @@ export async function generateMetadata() {
 }
 
 interface HomeProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
-export default function Home({ params }: HomeProps) {
-  const t = useTranslations("home");
-
+export default async function Home({ params }: HomeProps) {
+  const t = await getTranslations("home");
+  const {locale } = await params;
   return (
     <div className="h-full w-full overflow-hidden" dir="ltr">
       <CloudHomeImage
         label={t("Preschool")}
-        href={`/${params.locale}/courses/preschool2`}
+        href={`/${locale}/courses/preschool2`}
         imageUrl="/images/home/preschool.png"
         top={30}
         transition={randomTransion()}
       />
       <CloudHomeImage
         label={t("Primary")}
-        href={`/${params.locale}/courses/primary3`}
+        href={`/${locale}/courses/primary3`}
         imageUrl="/images/home/primary.jpg"
         top={160}
         transition={randomTransion()}
       />
       <CloudHomeImage
         label={t("Stories")}
-        href={`/${params.locale}/stories`}
+        href={`/${locale}/stories`}
         imageUrl="/images/home/stories.jpg"
         top={280}
         transition={randomTransion()}

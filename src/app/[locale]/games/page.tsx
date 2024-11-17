@@ -1,14 +1,14 @@
 import { getGames } from "@/lib/contentful/client";
-import GameCard from "./components/GameCard";
 import GamesList from "./components/GamesList";
 
 export default async function GamesPage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const uslocale =
-    params.locale == "en" || params.locale == "fr" ? "en-US" : params.locale;
+    locale == "en" || locale == "fr" ? "en-US" : locale;
   const entries = await getGames(uslocale);
 
   return <GamesList games={entries} />;

@@ -6,13 +6,12 @@ import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/layout/Footer";
 import Image from "next/image";
 
-import Preloader from "@/components/layout/Preloader";
 
 interface RootLayoutProps {
   children: React.ReactNode;
-  params: {
+  params: Promise< {
     locale: string;
-  };
+  }>;
 }
 
 export default async function RootLayout({
@@ -20,23 +19,19 @@ export default async function RootLayout({
   params,
 }: RootLayoutProps) {
   let messages;
+  let {locale } = await params
   try {
-    messages = (await import(`../../../messages/${params.locale}.json`))
+    messages = (await import(`../../../messages/${locale}.json`))
       .default;
   } catch (error) {
     console.log(error);
   }
 
-  // Show a 404 error if the user requests an unknown locale
-  if (params.locale !== params.locale) {
-    params.locale = params.locale;
-  }
-
   return (
-    <html lang={params.locale} dir={params.locale == "ar" ? "rtl" : "ltr"}>
+    <html lang={locale} dir={locale == "ar" ? "rtl" : "ltr"}>
       <body style={{ backgroundColor: "#94D8FB" }}>
-        <NextIntlClientProvider locale={params.locale} messages={messages}>
-          <Preloader />
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {/* <Preloader /> */}
 
           <Navbar />
           <div

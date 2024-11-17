@@ -1,7 +1,3 @@
-export default function GamePage({
-  params,
-}: {
-  params: { locale: string; id: string };
-}) {
+export default function GamePage() {
   return <div>Game Page</div>;
 }

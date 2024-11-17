@@ -14,17 +14,18 @@ export async function generateMetadata() {
 export default async function StoriesPage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const uslocale =
-    params.locale == "en" || params.locale == "fr" ? "en-US" : params.locale;
+    locale == "en" || locale == "fr" ? "en-US" : locale;
   const entries = await getEntries("course", uslocale, "story");
 
   return (
     <>
-      <HomeCardList entries={entries} hrefBase={`/${params.locale}/stories`} />
+      <HomeCardList entries={entries} hrefBase={`/${locale}/stories`} />
       {process.env.NODE_ENV === "development" && (
-        <PreviewContent href={`/${params.locale}/stories/`} locale={uslocale} />
+        <PreviewContent href={`/${locale}/stories/`} locale={uslocale} />
       )}
     </>
   );
