@@ -18,24 +18,14 @@ export default function Navbar() {
   const isActif = (href: string) => pathname.includes(href);
 
   return (
-    <nav
-      className="
-                flex-col justify-around
-                border-b p-4 sm:flex
-                sm:flex-row"
-    >
+    <nav className="flex-col justify-around border-b p-4 sm:flex sm:flex-row">
       <div className="flex items-center justify-between">
         <Link href={`/${locale}`}>
           <Logo src={t("logo")} />
         </Link>
         <div>
           <button
-            className="
-                            rounded-xl 
-                            border bg-orange-500 
-                            p-4
-                            outline-2 outline-lime-500
-                            hover:bg-orange-600 hover:outline sm:hidden"
+            className="rounded-xl border bg-orange-500 p-4 outline-2 outline-lime-500 hover:bg-orange-600 hover:outline sm:hidden"
             onClick={() => setCollapsed((collapsed) => !collapsed)}
           >
             <AiOutlineMenu size={32} />
@@ -43,11 +33,7 @@ export default function Navbar() {
         </div>
       </div>
       <div className={`sm:flex ${collapsed ? "hidden" : ""}`}>
-        <ul
-          className="
-                    items-center gap-4 space-y-2
-                    px-10 py-2 sm:flex sm:space-y-0 sm:p-1"
-        >
+        <ul className="items-center gap-4 space-y-2 px-10 py-2 sm:flex sm:space-y-0 sm:p-1">
           <NavbarItem
             href={`/${locale}/courses/preschool2`}
             label={t("Preschool")}
@@ -69,9 +55,9 @@ export default function Navbar() {
             active={isActif("games")}
           />
         </ul>
-        <div className="flex items-center justify-end">
-          <ChangeLanguage />
-        </div>
+      </div>
+      <div className="flex items-center justify-end">
+        <ChangeLanguage />
       </div>
     </nav>
   );
