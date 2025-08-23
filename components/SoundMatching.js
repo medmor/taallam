@@ -31,17 +31,16 @@ export default function SoundMatching({ items = [], count = 4, language = 'ar' }
     setTargetIndex(selection.length ? Math.floor(Math.random() * selection.length) : 0);
   }, [availableItems, rounds]);
 
-  useEffect(() => { preloadSfx(); }, []);
 
   // preload audio for pool (do not change targetIndex here — initial target is set
   // when the pool is created so we don't trigger multiple autoplay events)
   useEffect(() => {
     if (!pool.length) return;
-  setAudioReady(false);
-  audioMap.current = {};
+    setAudioReady(false);
+    audioMap.current = {};
     pool.forEach(it => {
       // prefer itemSound if present (user-provided higher quality files)
-      const url = it.itemSound || (language === 'en' ? it.enSound : it.sound) || it.sound || it.enSound || null;
+      const url = it.itemSound;
       if (!url) return;
       try {
         const a = new Audio(url);
@@ -52,12 +51,13 @@ export default function SoundMatching({ items = [], count = 4, language = 'ar' }
         // ignore
       }
     });
-  // mark audio as ready (we attempted to create Audio objects)
-  setAudioReady(true);
+    // mark audio as ready (we attempted to create Audio objects)
+    setAudioReady(true);
   }, [pool, language]);
 
   // play target sound
   const playTargetSound = () => {
+    console.log("Playing target sound");
     if (!pool || pool.length === 0) return;
     if (isPlaying.current) return;
     const idx = Math.min(targetIndex, pool.length - 1);
@@ -93,33 +93,40 @@ export default function SoundMatching({ items = [], count = 4, language = 'ar' }
     const correct = itemKey === targetKey;
     setFeedback(correct ? 'correct' : 'wrong');
     if (correct) setScore(s => s + 1);
-  try { playSfx(correct ? 'correct' : 'wrong'); } catch (e) {}
+    try { playSfx(correct ? 'correct' : 'wrong'); } catch (e) { }
     // brief delay then next round or finish
     setTimeout(() => {
       setFeedback(null);
       if (roundIndex + 1 >= rounds) {
+        console.log("Game finished");
         setFinished(true);
-  playSfx('win');
+        playSfx('win');
+        setAudioReady(false);
       } else {
         setRoundIndex(r => r + 1);
-  // set new target for next round and autoplay it
-  const nextIndex = Math.floor(Math.random() * pool.length);
-  setTargetIndex(nextIndex);
-  setTimeout(() => playTargetSound(), 120);
+        // set new target for next round and autoplay it
+        const nextIndex = Math.floor(Math.random() * pool.length);
+        setTargetIndex(nextIndex);
+        if(nextIndex == targetIndex){
+          setTimeout(() => {
+            playTargetSound();
+          }, 60);
+
+        }
       }
     }, 700);
   };
 
   const handleNext = () => {
-  playSfx('click');
+    playSfx('click');
     // restart using availableItems
     const shuffled = [...availableItems].sort(() => 0.5 - Math.random());
     const selection = shuffled.slice(0, rounds);
     setPool(selection);
     setRoundIndex(0);
-  const startIdx = selection.length ? Math.floor(Math.random() * selection.length) : 0;
-  setTargetIndex(startIdx);
-  setTimeout(() => playTargetSound(), 120);
+    const startIdx = selection.length ? Math.floor(Math.random() * selection.length) : 0;
+    setTargetIndex(startIdx);
+    setTimeout(() => playTargetSound(), 120);
     setScore(0);
     setFinished(false);
     setFeedback(null);
@@ -157,7 +164,7 @@ export default function SoundMatching({ items = [], count = 4, language = 'ar' }
 
         <Grid container spacing={2} justifyContent="center">
           {pool.map((it, idx) => (
-            <Grid item xs={6} sm={4} md={3} key={(it.enName||it.name)+idx}>
+            <Grid item xs={6} sm={4} md={3} key={(it.enName || it.name) + idx}>
               <Paper
                 onClick={() => handleSelect(it)}
                 sx={{

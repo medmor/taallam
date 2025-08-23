@@ -7,6 +7,7 @@ import DragLabeling from '@/components/DragLabeling';
 import SequenceBuilder from '@/components/SequenceBuilder';
 import PuzzleAssembly from '@/components/PuzzleAssembly';
 import AdditionGame from '@/components/AdditionGame';
+import MultiplicationGame from '@/components/MultiplicationGame';
 import { games, learningCategories } from '@/lib/data';
 import { Box, Grid, Paper, Typography, Button } from '@mui/material';
 
@@ -59,7 +60,7 @@ const GamesPage = () => {
                       transition: 'transform 0.12s ease, box-shadow 0.12s',
                       '&:active': { transform: 'scale(0.98)' },
                     }}
-                    >
+                  >
                     العب
                   </Button>
                 </div>
@@ -69,50 +70,62 @@ const GamesPage = () => {
         </Grid>
       )}
 
-  {selected === 'sliding-puzzle' && (
+      {selected  && (
+        <div style={{ textAlign: 'center' }}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            endIcon={<span style={{ fontSize: 22, marginRight: 8 }}>←</span>}
+            sx={{
+              mb: 2,
+              fontWeight: 'bold',
+              fontSize: 18,
+            }}
+            onClick={() => setSelected(null)}
+          >
+          </Button>
+        </div>
+      )}
+      {selected === 'sliding-puzzle' && (
         <div>
-          <Button sx={{ mb: 2 }} onClick={() => setSelected(null)}>← العودة</Button>
           <SlidingPuzzle />
         </div>
       )}
-
-  {selected === 'matching-cards' && (
+      {selected === 'matching-cards' && (
         <div>
-          <Button sx={{ mb: 2 }} onClick={() => setSelected(null)}>← العودة</Button>
           <MatchingGame size={4} type="numbers" />
         </div>
       )}
-
       {selected === 'sound-matching' && (
         <div>
-          <Button sx={{ mb: 2 }} onClick={() => setSelected(null)}>← العودة</Button>
           <SoundMatching items={(learningCategories && learningCategories[0] && learningCategories[0].items) || []} count={4} language="ar" />
         </div>
       )}
-        {selected === 'drag-labeling' && (
-          <div>
-            <Button sx={{ mb: 2 }} onClick={() => setSelected(null)}>← العودة</Button>
-            <DragLabeling items={(learningCategories && learningCategories[0] && learningCategories[0].items) || []} level={1} />
-          </div>
-        )}
-        {selected === 'sequence-builder' && (
-          <div>
-            <Button sx={{ mb: 2 }} onClick={() => setSelected(null)}>← العودة</Button>
-            <SequenceBuilder initialLength={3} />
-          </div>
-        )}
-        {selected === 'puzzle-assembly' && (
-          <div>
-            <Button sx={{ mb: 2 }} onClick={() => setSelected(null)}>← العودة</Button>
-            <PuzzleAssembly />
-          </div>
-        )}
-        {selected === 'addition-game' && (
-          <div>
-            <Button sx={{ mb: 2 }} onClick={() => setSelected(null)}>← العودة</Button>
-            <AdditionGame />
-          </div>
-        )}
+      {selected === 'drag-labeling' && (
+        <div>
+          <DragLabeling items={(learningCategories && learningCategories[0] && learningCategories[0].items) || []} level={1}  />
+        </div>
+      )}
+      {selected === 'sequence-builder' && (
+        <div>
+          <SequenceBuilder initialLength={3} />
+        </div>
+      )}
+      {selected === 'puzzle-assembly' && (
+        <div>
+          <PuzzleAssembly />
+        </div>
+      )}
+      {selected === 'addition-game' && (
+        <div>
+          <AdditionGame />
+        </div>
+      )}
+      {selected === 'multiplication-game' && (
+        <div>
+          <MultiplicationGame />
+        </div>
+      )}
     </Box>
   );
 };
