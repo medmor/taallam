@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import Timer from './Timer';
 import { Box, Button, Paper, Typography, Stack } from '@mui/material';
 import WinOverlay from './WinOverlay';
 import { playSfx } from '@/lib/sfx';
@@ -22,13 +23,23 @@ function generateForLevel(level) {
     b = randInt(10, 89);
   }
   const answer = a + b;
-  const wrong1 = answer + (Math.random() > 0.5 ? randInt(1, 5) : -randInt(1, 5));
-  const wrong2 = answer + (Math.random() > 0.5 ? randInt(6, 12) : -randInt(6, 12));
-  const choices = [answer, wrong1, wrong2].sort(() => Math.random() - 0.5);
+  let wrongs = [];
+  while (wrongs.length < 2) {
+    const delta = wrongs.length === 0 ? randInt(1, 5) : randInt(6, 12);
+    const sign = Math.random() > 0.5 ? 1 : -1;
+    const wrong = answer + sign * delta;
+    if (wrong > 0 && wrong !== answer && !wrongs.includes(wrong)) {
+      wrongs.push(wrong);
+    }
+  }
+  const choices = [answer, ...wrongs].sort(() => Math.random() - 0.5);
   return { a, b, answer, choices };
 }
 
 export default function AdditionGame() {
+  const [timerActive, setTimerActive] = useState(true);
+  const [timerKey, setTimerKey] = useState(0);
+  const [finalTime, setFinalTime] = useState(null);
   const [level, setLevel] = useState('easy');
   const [round, setRound] = useState(0);
   const [expr, setExpr] = useState(() => generateForLevel('easy'));
@@ -41,42 +52,81 @@ export default function AdditionGame() {
     setRound(0);
     setScore(0);
     setShowWin(false);
+    setTimerActive(true);
+    setTimerKey(k => k + 1);
+    setFinalTime(null);
   }, [level]);
 
   const nextRound = (correct) => {
     if (correct) {
       setScore(s => s + 1);
-      try { playSfx('correct'); } catch (e) {}
+      try { playSfx('correct'); } catch (e) { }
     } else {
-      try { playSfx('wrong'); } catch (e) {}
+      try { playSfx('wrong'); } catch (e) { }
     }
     if (round + 1 >= totalRounds) {
       setShowWin(true);
-      try { playSfx('win'); } catch (e) {}
+      setTimerActive(false);
+      try { playSfx('win'); } catch (e) { }
       return;
     }
     setRound(r => r + 1);
     setExpr(generateForLevel(level));
   };
 
-  return (
-    <Box>
-      <Typography variant="h5" sx={{ mb: 2 }}>لعبة الجمع</Typography>
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <Button variant={level==='easy' ? 'contained' : 'outlined'} onClick={() => setLevel('easy')}>سهل</Button>
-        <Button variant={level==='medium' ? 'contained' : 'outlined'} onClick={() => setLevel('medium')}>متوسط</Button>
-        <Button variant={level==='hard' ? 'contained' : 'outlined'} onClick={() => setLevel('hard')}>صعب</Button>
-      </Stack>
+  // Preload sound effects on mount
+  React.useEffect(() => {
+    try { require('@/lib/sfx').preloadSfx(); } catch (e) { }
+  }, []);
 
-      <Paper sx={{ p: 3, textAlign: 'center' }}>
-        <Typography variant="h4" sx={{ mb: 1 }}>{expr.a} + {expr.b}</Typography>
-        <Typography variant="h6" sx={{ mb: 2 }}>=</Typography>
-        <Stack direction="row" spacing={2} justifyContent="center">
-          {expr.choices.map((c) => (
-            <Button key={c} onClick={() => nextRound(c === expr.answer)} variant="outlined" sx={{ minWidth: 100 }}>{c}</Button>
-          ))}
+  // Timer stop handler
+  const handleTimerStop = (seconds) => {
+    setFinalTime(seconds);
+  };
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
+      <Paper elevation={6} sx={{ p: 4, borderRadius: 4, minWidth: 350, maxWidth: 400, background: 'linear-gradient(135deg, #e0f7fa 60%, #fffde4 100%)', border: '2px solid #80deea', boxShadow: '0 4px 24px #b2ebf2' }}>
+  <Typography variant="h4" align="center" sx={{ mb: 2, fontWeight: 'bold', color: '#00838f' }}>تحدي الرياضيات : الجمع</Typography>
+        <Stack direction="row" gap={3} justifyContent="center" sx={{ mb: 3 }}>
+          <Button variant={level === 'easy' ? 'contained' : 'outlined'} color="success" onClick={() => { playSfx('click'); setLevel('easy'); }}>سهل</Button>
+          <Button variant={level === 'medium' ? 'contained' : 'outlined'} color="warning" onClick={() => { playSfx('click'); setLevel('medium'); }}>متوسط</Button>
+          <Button variant={level === 'hard' ? 'contained' : 'outlined'} color="error" onClick={() => { playSfx('click'); setLevel('hard'); }}>صعب</Button>
         </Stack>
-        <Typography sx={{ mt: 2 }}>النتيجة: {score} / {totalRounds}</Typography>
+
+        {/* Progress Bar */}
+        <Box sx={{ width: '100%', mb: 2 }}>
+          <Box sx={{ height: 10, background: '#b2ebf2', borderRadius: 5 }}>
+            <Box sx={{ width: `${((round + 1) / totalRounds) * 100}%`, height: '100%', background: '#00838f', borderRadius: 5, transition: 'width 0.3s' }} />
+          </Box>
+          <Typography variant="body2" align="center" sx={{ mt: 1, color: '#00838f' }}>الجولة {round + 1} من {totalRounds}</Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h3" sx={{ mb: 1, color: '#006064', fontWeight: 'bold', letterSpacing: 2 }}>{expr.a} + {expr.b}</Typography>
+          <Typography variant="h5" sx={{ mb: 2, color: '#00838f' }}>=</Typography>
+          <Stack direction="row" gap={3} justifyContent="center">
+            {expr.choices.map((c) => (
+              <Button
+                key={c}
+                onClick={() => { playSfx('click'); nextRound(c === expr.answer); }}
+                variant="contained"
+                color={c === expr.answer ? 'primary' : 'secondary'}
+                sx={{ minWidth: 80, fontSize: 22, fontWeight: 'bold', boxShadow: '0 2px 8px #b2ebf2', borderRadius: 2, py: 1, px: 2, transition: 'transform 0.1s', ':active': { transform: 'scale(1.1)' } }}
+              >
+                {c}
+              </Button>
+            ))}
+          </Stack>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2, gap: 3 }}>
+          <Typography sx={{ fontSize: 18, color: '#006064', fontWeight: 'bold' }}>النتيجة: <span style={{ color: '#43a047' }}>{score}</span> / {totalRounds}</Typography>
+          <Timer active={timerActive} resetKey={timerKey} onStop={handleTimerStop} />
+        </Box>
+        {finalTime !== null && (
+          <Typography sx={{ mt: 1, fontSize: 16, color: '#00838f', textAlign: 'center' }}>الوقت المستغرق: {Math.floor(finalTime / 60).toString().padStart(2, '0')}:{(finalTime % 60).toString().padStart(2, '0')}</Typography>
+        )}
       </Paper>
 
       {showWin && (
