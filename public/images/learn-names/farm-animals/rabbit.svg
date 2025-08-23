@@ -1,0 +1,30 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <circle cx="128" cy="128" r="120" fill="#f0f8ff"/>
+  
+  <!-- Body -->
+  <ellipse cx="128" cy="160" rx="50" ry="40" fill="#ffffff" stroke="#333" stroke-width="3"/>
+  
+  <!-- Head -->
+  <ellipse cx="128" cy="95" rx="30" ry="25" fill="#ffffff" stroke="#333" stroke-width="3"/>
+  
+  <!-- Eyes -->
+  <ellipse cx="115" cy="85" rx="5" ry="6" fill="#ffcccc" stroke="#333" stroke-width="2"/>
+  <ellipse cx="141" cy="85" rx="5" ry="6" fill="#ffcccc" stroke="#333" stroke-width="2"/>
+  <ellipse cx="115" cy="85" rx="2" ry="3" fill="#333"/>
+  <ellipse cx="141" cy="85" rx="2" ry="3" fill="#333"/>
+  
+  <!-- Nose -->
+  <path d="M122 100 Q 128 105 134 100" fill="none" stroke="#333" stroke-width="1.5"/>
+  
+  <!-- Ears -->
+  <path d="M100 65 Q 90 45 95 40 Q 100 35 110 50 Q 115 55 112 65 Z" fill="#ffffff" stroke="#333" stroke-width="2"/>
+  <path d="M156 65 Q 166 45 161 40 Q 156 35 146 50 Q 141 55 144 65 Z" fill="#ffffff" stroke="#333" stroke-width="2"/>
+  
+  <!-- Legs -->
+  <rect x="110" y="195" width="12" height="35" rx="5" fill="#ffffff" stroke="#333" stroke-width="2"/>
+  <rect x="134" y="195" width="12" height="35" rx="5" fill="#ffffff" stroke="#333" stroke-width="2"/>
+  
+  <!-- Tail -->
+  <ellipse cx="180" cy="160" rx="10" ry="8" fill="#ffffff" stroke="#333" stroke-width="2"/>
+</svg>
