@@ -7,7 +7,7 @@ import LearningCard from '@/components/LearningCard';
 
 const LearnNamesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [audioPlayer] = useState(null);
+  const [audioPlayer, setAudioPlayer] = useState(null);
   const [itemIndex, setItemIndex] = useState(0);
   const [slideDir, setSlideDir] = useState(0); // -1 for prev, 1 for next
   const [prevIndex, setPrevIndex] = useState(0);
@@ -26,7 +26,7 @@ const LearnNamesPage = () => {
   };
 
   useEffect(() => {
-    audioPlayer = new Audio();
+    setAudioPlayer(new Audio());
     // detect direction from document or the viewport container
     try {
       const dirFromDoc = typeof document !== 'undefined' && (document.documentElement?.dir || document.body?.dir);
