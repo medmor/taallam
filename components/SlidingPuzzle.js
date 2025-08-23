@@ -228,10 +228,15 @@ const SlidingPuzzle = () => {
                 solvedArr = Array.from({ length: size * size }, (_, i) => i);
             }
             solvedArr[solvedArr.length - 1] = null;
-            setSolved(newTiles.every((v, i) => v === solvedArr[i]));
-            // if solved stop timer
-            if (newTiles.every((v, i) => v === solvedArr[i])) setTimerActive(false);
-            try { playSfx('slide'); } catch (e) {}
+            const isSolved = newTiles.every((v, i) => v === solvedArr[i]);
+            setSolved(isSolved);
+            // if solved stop timer and play win sound
+            if (isSolved) {
+                setTimerActive(false);
+                try { playSfx('win'); } catch (e) {}
+            } else {
+                try { playSfx('slide'); } catch (e) {}
+            }
         }
     };
 
