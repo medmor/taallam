@@ -64,6 +64,28 @@
             "isStatic": true,
             "damage": 1,
             "color": "danger"
+        },
+        {
+            "type": "pin",
+            "name": "wideSpike1",
+            "x": 600,
+            "y": 500,
+            "w": 200,
+            "h": 40,
+            "isStatic": true,
+            "damage": 2,
+            "color": "danger"
+        },
+        {
+            "type": "pin",
+            "name": "wideSpike2",
+            "x": 1400,
+            "y": 500,
+            "w": 200,
+            "h": 40,
+            "isStatic": true,
+            "damage": 2,
+            "color": "danger"
         }
     ]
 }
