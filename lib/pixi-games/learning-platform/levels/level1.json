@@ -42,5 +42,26 @@
             "isStatic": true,
             "color": "platform"
         }
+        ,
+        {
+            "type": "triangle",
+            "name": "pin1",
+            "x": 700,
+            "y": 328,
+            "w": 24,
+            "h": 40,
+            "isStatic": true,
+            "color": "danger"
+        },
+        {
+            "type": "triangle",
+            "name": "pin2",
+            "x": 1080,
+            "y": 208,
+            "w": 28,
+            "h": 44,
+            "isStatic": true,
+            "color": "danger"
+        }
     ]
 }
