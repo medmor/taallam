@@ -44,23 +44,25 @@
         }
         ,
         {
-            "type": "triangle",
+            "type": "pin",
             "name": "pin1",
             "x": 700,
             "y": 328,
             "w": 24,
-            "h": 40,
+            "h": 50,
             "isStatic": true,
+            "damage": 1,
             "color": "danger"
         },
         {
-            "type": "triangle",
+            "type": "pin",
             "name": "pin2",
             "x": 1080,
             "y": 208,
             "w": 28,
-            "h": 44,
+            "h": 50,
             "isStatic": true,
+            "damage": 1,
             "color": "danger"
         }
     ]
