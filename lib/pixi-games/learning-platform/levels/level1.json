@@ -1,0 +1,46 @@
+{
+    "width": 1600,
+    "height": 600,
+    "objects": [
+        {
+            "type": "rect",
+            "name": "ground",
+            "x": 800,
+            "y": 600,
+            "w": 1600,
+            "h": 400,
+            "isStatic": true,
+            "color": 654321
+        },
+        {
+            "type": "rect",
+            "name": "platform1",
+            "x": 300,
+            "y": 460,
+            "w": 200,
+            "h": 16,
+            "isStatic": true,
+            "color": 886644
+        },
+        {
+            "type": "rect",
+            "name": "platform2",
+            "x": 700,
+            "y": 360,
+            "w": 160,
+            "h": 16,
+            "isStatic": true,
+            "color": 886644
+        },
+        {
+            "type": "rect",
+            "name": "platform3",
+            "x": 1000,
+            "y": 240,
+            "w": 240,
+            "h": 16,
+            "isStatic": true,
+            "color": 886644
+        }
+    ]
+}
