@@ -10,7 +10,7 @@
             "w": 1600,
             "h": 200,
             "isStatic": true,
-            "color": 654321
+            "color": "ground"
         },
         {
             "type": "rect",
@@ -20,7 +20,7 @@
             "w": 200,
             "h": 16,
             "isStatic": true,
-            "color": 886644
+            "color": "platform"
         },
         {
             "type": "rect",
@@ -30,7 +30,7 @@
             "w": 160,
             "h": 16,
             "isStatic": true,
-            "color": 886644
+            "color": "platform"
         },
         {
             "type": "rect",
@@ -40,7 +40,7 @@
             "w": 240,
             "h": 16,
             "isStatic": true,
-            "color": 886644
+            "color": "platform"
         }
     ]
 }
