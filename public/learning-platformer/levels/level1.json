@@ -3,7 +3,7 @@
     "name": "المستوى 1",
     "width": 1600,
     "height": 1000,
-    "playerX": 100,
+    "playerX": 300,
     "playerY": 500,
     "objects": [
         {
