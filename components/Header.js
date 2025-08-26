@@ -37,9 +37,10 @@ export default function Header() {
             </IconButton>
           </Link>
         </Typography>
-        <Button color="inherit" component={Link} href="/learn-names"  sx={{fontSize: '1.2rem'}}>تعلم الأسماء</Button>
-        <Button color="inherit" component={Link} href="/games" sx={{fontSize: '1.2rem'}}>ألعاب</Button>
-        <Button style={{color: 'white'}} component={Link} href="/signin" sx={{fontSize: '1.2rem'}}>تسجيل الدخول</Button>
+  <Button color="inherit" component={Link} href="/learn-names"  sx={{fontSize: '1.2rem'}}>تعلم الأسماء</Button>
+  <Button color="inherit" component={Link} href="/games" sx={{fontSize: '1.2rem'}}>ألعاب</Button>
+  <Button color="inherit" component={Link} href="/other-games" sx={{fontSize: '1.2rem'}}>العاب اخرى</Button>
+  <Button style={{color: 'white'}} component={Link} href="/signin" sx={{fontSize: '1.2rem'}}>تسجيل الدخول</Button>
         <IconButton color="inherit" onClick={toggleMute} aria-label={muted ? 'unmute' : 'mute'}>
           {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
         </IconButton>
