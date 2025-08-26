@@ -23,9 +23,8 @@ export default function OtherGamesPage() {
               <Grid item xs={12} sm={6} md={4} key={game.id} display="flex" justifyContent="center">
                 <LearningCard
                   data={game}
-                  type="game"
+                  type="category"
                   onCardClick={() => setSelectedGame(game)}
-                  onSoundClick={() => {}}
                 />
               </Grid>
             ))
