@@ -40,21 +40,15 @@ export default function PlatformerPhaser({ width = "100%", height = 600 }) {
     };
   }, []);
 
-  const [collected, setCollected] = useState([]);
   const [won, setWon] = useState(false);
 
   return (
     <Box sx={{ width, maxWidth: 1000, mx: "auto", p: 2 }}>
-      <Typography variant="h6" sx={{ mb: 1 }}>
-        تحدي الرياضيات : المنصة (Phaser)
-      </Typography>
       <Box
         ref={containerRef}
         sx={{ width: "100%", boxShadow: 3, height: 600 }}
       />
-      <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-        <Typography variant="body1">Collected: {collected.join("")}</Typography>
-      </Box>
+
       {won && (
         <Box sx={{ mt: 2, p: 2, bgcolor: "success.main", color: "#fff" }}>
           <Typography variant="h6">Level Complete!</Typography>
