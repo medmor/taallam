@@ -3,7 +3,7 @@
     "name": "المستوى 1",
     "width": 1600,
     "height": 1000,
-    "playerX": 300,
+    "playerX": 100,
     "playerY": 500,
     "objects": [
         {
@@ -90,6 +90,27 @@
             "isStatic": true,
             "damage": 2,
             "color": "danger"
+        },
+        {
+            "type": "collectible",
+            "name": "coin1",
+            "x": 300,
+            "y": 540,
+            "value": 10
+        },
+        {
+            "type": "collectible",
+            "name": "coin2",
+            "x": 700,
+            "y": 460,
+            "value": 15
+        },
+        {
+            "type": "collectible",
+            "name": "coin3",
+            "x": 1000,
+            "y": 500,
+            "value": 20
         }
     ]
 }
