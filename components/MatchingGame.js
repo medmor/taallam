@@ -6,14 +6,6 @@ import WinOverlay from './WinOverlay';
 import Timer from './Timer';
 import { preloadSfx, playSfx } from '@/lib/sfx';
 
-const getRandomImage = () => {
-  const categories = learningCategories.filter(cat => cat.items && cat.items.length);
-  const allItems = categories.flatMap(cat => cat.items);
-  const itemsWithImages = allItems.filter(item => item.image && item.image !== '/globe.svg');
-  const randomItem = itemsWithImages[Math.floor(Math.random() * itemsWithImages.length)];
-  return randomItem.image;
-};
-
 // Return up to `count` unique random images. If there are fewer unique images
 // than `count`, the result will include duplicates (we try to fill as much as
 // possible without replacement first).
@@ -58,20 +50,31 @@ const MatchingGame = ({ size = 4, type = 'numbers' }) => {
   const [timerActive, setTimerActive] = useState(true);
   const [timerKey, setTimerKey] = useState(0);
 
+
+  // Preload images before game starts
   useEffect(() => {
-    // build pairs
     let values = [];
     if (localType === 'numbers') values = Array.from({ length: pairCount }, (_, i) => i + 1);
     else if (localType === 'alphabets') values = Array.from({ length: pairCount }, (_, i) => String.fromCharCode(65 + i));
-  else values = getRandomImages(pairCount);
+    else values = getRandomImages(pairCount);
+
+    // Preload images if type is not numbers or alphabets
+    if (localType !== 'numbers' && localType !== 'alphabets') {
+      const imageUrls = Array.isArray(values) ? values : [];
+      imageUrls.forEach((url) => {
+        if (typeof url === 'string' && url !== '/globe.svg') {
+          const img = new window.Image();
+          img.src = url;
+        }
+      });
+    }
 
     const pairs = shuffle([...values, ...values]);
     const init = pairs.map((v, i) => ({ id: i, value: v, matched: false }));
     setCards(init);
     setFirst(null); setSecond(null); setLock(false); setMoves(0); setErrors(0); setSolved(false);
-  // reset timer on new game
-  setTimerKey(k => k + 1);
-  setTimerActive(true);
+    setTimerKey(k => k + 1);
+    setTimerActive(true);
   }, [localSize, localType]);
 
   useEffect(() => {

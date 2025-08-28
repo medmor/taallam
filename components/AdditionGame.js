@@ -111,7 +111,7 @@ export default function AdditionGame() {
                 key={c}
                 onClick={() => { playSfx('click'); nextRound(c === expr.answer); }}
                 variant="contained"
-                color={c === expr.answer ? 'primary' : 'secondary'}
+                color={Math.random() < 0.5 ? 'primary' : 'secondary'}
                 sx={{ minWidth: 80, fontSize: 22, fontWeight: 'bold', boxShadow: '0 2px 8px #b2ebf2', borderRadius: 2, py: 1, px: 2, transition: 'transform 0.1s', ':active': { transform: 'scale(1.1)' } }}
               >
                 {c}
