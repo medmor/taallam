@@ -9,13 +9,14 @@ import PuzzleAssembly from '@/components/PuzzleAssembly';
 import AdditionGame from '@/components/AdditionGame';
 import MultiplicationGame from '@/components/MultiplicationGame';
 import NumberLineJump from '@/components/NumberLineJump';
+import MathBingo from '@/components/MathBingo';
 import { games, learningCategories } from '@/lib/data';
 import { Box, Grid, Paper, Typography, Button } from '@mui/material';
 
 const GamesPage = () => {
   const [selected, setSelected] = useState(null);
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ width: '100%', py: 2 }}>
       {!selected && (
         <Grid container spacing={2} justifyContent="center">
           {games.map(g => (
@@ -130,6 +131,11 @@ const GamesPage = () => {
       {selected === 'number-line-jump' && (
         <div>
           <NumberLineJump />
+        </div>
+      )}
+      {selected === 'math-bingo' && (
+        <div>
+          <MathBingo />
         </div>
       )}
     </Box>
