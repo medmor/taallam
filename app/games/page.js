@@ -8,6 +8,7 @@ import SequenceBuilder from '@/components/SequenceBuilder';
 import PuzzleAssembly from '@/components/PuzzleAssembly';
 import AdditionGame from '@/components/AdditionGame';
 import MultiplicationGame from '@/components/MultiplicationGame';
+import NumberLineJump from '@/components/NumberLineJump';
 import { games, learningCategories } from '@/lib/data';
 import { Box, Grid, Paper, Typography, Button } from '@mui/material';
 
@@ -124,6 +125,11 @@ const GamesPage = () => {
       {selected === 'multiplication-game' && (
         <div>
           <MultiplicationGame />
+        </div>
+      )}
+      {selected === 'number-line-jump' && (
+        <div>
+          <NumberLineJump />
         </div>
       )}
     </Box>
