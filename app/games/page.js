@@ -10,6 +10,7 @@ import AdditionGame from '@/components/AdditionGame';
 import MultiplicationGame from '@/components/MultiplicationGame';
 import NumberLineJump from '@/components/NumberLineJump';
 import MathBingo from '@/components/MathBingo';
+import EquationBalance from '@/components/EquationBalance';
 import { games, learningCategories } from '@/lib/data';
 import { Box, Grid, Paper, Typography, Button } from '@mui/material';
 
@@ -136,6 +137,11 @@ const GamesPage = () => {
       {selected === 'math-bingo' && (
         <div>
           <MathBingo />
+        </div>
+      )}
+      {selected === 'equation-balance' && (
+        <div>
+          <EquationBalance />
         </div>
       )}
     </Box>

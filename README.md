@@ -7,7 +7,7 @@
 Number & Basic Operations
 [*]NumberLineJump - Jump on a number line to solve addition/subtraction
 [*]MathBingo - Bingo game with math problems instead of numbers
-[ ]EquationBalance - Balance scale game to solve equations
+[*]EquationBalance - Balance scale game to solve equations
 [ ]MissingNumberGame - Fill in missing numbers in sequences
 Geometry
 [ ]ShapeBuilder - Build shapes by connecting dots/vertices
