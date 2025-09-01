@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography, Paper, Chip } from '@mui/material';
+import Timer from './Timer';
 
 const MissingNumberGame = () => {
   const [sequence, setSequence] = useState([]);
@@ -10,6 +11,9 @@ const MissingNumberGame = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
+  const [resetKey, setResetKey] = useState(0);
+  const [timerActive, setTimerActive] = useState(true);
+  const [lastTime, setLastTime] = useState(null);
 
   useEffect(() => {
     generateNewSequence();
@@ -64,7 +68,7 @@ const MissingNumberGame = () => {
 
   const handleAnswerSelect = (answer) => {
     if (showResult) return;
-    
+    setTimerActive(false);
     setSelectedAnswer(answer);
     const correct = answer === sequence[missingIndex];
     setIsCorrect(correct);
@@ -84,6 +88,8 @@ const MissingNumberGame = () => {
   const resetGame = () => {
     setScore(0);
     setLevel(1);
+    setResetKey(k => k + 1);
+    setTimerActive(true);
     generateNewSequence();
   };
 
@@ -103,13 +109,17 @@ const MissingNumberGame = () => {
       mx: 'auto', 
       p: 3, 
       textAlign: 'center',
-      backgroundColor: '#f5f5f5',
-      minHeight: '100vh'
+      backgroundColor: 'white',
+      borderRadius: '40px'
     }}>
       {/* Header */}
       <Typography variant="h4" gutterBottom sx={{ color: '#2196f3', fontWeight: 'bold' }}>
         🔢 لعبة الأرقام المفقودة
       </Typography>
+      {/* Timer */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+        <Timer active={timerActive} resetKey={resetKey} onStop={setLastTime} />
+      </Box>
       
       {/* Score and Level */}
       <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}>
