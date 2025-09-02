@@ -100,7 +100,9 @@ export default function PuzzleAssembly({ snapThreshold = 40 }) {
       y: Math.random() * (boardH - p.h - 8) + 4,
       snapped: false,
     }));
-    setPieces(placed);
+    // shuffle the initial order of pieces
+    const shuffled = [...placed].sort(() => Math.random() - 0.5);
+    setPieces(shuffled);
     setImageSrc(chosenImage || null);
     // compute initial scale based on container width
     const resize = () => {
@@ -388,11 +390,12 @@ export default function PuzzleAssembly({ snapThreshold = 40 }) {
             ))}
           </defs>
 
-          {/* Sort pieces so unsnapped tiles are rendered on top */}
+          {/* Sort pieces so snapped tiles are rendered first (below), unsnapped last (above) */}
           {(() => {
-            const sortedPieces = [...pieces].sort(
-              (a, b) => a.snapped - b.snapped
-            );
+            const sortedPieces = [
+              ...pieces.filter(p => p.snapped),
+              ...pieces.filter(p => !p.snapped)
+            ];
             return sortedPieces.map((p) => (
               <g
                 key={p.id}
