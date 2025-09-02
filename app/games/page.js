@@ -12,6 +12,7 @@ import NumberLineJump from '@/components/NumberLineJump';
 import MathBingo from '@/components/MathBingo';
 import EquationBalance from '@/components/EquationBalance';
 import MissingNumberGame from '@/components/MissingNumberGame';
+import ShapeBuilder from '@/components/ShapeBuilder';
 import { games, learningCategories } from '@/lib/data';
 import { Box, Grid, Paper, Typography, Button } from '@mui/material';
 
@@ -148,6 +149,11 @@ const GamesPage = () => {
       {selected === 'missing-number-game' && (
         <div>
           <MissingNumberGame />
+        </div>
+      )}
+      {selected === 'shape-builder' && (
+        <div>
+          <ShapeBuilder />
         </div>
       )}
     </Box>
