@@ -185,11 +185,11 @@ export default function SequenceBuilder({ pool: propPool = null }) {
     };
 
     return (
-        <Box sx={{ width: '100%', maxWidth: 640, mx: 'auto' }}>
+        <Paper elevation={4} sx={{ width: '100%', maxWidth: 640, mx: 'auto', borderRadius: 2, background: '#fff', p: 3, boxShadow: 3 }}>
             <Typography variant="h5" sx={{ mb: 1, textAlign: 'center' }}>Simon Says — تذكر التسلسل وكرره</Typography>
             <Typography variant="body2" sx={{ mb: 2, textAlign: 'center' }}>شاهد الترتيب ثم كرره بالضغط على الألوان بالترتيب الصحيح. فعّل الوضع الصارم لإعادة البدء عند أي خطأ.</Typography>
 
-            <Paper sx={{ p: 2, mb: 2 }}>
+            <Paper sx={{ p: 2, mb: 2, borderRadius: 2 }}>
                 <Grid container spacing={2} alignItems="center" justifyContent="center">
                     <Grid item>
                         <Typography>جولة: {sequence.length}</Typography>
@@ -245,6 +245,6 @@ export default function SequenceBuilder({ pool: propPool = null }) {
             <Box sx={{ mt: 2, textAlign: 'center' }}>
                 <Typography sx={{ minHeight: 24 }}>{message}</Typography>
             </Box>
-        </Box>
+    </Paper>
     );
 }

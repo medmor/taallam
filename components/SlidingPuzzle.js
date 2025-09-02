@@ -242,8 +242,9 @@ const SlidingPuzzle = () => {
 
     return (
         <Box ref={containerRef} sx={{ width: '100%', maxWidth: 480, mx: 'auto', p: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }} dir="ltr">
-            <Typography variant="h5" gutterBottom>لغز الانزلاق</Typography>
-            <Grid container spacing={2} alignItems="center" justifyContent="center" sx={{ mb: 2 }}>
+                <Paper elevation={4} sx={{ width: '100%', borderRadius: 5, background: '#fff', p: 3, boxShadow: 3, mb: 2 }}>
+                    <Typography variant="h5" gutterBottom>لغز الانزلاق</Typography>
+                    <Grid container spacing={2} alignItems="center" justifyContent="center" sx={{ mb: 2 }}>
                 <Grid item>
                     <FormControl size="small">
                         <InputLabel id="size-label">الحجم</InputLabel>
@@ -283,7 +284,8 @@ const SlidingPuzzle = () => {
                 <Grid item>
                     <Typography variant="body2">التحركات: {moves}</Typography>
                 </Grid>
-            </Grid>
+                    </Grid>
+                </Paper>
             {/** responsive board */}
             {(() => {
                 // responsive board size measured from outer container (with sensible defaults)

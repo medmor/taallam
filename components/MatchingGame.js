@@ -118,7 +118,7 @@ const MatchingGame = ({ size = 4, type = 'numbers' }) => {
   const displayFontSize = localSize === 2 ? 28 : 20;
 
   return (
-    <Box sx={{ width: 360, maxWidth: '100%', mx: 'auto', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Paper elevation={4} sx={{ width: 360, maxWidth: '100%', mx: 'auto', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: 2, background: '#fff', p: 3, boxShadow: 3 }}>
       <Typography variant="h6" sx={{ mb: 1, textAlign: 'center' }}>لعبة المطابقة</Typography>
       <Grid container spacing={1} alignItems="center" justifyContent="center" sx={{ mb: 1, width: '100%' }}>
         <Grid item>
@@ -190,7 +190,7 @@ const MatchingGame = ({ size = 4, type = 'numbers' }) => {
   setCards(init); setSolved(false); setMoves(0); setErrors(0);
   try { playSfx('click'); } catch (e) {}
       }} />}
-    </Box>
+  </Paper>
   );
 };
 
