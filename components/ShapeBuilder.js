@@ -16,7 +16,8 @@ const ShapeBuilder = () => {
     triangle: { sides: 3, name: 'مثلث', points: 3 },
     square: { sides: 4, name: 'مربع', points: 4 },
     pentagon: { sides: 5, name: 'خماسي', points: 5 },
-    hexagon: { sides: 6, name: 'سداسي', points: 6 }
+    hexagon: { sides: 6, name: 'سداسي', points: 6 },
+    octagon: { sides: 8, name: 'ثماني', points: 8 }
   };
 
   const generateDots = () => {
@@ -208,9 +209,8 @@ const ShapeBuilder = () => {
       setLevel(prev => prev + 1);
     }
     
-    setTargetShape(nextShape);
     setTimeout(() => {
-      generateDots();
+      setTargetShape(nextShape);
     }, 500);
   };
 
