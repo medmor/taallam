@@ -26,6 +26,7 @@ export default function NumberLineJump() {
   const [isJumping, setIsJumping] = useState(false);
   const [timerActive, setTimerActive] = useState(false);
   const [timerKey, setTimerKey] = useState(0);
+  const [isAnswering, setIsAnswering] = useState(false);
 
   const maxNumber = 20; // Number line goes from 0 to 20
   const operationsPerRound = 10;
@@ -38,6 +39,7 @@ export default function NumberLineJump() {
 
   // Generate a random addition/subtraction problem
   const generateProblem = () => {
+    setIsAnswering(false);
     const isAddition = Math.random() > 0.5;
     let num1, num2, answer;
 
@@ -56,7 +58,6 @@ export default function NumberLineJump() {
       num2 = Math.floor(Math.random() * num1) + 1;
       answer = num1 - num2;
     }
-
     return {
       expression: `${num1} ${isAddition ? "+" : "-"} ${num2}`,
       answer,
@@ -81,6 +82,7 @@ export default function NumberLineJump() {
   };
 
   const jumpToPosition = (position) => {
+    setIsAnswering(true);
     if (!currentProblem || isJumping) return;
 
     setIsJumping(true);
@@ -142,7 +144,7 @@ export default function NumberLineJump() {
             <Grid item key={num} xs={2} sm={1.2} md={1}>
               <Button
                 variant={playerPosition === num ? "contained" : "outlined"}
-                color={ playerPosition === num ? "primary" : "default"}
+                color={playerPosition === num ? "primary" : "default"}
                 onClick={() => jumpToPosition(num)}
                 sx={{
                   width: "100%",
@@ -164,7 +166,17 @@ export default function NumberLineJump() {
                 }}
                 disabled={!gameStarted || !currentProblem || gameComplete}
               >
-                <span style={{fontSize: "1.2rem"}}>{playerPosition === num ? (isCorrect ? "😃" : "😞") : num}</span>
+                <span style={{ fontSize: "1.2rem" }}>
+                  {playerPosition === num
+                    ? !isAnswering
+                      ? "😌"
+                      : isJumping
+                      ? "😓"
+                      : isCorrect
+                      ? "😃"
+                      : "😞"
+                    : num}
+                </span>
               </Button>
             </Grid>
           ))}
@@ -175,7 +187,10 @@ export default function NumberLineJump() {
 
   return (
     <Container maxWidth="lg">
-      <Paper elevation={3} sx={{ p: 4, m: 2, borderRadius: 3, maxWidth: 800, mx: "auto" }}>
+      <Paper
+        elevation={3}
+        sx={{ p: 4, m: 2, borderRadius: 3, maxWidth: 800, mx: "auto" }}
+      >
         <Typography
           variant="h4"
           align="center"
@@ -266,7 +281,7 @@ export default function NumberLineJump() {
                 </Typography>
               )}
 
-            {!gameComplete && renderNumberLine()}
+              {!gameComplete && renderNumberLine()}
 
               {feedback && (
                 <Alert
