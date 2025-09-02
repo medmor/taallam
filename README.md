@@ -11,7 +11,7 @@ Number & Basic Operations
 [*]MissingNumberGame - Fill in missing numbers in sequences
 Geometry
 [*]ShapeBuilder - Build shapes by connecting dots/vertices
-[ ]ShapeClassifier - Sort shapes by properties (sides, angles, etc.)
+[*]ShapeClassifier - Sort shapes by properties (sides, angles, etc.)
 [ ]TanggramPuzzle - Arrange geometric pieces to form pictures
 [ ]AreaCalculator - Visual area/perimeter games with grid squares
 [ ]AngleHunter - Identify and measure different angle types
