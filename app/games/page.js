@@ -184,7 +184,6 @@ const GamesPage = () => {
           <ShapeClassifier />
         </div>
       )}
-      {selected === "tangram-puzzle" && <TangramPuzzle />}
     </Box>
   );
 };
