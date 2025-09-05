@@ -14,7 +14,7 @@ import EquationBalance from "@/components/EquationBalance";
 import MissingNumberGame from "@/components/MissingNumberGame";
 import ShapeBuilder from "@/components/ShapeBuilder";
 import ShapeClassifier from "@/components/ShapeClassifier";
-import TangramPuzzle from "@/components/TangramPuzzle";
+import AreaCalculator from "@/components/AreaCalculator";
 import { games, learningCategories } from "@/lib/data";
 import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 
@@ -182,6 +182,11 @@ const GamesPage = () => {
       {selected === "shape-classifier" && (
         <div>
           <ShapeClassifier />
+        </div>
+      )}
+      {selected === "area-calculator" && (
+        <div>
+          <AreaCalculator />
         </div>
       )}
     </Box>
