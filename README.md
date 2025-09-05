@@ -17,7 +17,7 @@ Geometry
 Fractions & Decimals
 [*]PizzaFractions - Cut pizzas to match fraction problems
 [*]FractionComparison - Compare fractions using visual pie charts
-[ ]DecimalRace - Race by answering decimal place value questions
+[*]DecimalRace - Race by answering decimal place value questions
 Logic & Patterns
 [ ]PatternMaker - Complete number/shape patterns
 [ ]NumberPyramid - Build pyramids where each block = sum of blocks below

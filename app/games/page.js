@@ -18,6 +18,7 @@ import AreaCalculator from "@/components/AreaCalculator";
 import AngleHunter from "@/components/AngleHunter";
 import PizzaFractions from "@/components/PizzaFractions";
 import FractionComparison from "@/components/FractionComparison";
+import DecimalRace from "@/components/DecimalRace";
 import { games, learningCategories } from "@/lib/data";
 import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 
@@ -205,6 +206,11 @@ const GamesPage = () => {
       {selected === "fraction-comparison" && (
         <div>
           <FractionComparison />
+        </div>
+      )}
+      {selected === "decimal-race" && (
+        <div>
+          <DecimalRace />
         </div>
       )}
     </Box>
