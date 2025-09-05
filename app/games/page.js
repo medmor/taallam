@@ -16,6 +16,7 @@ import ShapeBuilder from "@/components/ShapeBuilder";
 import ShapeClassifier from "@/components/ShapeClassifier";
 import AreaCalculator from "@/components/AreaCalculator";
 import AngleHunter from "@/components/AngleHunter";
+import PizzaFractions from "@/components/PizzaFractions";
 import { games, learningCategories } from "@/lib/data";
 import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 
@@ -193,6 +194,11 @@ const GamesPage = () => {
       {selected === "angle-hunter" && (
         <div>
           <AngleHunter />
+        </div>
+      )}
+      {selected === "pizza-fractions" && (
+        <div>
+          <PizzaFractions />
         </div>
       )}
     </Box>

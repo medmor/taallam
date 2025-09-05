@@ -15,7 +15,7 @@ Geometry
 [*]AreaCalculator - Visual area/perimeter games with grid squares
 [*]AngleHunter - Identify and measure different angle types
 Fractions & Decimals
-[ ]PizzaFractions - Cut pizzas to match fraction problems
+[*]PizzaFractions - Cut pizzas to match fraction problems
 [ ]FractionComparison - Compare fractions using visual pie charts
 [ ]DecimalRace - Race by answering decimal place value questions
 Logic & Patterns
