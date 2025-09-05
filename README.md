@@ -13,7 +13,7 @@ Geometry
 [*]ShapeBuilder - Build shapes by connecting dots/vertices
 [*]ShapeClassifier - Sort shapes by properties (sides, angles, etc.)
 [*]AreaCalculator - Visual area/perimeter games with grid squares
-[ ]AngleHunter - Identify and measure different angle types
+[*]AngleHunter - Identify and measure different angle types
 Fractions & Decimals
 [ ]PizzaFractions - Cut pizzas to match fraction problems
 [ ]FractionComparison - Compare fractions using visual pie charts
