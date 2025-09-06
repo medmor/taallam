@@ -23,6 +23,7 @@ import PatternMaker from "@/components/PatternMaker";
 import NumberPyramid from "@/components/NumberPyramid";
 import MathSudoku from "@/components/MathSudoku";
 import CashRegister from "@/components/CashRegister";
+import UnitConverter from "@/components/UnitConverter";
 import { games, learningCategories } from "@/lib/data";
 import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 
@@ -235,6 +236,11 @@ const GamesPage = () => {
       {selected === "cash-register" && (
         <div>
           <CashRegister />
+        </div>
+      )}
+      {selected === "unit-converter" && (
+        <div>
+          <UnitConverter />
         </div>
       )}
     </Box>
