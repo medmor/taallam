@@ -20,7 +20,7 @@ Fractions & Decimals
 [*]DecimalRace - Race by answering decimal place value questions
 Logic & Patterns
 [*]PatternMaker - Complete number/shape patterns
-[ ]NumberPyramid - Build pyramids where each block = sum of blocks below
+[*]NumberPyramid - Build pyramids where each block = sum of blocks below
 [ ]MathSudoku - Simple 4x4 Sudoku with pictures/numbers
 Money & Measurement
 [ ]CashRegister - Make change and count money
