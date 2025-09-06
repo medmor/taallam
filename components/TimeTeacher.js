@@ -73,21 +73,26 @@ const TimeTeacher = () => {
   const generateQuestion = () => {
     const time = generateTime();
     
-    if (gameMode === "analog-reading") {
+    // Randomly select game mode for each question
+    const modes = ["analog-reading", "digital-reading", "duration"];
+    const randomMode = modes[Math.floor(Math.random() * modes.length)];
+    setGameMode(randomMode);
+    
+    if (randomMode === "analog-reading") {
       setCurrentQuestion({
         type: "analog-reading",
         hour: time.hour,
         minute: time.minute,
         description: "ما الوقت المعروض على الساعة؟",
       });
-    } else if (gameMode === "digital-reading") {
+    } else if (randomMode === "digital-reading") {
       setCurrentQuestion({
         type: "digital-reading",
         hour: time.hour,
         minute: time.minute,
         description: "اقرأ الوقت الرقمي واختر الإجابة الصحيحة",
       });
-    } else if (gameMode === "duration") {
+    } else if (randomMode === "duration") {
       const startTime = generateTime();
       const durationHours = Math.floor(Math.random() * 3);
       const durationMinutes = Math.floor(Math.random() * 4) * 15; // 0, 15, 30, 45
@@ -359,13 +364,15 @@ const TimeTeacher = () => {
   };
 
   const getHint = () => {
+    if (!currentQuestion) return "انتبه للوقت المعروض";
+    
     const hints = {
       "analog-reading": "العقرب القصير يشير للساعة، والعقرب الطويل يشير للدقائق",
       "digital-reading": "الرقم الأول هو الساعة، والرقم الثاني هو الدقائق",
       "duration": "احسب الفرق بين الوقت الأول والوقت الثاني"
     };
     
-    return hints[currentQuestion?.type] || "انتبه للوقت المعروض";
+    return hints[currentQuestion.type] || "انتبه للوقت المعروض";
   };
 
   const generateAnswerChoices = () => {
@@ -406,16 +413,19 @@ const TimeTeacher = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas && currentQuestion) {
-      canvas.width = 400;
-      canvas.height = 300;
       
       if (currentQuestion.type === "analog-reading") {
+        canvas.width = 400;
+        canvas.height = 300;
         drawAnalogClock(currentQuestion.hour, currentQuestion.minute);
       } else if (currentQuestion.type === "digital-reading") {
+        canvas.width = 400;
+        canvas.height = 300;
         drawDigitalClock(currentQuestion.hour, currentQuestion.minute);
       } else if (currentQuestion.type === "duration") {
         // Draw both start and end times
         canvas.width = 500;
+        canvas.height = 280;
         const ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
@@ -426,15 +436,21 @@ const TimeTeacher = () => {
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Draw start time clock at position (100, 150)
+        // Draw start time clock at position (100, 120)
+        const startX = 100;
+        const startY = 120;
+        const endX = 350;
+        const endY = 120;
+        
+        // First clock (start time)
         ctx.save();
-        ctx.translate(-100, 0);
+        ctx.translate(startX - 100, startY - 100);
         drawAnalogClock(currentQuestion.startHour, currentQuestion.startMinute, false);
         ctx.restore();
         
-        // Draw end time clock at position (350, 150)
+        // Second clock (end time)  
         ctx.save();
-        ctx.translate(150, 0);
+        ctx.translate(endX - 100, endY - 100);
         drawAnalogClock(currentQuestion.endHour, currentQuestion.endMinute, false);
         ctx.restore();
         
@@ -443,21 +459,22 @@ const TimeTeacher = () => {
         ctx.font = "16px Arial";
         ctx.textAlign = "center";
         
-        ctx.fillText("من", 100, 220);
-        ctx.fillText("إلى", 350, 220);
-        ctx.fillText(formatTimeArabic(currentQuestion.startHour, currentQuestion.startMinute), 100, 240);
-        ctx.fillText(formatTimeArabic(currentQuestion.endHour, currentQuestion.endMinute), 350, 240);
+        ctx.fillText("من", startX, startY + 80);
+        ctx.fillText("إلى", endX, endY + 80);
+        ctx.fillText(formatTimeArabic(currentQuestion.startHour, currentQuestion.startMinute), startX, startY + 100);
+        ctx.fillText(formatTimeArabic(currentQuestion.endHour, currentQuestion.endMinute), endX, endY + 100);
         
         // Draw arrow
         ctx.strokeStyle = "#ff6b35";
         ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.moveTo(150, 150);
-        ctx.lineTo(300, 150);
-        ctx.moveTo(290, 140);
-        ctx.lineTo(300, 150);
-        ctx.moveTo(290, 160);
-        ctx.lineTo(300, 150);
+        ctx.moveTo(startX + 60, startY);
+        ctx.lineTo(endX - 60, endY);
+        // Arrow head
+        ctx.moveTo(endX - 70, endY - 10);
+        ctx.lineTo(endX - 60, endY);
+        ctx.moveTo(endX - 70, endY + 10);
+        ctx.lineTo(endX - 60, endY);
         ctx.stroke();
       }
     }
@@ -466,7 +483,7 @@ const TimeTeacher = () => {
   // Initialize first question
   useEffect(() => {
     generateQuestion();
-  }, [gameMode, level]);
+  }, [level]);
 
   const isGameComplete = currentQuestionIndex >= totalQuestions;
 
@@ -514,35 +531,6 @@ const TimeTeacher = () => {
       <Typography variant="body1" sx={{ mb: 2, color: "#666" }}>
         {getLevelDescription()}
       </Typography>
-
-      {/* Game Mode Selection */}
-      <Paper elevation={2} sx={{ p: 2, mb: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          اختر نوع التمرين:
-        </Typography>
-        
-        <ToggleButtonGroup
-          value={gameMode}
-          exclusive
-          onChange={(e, newMode) => {
-            if (newMode) {
-              setGameMode(newMode);
-              setCurrentQuestionIndex(0);
-            }
-          }}
-          sx={{ mb: 2 }}
-        >
-          <ToggleButton value="analog-reading">
-            🕐 قراءة الساعة التناظرية
-          </ToggleButton>
-          <ToggleButton value="digital-reading">
-            🔢 قراءة الساعة الرقمية
-          </ToggleButton>
-          <ToggleButton value="duration">
-            ⏱️ حساب المدة الزمنية
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Paper>
 
       {!isGameComplete && currentQuestion && (
         <>
