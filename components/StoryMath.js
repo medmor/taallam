@@ -5,15 +5,8 @@ import {
   Typography,
   Paper,
   Chip,
-  Grid,
   Alert,
-  Card,
-  CardContent,
   TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import { playSfx } from "@/lib/sfx";
 
@@ -49,76 +42,176 @@ const StoryMath = () => {
     coin: "#ffd700",
   };
 
+  // Character names with gender information
+  const characters = {
+    male: [
+      { name: "أحمد", gender: "male" },
+      { name: "محمد", gender: "male" },
+      { name: "علي", gender: "male" },
+      { name: "حمزة", gender: "male" },
+      { name: "يوسف", gender: "male" },
+      { name: "عمر", gender: "male" },
+      { name: "خالد", gender: "male" },
+      { name: "طارق", gender: "male" }
+    ],
+    female: [
+      { name: "فاطمة", gender: "female" },
+      { name: "عائشة", gender: "female" },
+      { name: "مريم", gender: "female" },
+      { name: "زينب", gender: "female" },
+      { name: "نور", gender: "female" },
+      { name: "هند", gender: "female" },
+      { name: "سارة", gender: "female" },
+      { name: "ريم", gender: "female" }
+    ]
+  };
+
+  // Helper function to get gender-appropriate verb and pronoun forms
+  const getGenderForms = (gender) => {
+    return {
+      was: gender === "male" ? "كان" : "كانت",
+      gave: gender === "male" ? "أعطى" : "أعطت",
+      hisHer: gender === "male" ? "له" : "لها",
+      withHim: gender === "male" ? "معه" : "معها",
+      heFriend: gender === "male" ? "صديقه" : "صديقتها",
+      hisHerSibling: gender === "male" ? "لأخته" : "لأختها"
+    };
+  };
+
   // Story templates for different types of problems
   const storyTemplates = [
     {
       type: "addition",
       category: "fruits",
-      template: "كان لدى {name} {num1} {item}. أعطاه صديقه {num2} {item} أخرى. كم {item} أصبح لديه الآن؟",
+      template: "{was} لدى {name} {num1} {item1}. أعطا{gave_suffix} {heFriend} {num2} {item2} أخرى. كم  أصبح {hisHer} الآن؟",
       visual: "fruits_adding",
       operation: "+",
-      names: ["أحمد", "فاطمة", "محمد", "عائشة", "علي", "مريم"],
-      items: ["تفاحة", "موزة", "برتقالة", "كمثرى"],
+      items: [
+        { singular: "تفاحة", plural: "تفاحات" },
+        { singular: "موزة", plural: "موزات" },
+        { singular: "برتقالة", plural: "برتقالات" },
+        { singular: "كمثرى", plural: "كمثريات" }
+      ],
       emoji: ["🍎", "🍌", "🍊", "🍐"],
     },
     {
       type: "subtraction", 
       category: "toys",
-      template: "كان لدى {name} {num1} {item}. أعطى {num2} منها لأخته. كم {item} بقي معه؟",
+      template: "{was} لدى {name} {num1} {item1}. {gave} {num2} منها {hisHerSibling}. كم {item_result} بقي {withHim}؟",
       visual: "toys_removing",
       operation: "-",
-      names: ["حمزة", "زينب", "يوسف", "نور", "عمر", "هند"],
-      items: ["كرة", "دمية", "سيارة", "كتاب"],
+      items: [
+        { singular: "كرة", plural: "كرات" },
+        { singular: "دمية", plural: "دمى" },
+        { singular: "سيارة", plural: "سيارات" },
+        { singular: "كتاب", plural: "كتب" }
+      ],
       emoji: ["⚽", "🎎", "🚗", "📚"],
     },
     {
       type: "addition",
       category: "animals", 
-      template: "في المزرعة {num1} {item}. جاءت {num2} {item} أخرى. كم {item} في المزرعة الآن؟",
+      template: "في المزرعة {num1} {item1}. جاءت {num2} {item2} أخرى. كم {item_result} في المزرعة الآن؟",
       visual: "animals_gathering",
       operation: "+",
-      names: ["المزرعة", "الحديقة", "البيت", "المكان"],
-      items: ["دجاجة", "خروف", "بقرة", "حصان"],
+      isNeutral: true, // No character needed
+      items: [
+        { singular: "دجاجة", plural: "دجاجات" },
+        { singular: "خروف", plural: "خراف" },
+        { singular: "بقرة", plural: "بقرات" },
+        { singular: "حصان", plural: "أحصنة" }
+      ],
       emoji: ["🐔", "🐑", "🐄", "🐴"],
     },
     {
       type: "subtraction",
       category: "birds",
-      template: "كان على الشجرة {num1} {item}. طار منها {num2}. كم {item} بقي على الشجرة؟",
+      template: "كان على الشجرة {num1} {item1}. طار منها {num2}. كم  بقي على الشجرة؟",
       visual: "birds_flying",
-      operation: "-", 
-      names: ["الشجرة", "الغصن", "المكان", "الحديقة"],
-      items: ["عصفور", "حمامة", "طائر", "عصفور صغير"],
+      operation: "-",
+      isNeutral: true, // No character needed
+      items: [
+        { singular: "عصفور", plural: "عصافير" },
+        { singular: "حمامة", plural: "حمامات" },
+        { singular: "طائر", plural: "طيور" },
+      ],
       emoji: ["🐦", "🕊️", "🐤", "🐥"],
     },
     {
       type: "multiplication",
       category: "groups",
-      template: "لدى {name} {num1} صناديق، في كل صندوق {num2} {item}. كم {item} لديه في المجموع؟",
+      template: "لدى {name} {num1} صناديق، في كل صندوق {num2} {item2}. كم لديه في المجموع؟",
       visual: "groups_counting",
       operation: "×",
-      names: ["خالد", "سارة", "ريم", "طارق"],
-      items: ["قلم", "كتاب", "تفاحة", "كرة"],
+      items: [
+        { singular: "قلم", plural: "أقلام" },
+        { singular: "كتاب", plural: "كتب" },
+        { singular: "تفاحة", plural: "تفاحات" },
+        { singular: "كرة", plural: "كرات" }
+      ],
       emoji: ["✏️", "📚", "🍎", "⚽"],
     },
     {
       type: "division",
       category: "sharing",
-      template: "لدى {name} {num1} {item} ويريد توزيعها على {num2} أطفال بالتساوي. كم {item} سيحصل كل طفل؟",
+      template: "لدى {name} {num1} {item1} و{wants} توزيعها على {num2} أطفال بالتساوي. ما العدد الذي سيحصل عليه كل طفل؟",
       visual: "sharing_equally",
       operation: "÷",
-      names: ["الأم", "المعلمة", "الأب", "الجدة"],
-      items: ["حلوى", "قلم", "كتاب", "لعبة"],
+      parentCharacters: true, // Special case for parent/teacher characters
+      items: [
+        { singular: "حلوى", plural: "حلويات" },
+        { singular: "قلم", plural: "أقلام" },
+        { singular: "كتاب", plural: "كتب" },
+        { singular: "لعبة", plural: "ألعاب" }
+      ],
       emoji: ["🍭", "✏️", "📚", "🧸"],
     },
   ];
 
+  // Helper function to get correct Arabic singular/plural form
+  const getCorrectForm = (number, itemObject) => {
+    if (number === 1) {
+      return itemObject.singular;
+    } else {
+      return itemObject.plural;
+    }
+  };
+
   const generateStory = () => {
     const template = storyTemplates[Math.floor(Math.random() * storyTemplates.length)];
-    const name = template.names[Math.floor(Math.random() * template.names.length)];
     const itemIndex = Math.floor(Math.random() * template.items.length);
-    const item = template.items[itemIndex];
+    const itemObject = template.items[itemIndex];
     const emoji = template.emoji[itemIndex];
+
+    let selectedCharacter = null;
+    let name = "";
+    let genderForms = {};
+
+    // Handle different character types
+    if (template.isNeutral) {
+      // No character needed (animals, birds stories)
+      name = "";
+    } else if (template.parentCharacters) {
+      // Special parent/teacher characters with their own grammar
+      const parentCharacters = [
+        { name: "الأم", gender: "female" },
+        { name: "المعلمة", gender: "female" },
+        { name: "الأب", gender: "male" },
+        { name: "المعلم", gender: "male" }
+      ];
+      selectedCharacter = parentCharacters[Math.floor(Math.random() * parentCharacters.length)];
+      name = selectedCharacter.name;
+      genderForms = {
+        wants: selectedCharacter.gender === "male" ? "يريد" : "تريد"
+      };
+    } else {
+      // Regular character stories - randomly pick male or female
+      const genderChoice = Math.random() < 0.5 ? "male" : "female";
+      const characterList = characters[genderChoice];
+      selectedCharacter = characterList[Math.floor(Math.random() * characterList.length)];
+      name = selectedCharacter.name;
+      genderForms = getGenderForms(selectedCharacter.gender);
+    }
 
     let num1, num2, answer;
 
@@ -182,19 +275,43 @@ const StoryMath = () => {
       }
     }
 
-    const story = template.template
+    // Get correct forms based on numbers
+    const item1 = getCorrectForm(num1, itemObject);
+    const item2 = getCorrectForm(num2, itemObject);
+    const item_result = getCorrectForm(answer, itemObject);
+
+    // Build the story with gender-appropriate grammar
+    let story = template.template
       .replace("{name}", name)
       .replace("{num1}", num1)
       .replace("{num2}", num2)
-      .replace(/{item}/g, item);
+      .replace("{item1}", item1)
+      .replace("{item2}", item2)
+      .replace("{item_result}", item_result);
+
+    // Apply gender-specific replacements
+    if (selectedCharacter && !template.isNeutral && !template.parentCharacters) {
+      story = story
+        .replace("{was}", genderForms.was)
+        .replace("{gave}", genderForms.gave)
+        .replace("{gave_suffix}", selectedCharacter.gender === "male" ? "ه" : "تها")
+        .replace("{hisHer}", genderForms.hisHer)
+        .replace("{withHim}", genderForms.withHim)
+        .replace("{heFriend}", genderForms.heFriend)
+        .replace("{hisHerSibling}", genderForms.hisHerSibling);
+    } else if (template.parentCharacters) {
+      story = story.replace("{wants}", genderForms.wants);
+    }
 
     setCurrentStory({
       ...template,
       story,
       name,
+      character: selectedCharacter,
       num1,
       num2,
-      item,
+      item: item_result, // For compatibility with drawing functions
+      itemObject,
       emoji,
       answer,
       question: `${num1} ${template.operation} ${num2} = ؟`,
@@ -467,7 +584,7 @@ const StoryMath = () => {
   };
 
   const drawSharingEqually = (ctx, width, height) => {
-    const { num1, num2, emoji } = currentStory;
+    const { num1, num2, emoji, answer, itemObject } = currentStory;
     const itemSize = 25;
     const personSize = 40;
     const spacing = 80;
@@ -481,7 +598,7 @@ const StoryMath = () => {
       
       // Draw items for each person (animated)
       if (animationStep >= 2) {
-        const itemsPerPerson = currentStory.answer;
+        const itemsPerPerson = answer;
         for (let j = 0; j < itemsPerPerson; j++) {
           const itemX = x + (j - itemsPerPerson / 2 + 0.5) * 30;
           const itemY = y - 50;
@@ -493,10 +610,11 @@ const StoryMath = () => {
 
     // Show total items at top initially
     if (animationStep <= 1) {
+      const totalItemText = getCorrectForm(num1, itemObject);
       ctx.font = "bold 20px Arial";
       ctx.fillStyle = "#333";
       ctx.textAlign = "center";
-      ctx.fillText(`${num1} ${currentStory.item}`, width / 2, 80);
+      ctx.fillText(`${num1} ${totalItemText}`, width / 2, 80);
       
       // Draw all items in a pile
       for (let i = 0; i < num1; i++) {
@@ -509,10 +627,11 @@ const StoryMath = () => {
 
     // Show result
     if (animationStep >= 3) {
+      const resultItemText = getCorrectForm(answer, itemObject);
       ctx.fillStyle = storyColors.correct;
       ctx.font = "bold 24px Arial";
       ctx.textAlign = "center";
-      ctx.fillText(`كل طفل يحصل على ${currentStory.answer}`, width / 2, 50);
+      ctx.fillText(`كل طفل يحصل على ${answer} ${resultItemText}`, width / 2, 50);
     }
   };
 
