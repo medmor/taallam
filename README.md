@@ -27,5 +27,5 @@ Money & Measurement
 [*]UnitConverter - Convert between different units (cm to m, etc.)
 [*]TimeTeacher - Read analog/digital clocks, time duration
 Word Problems
-[ ]StoryMath - Interactive story problems with animations
+[*]StoryMath - Interactive story problems with animations
 [ ]GraphMaker - Create bar graphs from data sets

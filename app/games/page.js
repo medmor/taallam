@@ -25,6 +25,7 @@ import MathSudoku from "@/components/MathSudoku";
 import CashRegister from "@/components/CashRegister";
 import UnitConverter from "@/components/UnitConverter";
 import TimeTeacher from "@/components/TimeTeacher";
+import StoryMath from "@/components/StoryMath";
 import { games, learningCategories } from "@/lib/data";
 import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 
@@ -247,6 +248,11 @@ const GamesPage = () => {
       {selected === "time-teacher" && (
         <div>
           <TimeTeacher />
+        </div>
+      )}
+      {selected === "story-math" && (
+        <div>
+          <StoryMath />
         </div>
       )}
     </Box>
