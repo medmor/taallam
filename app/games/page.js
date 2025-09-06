@@ -21,6 +21,8 @@ import FractionComparison from "@/components/FractionComparison";
 import DecimalRace from "@/components/DecimalRace";
 import PatternMaker from "@/components/PatternMaker";
 import NumberPyramid from "@/components/NumberPyramid";
+import MathSudoku from "@/components/MathSudoku";
+import CashRegister from "@/components/CashRegister";
 import { games, learningCategories } from "@/lib/data";
 import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 
@@ -223,6 +225,16 @@ const GamesPage = () => {
       {selected === "number-pyramid" && (
         <div>
           <NumberPyramid />
+        </div>
+      )}
+      {selected === "math-sudoku" && (
+        <div>
+          <MathSudoku />
+        </div>
+      )}
+      {selected === "cash-register" && (
+        <div>
+          <CashRegister />
         </div>
       )}
     </Box>

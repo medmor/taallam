@@ -21,9 +21,9 @@ Fractions & Decimals
 Logic & Patterns
 [*]PatternMaker - Complete number/shape patterns
 [*]NumberPyramid - Build pyramids where each block = sum of blocks below
-[ ]MathSudoku - Simple 4x4 Sudoku with pictures/numbers
+[*]MathSudoku - Simple 4x4 Sudoku with pictures/numbers
 Money & Measurement
-[ ]CashRegister - Make change and count money
+[*]CashRegister - Make change and count money
 [ ]UnitConverter - Convert between different units (cm to m, etc.)
 [ ]TimeTeacher - Read analog/digital clocks, time duration
 Word Problems
