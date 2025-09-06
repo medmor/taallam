@@ -24,6 +24,7 @@ import NumberPyramid from "@/components/NumberPyramid";
 import MathSudoku from "@/components/MathSudoku";
 import CashRegister from "@/components/CashRegister";
 import UnitConverter from "@/components/UnitConverter";
+import TimeTeacher from "@/components/TimeTeacher";
 import { games, learningCategories } from "@/lib/data";
 import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 
@@ -241,6 +242,11 @@ const GamesPage = () => {
       {selected === "unit-converter" && (
         <div>
           <UnitConverter />
+        </div>
+      )}
+      {selected === "time-teacher" && (
+        <div>
+          <TimeTeacher />
         </div>
       )}
     </Box>

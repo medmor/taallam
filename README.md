@@ -24,8 +24,8 @@ Logic & Patterns
 [*]MathSudoku - Simple 4x4 Sudoku with pictures/numbers
 Money & Measurement
 [*]CashRegister - Make change and count money
-[ ]UnitConverter - Convert between different units (cm to m, etc.)
-[ ]TimeTeacher - Read analog/digital clocks, time duration
+[*]UnitConverter - Convert between different units (cm to m, etc.)
+[*]TimeTeacher - Read analog/digital clocks, time duration
 Word Problems
 [ ]StoryMath - Interactive story problems with animations
 [ ]GraphMaker - Create bar graphs from data sets
