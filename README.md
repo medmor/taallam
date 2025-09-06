@@ -19,7 +19,7 @@ Fractions & Decimals
 [*]FractionComparison - Compare fractions using visual pie charts
 [*]DecimalRace - Race by answering decimal place value questions
 Logic & Patterns
-[ ]PatternMaker - Complete number/shape patterns
+[*]PatternMaker - Complete number/shape patterns
 [ ]NumberPyramid - Build pyramids where each block = sum of blocks below
 [ ]MathSudoku - Simple 4x4 Sudoku with pictures/numbers
 Money & Measurement

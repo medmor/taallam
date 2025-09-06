@@ -19,6 +19,7 @@ import AngleHunter from "@/components/AngleHunter";
 import PizzaFractions from "@/components/PizzaFractions";
 import FractionComparison from "@/components/FractionComparison";
 import DecimalRace from "@/components/DecimalRace";
+import PatternMaker from "@/components/PatternMaker";
 import { games, learningCategories } from "@/lib/data";
 import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 
@@ -211,6 +212,11 @@ const GamesPage = () => {
       {selected === "decimal-race" && (
         <div>
           <DecimalRace />
+        </div>
+      )}
+      {selected === "pattern-maker" && (
+        <div>
+          <PatternMaker />
         </div>
       )}
     </Box>
