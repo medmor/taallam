@@ -367,18 +367,30 @@ const PatternMaker = () => {
         ctx.fillText(num.toString(), x, y);
       });
 
-      // Draw question mark for the missing element
+      // Draw question mark or correct answer for the missing element
       const questionX = margin + spacing * pattern.sequence.length;
       const questionY = height / 2;
 
-      ctx.fillStyle = patternColors.accent;
-      ctx.beginPath();
-      ctx.arc(questionX, questionY, 30, 0, 2 * Math.PI);
-      ctx.fill();
+      // Show correct answer after user answers, otherwise show question mark
+      if (showResult) {
+        ctx.fillStyle = isCorrect ? patternColors.correct : patternColors.pattern;
+        ctx.beginPath();
+        ctx.arc(questionX, questionY, 30, 0, 2 * Math.PI);
+        ctx.fill();
 
-      ctx.fillStyle = "#fff";
-      ctx.font = "bold 28px Arial";
-      ctx.fillText("?", questionX, questionY);
+        ctx.fillStyle = isCorrect ? "#fff" : "#333";
+        ctx.font = "bold 24px Arial";
+        ctx.fillText(pattern.correctAnswer.toString(), questionX, questionY);
+      } else {
+        ctx.fillStyle = patternColors.accent;
+        ctx.beginPath();
+        ctx.arc(questionX, questionY, 30, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 28px Arial";
+        ctx.fillText("?", questionX, questionY);
+      }
 
     } else {
       // Draw shape sequence
@@ -393,20 +405,33 @@ const PatternMaker = () => {
         drawShape(ctx, shape, x, y);
       });
 
-      // Draw question mark for the missing element
+      // Draw question mark or correct answer for the missing element
       const questionX = margin + spacing * pattern.sequence.length;
       const questionY = height / 2;
 
-      ctx.fillStyle = patternColors.accent;
-      ctx.beginPath();
-      ctx.arc(questionX, questionY, 35, 0, 2 * Math.PI);
-      ctx.fill();
+      // Show correct answer after user answers, otherwise show question mark
+      if (showResult) {
+        // Draw the correct shape/answer
+        drawShape(ctx, pattern.correctAnswer, questionX, questionY);
+        
+        // Add a green outline if correct, red if wrong
+        ctx.strokeStyle = isCorrect ? patternColors.correct : patternColors.incorrect;
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(questionX, questionY, 40, 0, 2 * Math.PI);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = patternColors.accent;
+        ctx.beginPath();
+        ctx.arc(questionX, questionY, 35, 0, 2 * Math.PI);
+        ctx.fill();
 
-      ctx.fillStyle = "#fff";
-      ctx.font = "bold 28px Arial";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("?", questionX, questionY);
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 28px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("?", questionX, questionY);
+      }
     }
   };
 
@@ -482,7 +507,7 @@ const PatternMaker = () => {
       canvas.height = 120;
       drawPattern();
     }
-  }, [pattern]);
+  }, [pattern, showResult, isCorrect]); // Added showResult and isCorrect to dependencies
 
   // Initialize first pattern
   useEffect(() => {
