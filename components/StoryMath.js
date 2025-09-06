@@ -774,7 +774,7 @@ const StoryMath = () => {
             </Box>
 
             {/* Animation Canvas */}
-            <canvas
+            {/* <canvas
               ref={canvasRef}
               style={{
                 width: "100%",
@@ -784,7 +784,11 @@ const StoryMath = () => {
                 borderRadius: "10px",
                 marginBottom: "20px",
               }}
-            />
+            /> */}
+
+            <Box sx={{ mb: 3, p: 2, backgroundColor: "#fff3e0", borderRadius: 2 }}>
+                الرسوم المتحركة قيد التطوير حالياً 🚧
+            </Box>
 
             {/* Animation Control */}
             <Box sx={{ mb: 3 }}>
