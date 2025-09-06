@@ -28,4 +28,4 @@ Money & Measurement
 [*]TimeTeacher - Read analog/digital clocks, time duration
 Word Problems
 [*]StoryMath - Interactive story problems with animations
-[ ]GraphMaker - Create bar graphs from data sets
+[*]GraphMaker - Create bar graphs from data sets
