@@ -375,7 +375,7 @@ export default function ShapeClassifier() {
 
   // Generate shapes for current level
   const generateLevelShapes = () => {
-    const shuffledShapes = [...shapes].filter((s) => s.id === "crescent"); //[...shapes].sort(() => Math.random() - 0.5);
+    const shuffledShapes = [...shapes].sort(() => Math.random() - 0.5);
     return shuffledShapes.slice(0, Math.min(shapesPerLevel, shapes.length));
   };
 
