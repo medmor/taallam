@@ -14,6 +14,7 @@ import {
   Fade,
   CircularProgress,
 } from "@mui/material";
+import Link from "next/link";
 
 // Dynamic imports for all game components with loading states
 const gameComponents = {
@@ -286,7 +287,13 @@ const GamesPageContent = () => {
                 <Grid item xs={12} sm={6} md={4} lg={3} key={game.id}>
                   <Fade in={true} timeout={300 + index * 100}>
                     <Paper
-                      onClick={() => setSelected(game.id)}
+                      onClick={() => {
+                        if (game.isStandalone && game.url) {
+                          router.push(game.url);
+                        } else {
+                          setSelected(game.id);
+                        }
+                      }}
                       sx={{
                         p: 2,
                         display: "flex",
@@ -361,7 +368,11 @@ const GamesPageContent = () => {
                           variant="contained"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setSelected(game.id);
+                            if (game.isStandalone && game.url) {
+                              router.push(game.url);
+                            } else {
+                              setSelected(game.id);
+                            }
                           }}
                           sx={{
                             mt: "auto",
@@ -374,7 +385,7 @@ const GamesPageContent = () => {
                             "&:active": { transform: "scale(0.98)" },
                           }}
                         >
-                          العب الآن
+                          {game.isStandalone ? "انتقل للعبة" : "العب الآن"}
                         </Button>
                       </Box>
                     </Paper>

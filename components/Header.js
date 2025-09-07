@@ -53,6 +53,14 @@ export default function Header() {
         >
           ألعاب
         </Button>
+        <Button
+          color="inherit"
+          component={Link}
+          href="/math-race"
+          sx={{ fontSize: "1.2rem" }}
+        >
+          🏎️ سباق الرياضيات
+        </Button>
         {/* <Button
           color="inherit"
           component={Link}
