@@ -16,10 +16,10 @@ const AngleHunter = () => {
 
   const angleTypes = {
     acute: { name: 'حادة', range: [1, 89], color: '#4caf50' },
-    right: { name: 'قائمة', range: [90, 90], color: '#2196f3' },
-    obtuse: { name: 'منفرجة', range: [91, 179], color: '#ff9800' },
-    straight: { name: 'مستقيمة', range: [180, 180], color: '#9c27b0' },
-    reflex: { name: 'منعكسة', range: [181, 359], color: '#f44336' }
+    right: { name: 'قائمة', range: [90, 90], color: '#4caf50' },
+    obtuse: { name: 'منفرجة', range: [91, 179], color: '#4caf50' },
+    straight: { name: 'مستقيمة', range: [180, 180], color: '#4caf50' },
+    reflex: { name: 'منعكسة', range: [181, 359], color: '#4caf50' }
   };
 
   const generateNewAngle = () => {
