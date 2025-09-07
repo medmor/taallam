@@ -61,14 +61,14 @@ export default function Header() {
         >
           العاب اخرى
         </Button> */}
-        <Button
+        {/* <Button
           style={{ color: "white" }}
           component={Link}
           href="/signin"
           sx={{ fontSize: "1.2rem" }}
         >
           تسجيل الدخول
-        </Button>
+        </Button> */}
         <IconButton
           color="inherit"
           onClick={toggleMute}
