@@ -123,7 +123,8 @@ const getGameProps = (gameId) => {
   }
 };
 
-const GamesPage = () => {
+// Main component that uses useSearchParams
+const GamesPageContent = () => {
   const [selected, setSelected] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const searchParams = useSearchParams();
@@ -428,6 +429,33 @@ const GamesPage = () => {
         </Suspense>
       )}
     </Box>
+  );
+};
+
+// Wrapper component with Suspense boundary
+const GamesPage = () => {
+  return (
+    <Suspense 
+      fallback={
+        <Box 
+          sx={{ 
+            display: "flex", 
+            justifyContent: "center", 
+            alignItems: "center",
+            minHeight: "400px",
+            flexDirection: "column",
+            gap: 2
+          }}
+        >
+          <CircularProgress size={60} />
+          <Typography variant="h6" color="primary">
+            جاري تحميل صفحة الألعاب...
+          </Typography>
+        </Box>
+      }
+    >
+      <GamesPageContent />
+    </Suspense>
   );
 };
 
