@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -9,8 +9,12 @@ import {
   Grid,
   Container,
   LinearProgress,
+  Zoom,
+  Fade,
 } from "@mui/material";
 import { preloadSfx, playSfx } from "@/lib/sfx";
+import { GameProgressionManager } from "@/lib/gameEnhancements";
+import { gameThemes, enhancedButtonStyles, cardAnimations, createFireworksEffect, enhancedSoundFeedback } from "@/lib/visualEnhancements";
 import Timer from "@/components/Timer";
 
 export default function NumberLineJump() {
@@ -27,9 +31,17 @@ export default function NumberLineJump() {
   const [timerActive, setTimerActive] = useState(false);
   const [timerKey, setTimerKey] = useState(0);
   const [isAnswering, setIsAnswering] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [showFireworks, setShowFireworks] = useState(false);
+  const [animatingNumbers, setAnimatingNumbers] = useState(new Set());
+  
+  const gameRef = useRef(null);
+  const particleCanvasRef = useRef(null);
+  const gameManager = useRef(new GameProgressionManager('numberLineJump')).current;
 
   const maxNumber = 20; // Number line goes from 0 to 20
   const operationsPerRound = 10;
+  const theme = gameThemes.math;
 
   useEffect(() => {
     try {
@@ -37,27 +49,59 @@ export default function NumberLineJump() {
     } catch (e) {}
   }, []);
 
-  // Generate a random addition/subtraction problem
+  // Generate a random addition/subtraction problem with difficulty progression
   const generateProblem = () => {
     setIsAnswering(false);
-    const isAddition = Math.random() > 0.5;
-    let num1, num2, answer;
+    const currentLevel = gameManager.getCurrentLevel();
+    const operations = gameManager.getOperationsForLevel(currentLevel);
+    const operation = operations[Math.floor(Math.random() * operations.length)];
+    
+    let num1, num2, answer, isAddition;
 
-    if (isAddition) {
-      num1 = Math.floor(Math.random() * 8) + 1;
-      num2 = Math.floor(Math.random() * 8) + 1;
-      answer = num1 + num2;
-      // Ensure answer doesn't exceed our number line
-      if (answer > maxNumber) {
+    switch (operation) {
+      case 'addition':
+        isAddition = true;
+        if (currentLevel === 'beginner') {
+          num1 = Math.floor(Math.random() * 5) + 1;
+          num2 = Math.floor(Math.random() * 5) + 1;
+        } else if (currentLevel === 'intermediate') {
+          num1 = Math.floor(Math.random() * 8) + 1;
+          num2 = Math.floor(Math.random() * 8) + 1;
+        } else {
+          num1 = Math.floor(Math.random() * 10) + 1;
+          num2 = Math.floor(Math.random() * 10) + 1;
+        }
+        answer = num1 + num2;
+        // Ensure answer doesn't exceed our number line
+        if (answer > maxNumber) {
+          num1 = Math.floor(Math.random() * 5) + 1;
+          num2 = Math.floor(Math.random() * 5) + 1;
+          answer = num1 + num2;
+        }
+        break;
+        
+      case 'subtraction':
+        isAddition = false;
+        if (currentLevel === 'beginner') {
+          num1 = Math.floor(Math.random() * 10) + 5;
+          num2 = Math.floor(Math.random() * num1) + 1;
+        } else if (currentLevel === 'intermediate') {
+          num1 = Math.floor(Math.random() * 15) + 5;
+          num2 = Math.floor(Math.random() * num1) + 1;
+        } else {
+          num1 = Math.floor(Math.random() * 20) + 5;
+          num2 = Math.floor(Math.random() * num1) + 1;
+        }
+        answer = num1 - num2;
+        break;
+        
+      default:
+        isAddition = true;
         num1 = Math.floor(Math.random() * 5) + 1;
         num2 = Math.floor(Math.random() * 5) + 1;
         answer = num1 + num2;
-      }
-    } else {
-      num1 = Math.floor(Math.random() * 15) + 5;
-      num2 = Math.floor(Math.random() * num1) + 1;
-      answer = num1 - num2;
     }
+    
     return {
       expression: `${num1} ${isAddition ? "+" : "-"} ${num2}`,
       answer,

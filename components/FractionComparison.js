@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Button, Typography, Paper, Chip } from '@mui/material';
+import { Box, Button, Typography, Paper, Chip, Zoom, Fade, LinearProgress } from '@mui/material';
 import { playSfx } from '@/lib/sfx';
+import { GameProgressionManager } from '@/lib/gameEnhancements';
+import { gameThemes, enhancedButtonStyles, cardAnimations, createFireworksEffect, enhancedSoundFeedback } from '@/lib/visualEnhancements';
 
 const FractionComparison = () => {
   const leftCanvasRef = useRef(null);
@@ -15,6 +17,14 @@ const FractionComparison = () => {
   const [level, setLevel] = useState(1);
   const [fractionList, setFractionList] = useState([]);
   const [orderedAnswers, setOrderedAnswers] = useState([]);
+  const [streak, setStreak] = useState(0);
+  const [showFireworks, setShowFireworks] = useState(false);
+  const [animatingFractions, setAnimatingFractions] = useState(false);
+  
+  const gameRef = useRef(null);
+  const particleCanvasRef = useRef(null);
+  const gameManager = useRef(new GameProgressionManager('fractionComparison')).current;
+  const theme = gameThemes.fractions;
 
   const pieColors = {
     filled: '#ff6b35',
@@ -40,15 +50,28 @@ const FractionComparison = () => {
   };
 
   const generateCompareProblem = () => {
-    let denominators, leftNum, leftDen, rightNum, rightDen;
+    const currentLevel = gameManager.getCurrentLevel();
+    let denominators;
     
-    if (level === 1) {
-      denominators = [2, 3, 4];
-    } else if (level === 2) {
-      denominators = [2, 3, 4, 5, 6];
-    } else {
-      denominators = [2, 3, 4, 5, 6, 8, 10];
+    // Enhanced difficulty progression for fractions
+    switch (currentLevel) {
+      case 'beginner':
+        denominators = [2, 3, 4]; // Simple fractions
+        break;
+      case 'intermediate':
+        denominators = [2, 3, 4, 5, 6]; // Add 5ths and 6ths
+        break;
+      case 'advanced':
+        denominators = [2, 3, 4, 5, 6, 8, 10]; // Add 8ths and 10ths
+        break;
+      case 'expert':
+        denominators = [2, 3, 4, 5, 6, 8, 9, 10, 12]; // Complex fractions
+        break;
+      default:
+        denominators = [2, 3, 4];
     }
+
+    let leftNum, leftDen, rightNum, rightDen;
 
     // Generate two different fractions
     leftDen = denominators[Math.floor(Math.random() * denominators.length)];

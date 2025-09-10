@@ -1,37 +1,67 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Timer from "./Timer";
-import { Box, Button, Paper, Typography, Stack } from "@mui/material";
+import { 
+  Box, 
+  Button, 
+  Paper, 
+  Typography, 
+  Stack, 
+  Chip, 
+  LinearProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Fade,
+  Zoom
+} from "@mui/material";
 import WinOverlay from "./WinOverlay";
 import { playSfx } from "@/lib/sfx";
+import { 
+  GameProgressionManager, 
+  difficultyLevels, 
+  createParticleEffect, 
+  animateNumber,
+  createPulseAnimation,
+  createShakeAnimation
+} from "@/lib/gameEnhancements";
 
 function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function generateForLevel(level) {
-  // returns {a,b,answer,choices}
-  let a, b;
-  if (level === "easy") {
-    a = randInt(1, 9);
-    b = randInt(1, 9);
-  } else if (level === "medium") {
-    a = randInt(1, 9);
-    b = randInt(10, 20);
-  } else {
-    a = randInt(10, 99);
-    b = randInt(10, 89);
+  // Enhanced difficulty progression
+  let a, b, maxChoices = 4;
+  
+  if (level === "beginner") {
+    a = randInt(1, 5);
+    b = randInt(1, 5);
+  } else if (level === "intermediate") {
+    a = randInt(1, 12);
+    b = randInt(1, 12);
+  } else if (level === "advanced") {
+    a = randInt(10, 25);
+    b = randInt(10, 25);
+  } else { // expert
+    a = randInt(20, 50);
+    b = randInt(20, 50);
+    maxChoices = 6; // More challenging choices
   }
+  
   const answer = a + b;
   let wrongs = [];
-  while (wrongs.length < 2) {
-    const delta = wrongs.length === 0 ? randInt(1, 5) : randInt(6, 12);
+  
+  while (wrongs.length < maxChoices - 1) {
+    const delta = level === "expert" ? randInt(1, 8) : randInt(1, 5);
     const sign = Math.random() > 0.5 ? 1 : -1;
     const wrong = answer + sign * delta;
     if (wrong > 0 && wrong !== answer && !wrongs.includes(wrong)) {
       wrongs.push(wrong);
     }
   }
+  
   const choices = [answer, ...wrongs].sort(() => Math.random() - 0.5);
   return { a, b, answer, choices };
 }
@@ -40,44 +70,92 @@ export default function AdditionGame() {
   const [timerActive, setTimerActive] = useState(true);
   const [timerKey, setTimerKey] = useState(0);
   const [finalTime, setFinalTime] = useState(null);
-  const [level, setLevel] = useState("easy");
+  const [level, setLevel] = useState("beginner");
   const [round, setRound] = useState(0);
-  const [expr, setExpr] = useState(() => generateForLevel("easy"));
+  const [expr, setExpr] = useState(() => generateForLevel("beginner"));
   const [score, setScore] = useState(0);
   const [showWin, setShowWin] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [feedback, setFeedback] = useState("");
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [questionStartTime, setQuestionStartTime] = useState(Date.now());
+  const [showFeedback, setShowFeedback] = useState(false);
+  
+  const particleCanvasRef = useRef(null);
+  const scoreRef = useRef(null);
+  const progressManager = useRef(new GameProgressionManager('addition-game'));
+  
   const totalRounds = 10;
+  const maxStreak = 10;
 
   useEffect(() => {
     setExpr(generateForLevel(level));
     setRound(0);
     setScore(0);
+    setStreak(0);
     setShowWin(false);
     setTimerActive(true);
     setTimerKey((k) => k + 1);
     setFinalTime(null);
+    setQuestionStartTime(Date.now());
+    setFeedback("");
+    setSelectedAnswer(null);
   }, [level]);
 
-  const nextRound = (correct) => {
+  const nextRound = (selectedChoice) => {
+    const correct = selectedChoice === expr.answer;
+    const responseTime = Date.now() - questionStartTime;
+    
+    setSelectedAnswer(selectedChoice);
+    setShowFeedback(true);
+    
     if (correct) {
+      const newStreak = streak + 1;
+      setStreak(newStreak);
       setScore((s) => s + 1);
-      try {
+      
+      // Enhanced feedback based on performance
+      if (responseTime < 3000) {
+        setFeedback("⚡ سريع جداً!");
+        playSfx("streak");
+      } else if (newStreak >= 5) {
+        setFeedback(`🔥 متتالية رائعة! ${newStreak}`);
+        playSfx("bonus");
+      } else {
+        setFeedback("✅ ممتاز!");
         playSfx("correct");
-      } catch (e) {}
+      }
+      
+      // Create particle effect for correct answers
+      createParticleEffect(particleCanvasRef.current, 'success');
+      
+      // Update progress manager
+      progressManager.current.updateScore(10, responseTime);
+      progressManager.current.updateStreak(newStreak);
+      
     } else {
-      try {
-        playSfx("wrong");
-      } catch (e) {}
+      setStreak(0);
+      setFeedback(`❌ الإجابة الصحيحة: ${expr.answer}`);
+      playSfx("wrong");
     }
-    if (round + 1 >= totalRounds) {
-      setShowWin(true);
-      setTimerActive(false);
-      try {
+
+    // Continue to next round after feedback
+    setTimeout(() => {
+      setShowFeedback(false);
+      setSelectedAnswer(null);
+      
+      if (round + 1 >= totalRounds) {
+        setShowWin(true);
+        setTimerActive(false);
         playSfx("win");
-      } catch (e) {}
-      return;
-    }
-    setRound((r) => r + 1);
-    setExpr(generateForLevel(level));
+        return;
+      }
+      
+      setRound((r) => r + 1);
+      setExpr(generateForLevel(level));
+      setQuestionStartTime(Date.now());
+      setFeedback("");
+    }, 1500);
   };
 
   // Preload sound effects on mount
@@ -99,163 +177,255 @@ export default function AdditionGame() {
         flexDirection: "column",
         alignItems: "center",
         mt: 4,
+        position: "relative"
       }}
     >
+      {/* Particle effect canvas */}
+      <canvas 
+        ref={particleCanvasRef} 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 10
+        }}
+        width="800"
+        height="600"
+      />
+      
       <Paper
-        elevation={6}
+        elevation={8}
         sx={{
           p: 4,
           borderRadius: 4,
-          minWidth: 350,
-          maxWidth: 400,
-          border: "2px solid #80deea",
-          boxShadow: "0 4px 24px #b2ebf2",
+          minWidth: 380,
+          maxWidth: 450,
+          border: `3px solid ${difficultyLevels[level].color}`,
+          boxShadow: `0 8px 32px ${difficultyLevels[level].color}40`,
+          background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
+          position: 'relative',
+          overflow: 'hidden'
         }}
       >
-        <Typography
-          variant="h4"
-          align="center"
-          sx={{ mb: 2, fontWeight: "bold", color: "#00838f" }}
-        >
-          تحدي الرياضيات : الجمع
-        </Typography>
-        <Stack direction="row" gap={3} justifyContent="center" sx={{ mb: 3 }}>
-          <Button
-            variant={level === "easy" ? "contained" : "outlined"}
-            color="success"
-            onClick={() => {
-              playSfx("click");
-              setLevel("easy");
-            }}
-          >
-            سهل
-          </Button>
-          <Button
-            variant={level === "medium" ? "contained" : "outlined"}
-            color="warning"
-            onClick={() => {
-              playSfx("click");
-              setLevel("medium");
-            }}
-          >
-            متوسط
-          </Button>
-          <Button
-            variant={level === "hard" ? "contained" : "outlined"}
-            color="error"
-            onClick={() => {
-              playSfx("click");
-              setLevel("hard");
-            }}
-          >
-            صعب
-          </Button>
-        </Stack>
-
-        {/* Progress Bar */}
-        <Box sx={{ width: "100%", mb: 2 }}>
-          <Box sx={{ height: 10, background: "#b2ebf2", borderRadius: 5 }}>
-            <Box
-              sx={{
-                width: `${((round + 1) / totalRounds) * 100}%`,
-                height: "100%",
-                background: "#00838f",
-                borderRadius: 5,
-                transition: "width 0.3s",
-              }}
-            />
-          </Box>
+        {/* Difficulty indicator */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Typography
-            variant="body2"
+            variant="h4"
             align="center"
-            sx={{ mt: 1, color: "#00838f" }}
-          >
-            الجولة {round + 1} من {totalRounds}
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            mb: 2,
-          }}
-        >
-          <Typography
-            variant="h3"
-            sx={{
-              mb: 1,
-              color: "#006064",
-              fontWeight: "bold",
-              letterSpacing: 2,
+            sx={{ 
+              fontWeight: "bold", 
+              color: difficultyLevels[level].color,
+              flexGrow: 1
             }}
           >
-            {expr.a} + {expr.b}
+            تحدي الجمع {difficultyLevels[level].icon}
           </Typography>
-          <Typography variant="h5" sx={{ mb: 2, color: "#00838f" }}>
-            =
-          </Typography>
-          <Stack direction="row" gap={3} justifyContent="center">
-            {expr.choices.map((c) => (
-              <Button
-                key={c}
-                onClick={() => {
-                  playSfx("click");
-                  nextRound(c === expr.answer);
-                }}
-                variant="contained"
-                color={Math.random() < 0.5 ? "primary" : "secondary"}
-                sx={{
-                  minWidth: 80,
-                  fontSize: 22,
-                  fontWeight: "bold",
-                  boxShadow: "0 2px 8px #b2ebf2",
-                  borderRadius: 2,
-                  py: 1,
-                  px: 2,
-                  transition: "transform 0.1s",
-                  ":active": { transform: "scale(1.1)" },
-                }}
-              >
-                {c}
-              </Button>
-            ))}
-          </Stack>
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            mt: 2,
-            gap: 3,
-          }}
-        >
-          <Typography
-            sx={{ fontSize: 18, color: "#006064", fontWeight: "bold" }}
-          >
-            النتيجة: <span style={{ color: "#43a047" }}>{score}</span> /{" "}
-            {totalRounds}
-          </Typography>
-          <Timer
-            active={timerActive}
-            resetKey={timerKey}
-            onStop={handleTimerStop}
+          <Chip 
+            label={difficultyLevels[level].name}
+            sx={{ 
+              backgroundColor: difficultyLevels[level].color,
+              color: 'white',
+              fontWeight: 'bold'
+            }}
           />
         </Box>
-        {finalTime !== null && (
-          <Typography
-            sx={{ mt: 1, fontSize: 16, color: "#00838f", textAlign: "center" }}
-          >
-            الوقت المستغرق:{" "}
-            {Math.floor(finalTime / 60)
-              .toString()
-              .padStart(2, "0")}
-            :{(finalTime % 60).toString().padStart(2, "0")}
+
+        {/* Game stats */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, flexWrap: 'wrap', gap: 1 }}>
+          <Chip 
+            label={`الجولة: ${round + 1}/${totalRounds}`} 
+            color="primary" 
+            variant="outlined"
+          />
+          <Chip 
+            ref={scoreRef}
+            label={`النقاط: ${score}`} 
+            color="success" 
+            variant="outlined"
+          />
+          {streak > 0 && (
+            <Chip 
+              label={`متتالية: ${streak} 🔥`} 
+              sx={{ 
+                backgroundColor: '#ff6b35',
+                color: 'white',
+                ...createPulseAnimation()
+              }}
+            />
+          )}
+        </Box>
+
+        {/* Progress bar */}
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
+            التقدم في اللعبة
           </Typography>
+          <LinearProgress 
+            variant="determinate" 
+            value={(round / totalRounds) * 100}
+            sx={{ 
+              height: 8, 
+              borderRadius: 4,
+              backgroundColor: '#e0e0e0',
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: difficultyLevels[level].color,
+                borderRadius: 4
+              }
+            }}
+          />
+        </Box>
+
+        {/* Difficulty selector */}
+        <Box sx={{ mb: 3 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel>مستوى الصعوبة</InputLabel>
+            <Select
+              value={level}
+              label="مستوى الصعوبة"
+              onChange={(e) => setLevel(e.target.value)}
+              disabled={showFeedback}
+            >
+              {Object.entries(difficultyLevels).map(([key, config]) => (
+                <MenuItem 
+                  key={key} 
+                  value={key}
+                  disabled={!progressManager.current.getProgress().difficultyUnlocked.includes(key)}
+                >
+                  {config.icon} {config.name}
+                  {!progressManager.current.getProgress().difficultyUnlocked.includes(key) && ' 🔒'}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+
+        {/* Main question display */}
+        <Zoom in={!showFeedback} timeout={500}>
+          <Paper
+            elevation={4}
+            sx={{
+              p: 3,
+              mb: 3,
+              borderRadius: 3,
+              backgroundColor: '#f8f9fa',
+              border: '2px solid #e9ecef',
+              textAlign: 'center'
+            }}
+          >
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: "bold",
+                color: "#2c3e50",
+                fontFamily: "'Amiri', serif",
+                mb: 1
+              }}
+            >
+              {expr.a} + {expr.b} = ؟
+            </Typography>
+          </Paper>
+        </Zoom>
+
+        {/* Feedback display */}
+        {showFeedback && (
+          <Fade in={showFeedback} timeout={300}>
+            <Paper
+              elevation={4}
+              sx={{
+                p: 3,
+                mb: 3,
+                borderRadius: 3,
+                backgroundColor: selectedAnswer === expr.answer ? '#e8f5e8' : '#ffeaea',
+                border: `2px solid ${selectedAnswer === expr.answer ? '#4caf50' : '#f44336'}`,
+                textAlign: 'center',
+                ...(selectedAnswer === expr.answer ? createPulseAnimation() : createShakeAnimation())
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: "bold",
+                  color: selectedAnswer === expr.answer ? "#2e7d32" : "#c62828",
+                  mb: 1
+                }}
+              >
+                {feedback}
+              </Typography>
+            </Paper>
+          </Fade>
         )}
+
+        {/* Answer choices */}
+        {!showFeedback && (
+          <Stack spacing={2}>
+            {expr.choices.map((choice, index) => (
+              <Zoom 
+                key={choice} 
+                in={true} 
+                timeout={300}
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => nextRound(choice)}
+                  disabled={showFeedback}
+                  sx={{
+                    py: 2,
+                    fontSize: "1.4rem",
+                    fontWeight: "bold",
+                    borderRadius: 3,
+                    border: '2px solid #e0e0e0',
+                    backgroundColor: 'white',
+                    color: '#333',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      backgroundColor: difficultyLevels[level].color,
+                      color: 'white',
+                      transform: 'translateY(-4px)',
+                      boxShadow: `0 8px 16px ${difficultyLevels[level].color}40`,
+                      border: `2px solid ${difficultyLevels[level].color}`
+                    },
+                    '&:active': {
+                      transform: 'translateY(0px)',
+                    }
+                  }}
+                >
+                  {choice}
+                </Button>
+              </Zoom>
+            ))}
+          </Stack>
+        )}
+
+        {/* Timer display */}
+        <Box sx={{ mt: 3, textAlign: 'center' }}>
+          <Stack direction="row" gap={2} justifyContent="center" alignItems="center">
+            <Typography variant="h6" sx={{ color: '#666' }}>
+              الوقت:
+            </Typography>
+            <Timer 
+              active={timerActive} 
+              key={timerKey} 
+              onStop={handleTimerStop}
+              sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}
+            />
+          </Stack>
+          {finalTime !== null && (
+            <Typography
+              sx={{ mt: 1, fontSize: 16, color: "#00838f", textAlign: "center" }}
+            >
+              الوقت المستغرق:{" "}
+              {Math.floor(finalTime / 60)
+                .toString()
+                .padStart(2, "0")}
+              :{(finalTime % 60).toString().padStart(2, "0")}
+            </Typography>
+          )}
+        </Box>
       </Paper>
 
       {showWin && (
@@ -267,7 +437,14 @@ export default function AdditionGame() {
             setShowWin(false);
             setRound(0);
             setScore(0);
+            setStreak(0);
             setExpr(generateForLevel(level));
+            setTimerActive(true);
+            setTimerKey(k => k + 1);
+            setQuestionStartTime(Date.now());
+            setFeedback("");
+            setSelectedAnswer(null);
+            setShowFeedback(false);
           }}
         />
       )}

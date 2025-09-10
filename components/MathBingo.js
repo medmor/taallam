@@ -1,7 +1,9 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Paper, Alert, Grid, Container, Chip } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { Box, Typography, Button, Paper, Alert, Grid, Container, Chip, Zoom, Fade, LinearProgress } from '@mui/material';
 import { preloadSfx, playSfx } from '@/lib/sfx';
+import { GameProgressionManager } from '@/lib/gameEnhancements';
+import { gameThemes, enhancedButtonStyles, cardAnimations, createFireworksEffect, enhancedSoundFeedback } from '@/lib/visualEnhancements';
 import Timer from '@/components/Timer';
 
 export default function MathBingo() {
@@ -15,33 +17,42 @@ export default function MathBingo() {
   const [timerActive, setTimerActive] = useState(false);
   const [score, setScore] = useState(0);
   const [totalProblems, setTotalProblems] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [animatingCells, setAnimatingCells] = useState(new Set());
+  const [showFireworks, setShowFireworks] = useState(false);
+  
+  const gameRef = useRef(null);
+  const particleCanvasRef = useRef(null);
+  const gameManager = useRef(new GameProgressionManager('mathBingo')).current;
 
   const gridSize = 5; // 5x5 Bingo card
   const centerCell = Math.floor(gridSize / 2); // Free space in center
+  const theme = gameThemes.math;
 
   useEffect(() => {
     try { preloadSfx(); } catch (e) {}
   }, []);
 
-  // Generate a math problem that equals a specific answer
+  // Generate a math problem that equals a specific answer with difficulty progression
   const generateProblemForAnswer = (answer) => {
-    const operations = ['+', '-', '*'];
+    const currentLevel = gameManager.getCurrentLevel();
+    const operations = gameManager.getOperationsForLevel(currentLevel);
     const operation = operations[Math.floor(Math.random() * operations.length)];
     
     let num1, num2, problem;
     
     switch (operation) {
-      case '+':
+      case 'addition':
         num1 = Math.floor(Math.random() * answer) + 1;
         num2 = answer - num1;
         problem = `${num1} + ${num2}`;
         break;
-      case '-':
+      case 'subtraction':
         num1 = answer + Math.floor(Math.random() * 20) + 1;
         num2 = num1 - answer;
         problem = `${num1} - ${num2}`;
         break;
-      case '*':
+      case 'multiplication':
         if (answer <= 1) {
           num1 = 1;
           num2 = answer;
@@ -65,6 +76,12 @@ export default function MathBingo() {
           }
         }
         problem = `${num1} × ${num2}`;
+        break;
+      case 'division':
+        // Create division problem where answer is the quotient
+        const divisor = Math.floor(Math.random() * 9) + 2; // 2-10
+        const dividend = answer * divisor;
+        problem = `${dividend} ÷ ${divisor}`;
         break;
       default:
         num1 = Math.floor(Math.random() * answer) + 1;
@@ -155,7 +172,7 @@ export default function MathBingo() {
     return diag1Complete || diag2Complete;
   };
 
-  // Start new game
+  // Start new game with enhanced features
   const startGame = () => {
     const newCard = createBingoCard();
     setBingoCard(newCard);
@@ -167,6 +184,13 @@ export default function MathBingo() {
     setTimerActive(true);
     setScore(0);
     setTotalProblems(0);
+    setStreak(0);
+    setAnimatingCells(new Set());
+    setShowFireworks(false);
+    
+    // Initialize game manager
+    gameManager.resetSession();
+    
     generateNextProblem(newCard);
   };
 
@@ -194,7 +218,7 @@ export default function MathBingo() {
     setTotalProblems(prev => prev + 1);
   };
 
-  // Handle cell click
+  // Handle cell click with enhanced feedback and animations
   const handleCellClick = (row, col) => {
     if (!gameStarted || gameWon || !currentProblem) return;
     
@@ -203,22 +227,60 @@ export default function MathBingo() {
     
     if (bingoCard[row][col].isFree || markedCells.has(cellKey)) return;
     
+    // Add animation to clicked cell
+    setAnimatingCells(prev => new Set([...prev, cellKey]));
+    setTimeout(() => {
+      setAnimatingCells(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(cellKey);
+        return newSet;
+      });
+    }, 600);
+    
     // Add to called numbers when player makes an attempt (reveal the answer)
     setCalledNumbers(prev => [...prev, currentProblem.answer]);
     
     if (cellNumber === currentProblem.answer) {
       const newMarkedCells = new Set([...markedCells, cellKey]);
       setMarkedCells(newMarkedCells);
+      
+      // Update streak and score
+      const newStreak = streak + 1;
+      setStreak(newStreak);
       setScore(prev => prev + 1);
-      setFeedback('صحيح! أحسنت');
-      try { playSfx('correct'); } catch (e) {}
+      
+      // Enhanced sound feedback based on streak
+      enhancedSoundFeedback.playSuccess(newStreak);
+      
+      // Update game progression
+      gameManager.recordAnswer(true);
+      
+      // Check for achievements
+      if (newStreak === 5) {
+        setFeedback('رائع! تسلسل من 5 إجابات صحيحة!');
+        enhancedSoundFeedback.playAchievement();
+      } else if (newStreak === 3) {
+        setFeedback('ممتاز! تسلسل رائع!');
+      } else {
+        setFeedback('صحيح! أحسنت');
+      }
       
       // Check for win
       if (checkWin(newMarkedCells)) {
         setGameWon(true);
         setTimerActive(false);
+        setShowFireworks(true);
         setFeedback('مبروك! لقد فزت في البينغو!');
-        try { playSfx('win'); } catch (e) {}
+        
+        // Trigger fireworks effect
+        setTimeout(() => {
+          if (particleCanvasRef.current) {
+            createFireworksEffect(particleCanvasRef.current);
+          }
+        }, 300);
+        
+        enhancedSoundFeedback.playAchievement();
+        gameManager.recordWin();
       } else {
         // Generate next problem after delay
         setTimeout(() => {
@@ -227,8 +289,12 @@ export default function MathBingo() {
         }, 1500);
       }
     } else {
+      // Reset streak on wrong answer
+      setStreak(0);
+      gameManager.recordAnswer(false);
+      
       setFeedback(`خطأ! الإجابة الصحيحة هي ${currentProblem.answer}`);
-      try { playSfx('wrong'); } catch (e) {}
+      enhancedSoundFeedback.playError();
       
       setTimeout(() => {
         generateNextProblem();
@@ -238,155 +304,380 @@ export default function MathBingo() {
   };
 
   return (
-    <Container maxWidth="md" sx={{width: '100%'}}>
-      <Paper elevation={3} sx={{ p: 4, m: 2, borderRadius: 3 }}>
-        <Typography variant="h4" align="center" sx={{ mb: 3, fontWeight: 'bold', color: 'primary.main' }}>
-          لعبة البينغو الرياضي
-        </Typography>
-        
-        <Typography variant="body1" align="center" sx={{ mb: 3, color: 'text.secondary' }}>
-          احسب المسألة واختر الإجابة الصحيحة من كارت البينغو
-        </Typography>
-
-        {!gameStarted ? (
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Button 
-              variant="contained" 
-              size="large" 
-              onClick={startGame}
-              sx={{ fontSize: '1.2rem', py: 2, px: 6, borderRadius: 3 }}
+    <Box 
+      ref={gameRef}
+      sx={{ 
+        position: 'relative',
+        minHeight: '100vh',
+        background: theme.background,
+        py: 3
+      }}
+    >
+      {/* Particle Canvas for Effects */}
+      <canvas
+        ref={particleCanvasRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 1000
+        }}
+        width={typeof window !== 'undefined' ? window.innerWidth : 1200}
+        height={typeof window !== 'undefined' ? window.innerHeight : 800}
+      />
+      
+      <Container maxWidth="md" sx={{width: '100%', position: 'relative', zIndex: 1}}>
+        <Fade in timeout={800}>
+          <Paper 
+            elevation={8} 
+            sx={{ 
+              p: 4, 
+              m: 2, 
+              borderRadius: 4,
+              background: theme.cardBg,
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              boxShadow: theme.shadow
+            }}
+          >
+            <Typography 
+              variant="h4" 
+              align="center" 
+              sx={{ 
+                mb: 3, 
+                fontWeight: 'bold', 
+                background: `linear-gradient(45deg, ${theme.primary}, ${theme.secondary})`,
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
+              }}
             >
-              ابدأ اللعب
-            </Button>
-          </Box>
+              لعبة البينغو الرياضي
+            </Typography>
+            
+            <Typography 
+              variant="body1" 
+              align="center" 
+              sx={{ 
+                mb: 3, 
+                color: 'text.secondary',
+                fontSize: '1.1rem'
+              }}
+            >
+              احسب المسألة واختر الإجابة الصحيحة من كارت البينغو
+            </Typography>
+
+            {!gameStarted ? (
+              <Zoom in timeout={600}>
+                <Box sx={{ textAlign: 'center', mb: 4 }}>
+                  <Button 
+                    variant="contained" 
+                    size="large" 
+                    onClick={startGame}
+                    sx={{
+                      ...enhancedButtonStyles.primary(theme),
+                      fontSize: '1.3rem', 
+                      py: 3, 
+                      px: 8,
+                      minWidth: '200px'
+                    }}
+                  >
+                    ابدأ اللعب
+                  </Button>
+                </Box>
+              </Zoom>
         ) : (
           <>
             {/* Game Stats */}
-            <Paper elevation={2} sx={{ p: 3, mb: 3, textAlign: 'center', backgroundColor: 'background.default' }}>
-              <Grid container spacing={2} alignItems="center" justifyContent="center">
-                <Grid item xs={12} sm={4}>
-                  <Typography variant="h6">
-                    النتيجة: {score}/{totalProblems}
-                  </Typography>
+            <Fade in timeout={600} style={{ transitionDelay: '200ms' }}>
+              <Paper 
+                elevation={4} 
+                sx={{ 
+                  p: 3, 
+                  mb: 3, 
+                  textAlign: 'center', 
+                  background: 'rgba(255,255,255,0.9)',
+                  borderRadius: 3,
+                  backdropFilter: 'blur(5px)'
+                }}
+              >
+                <Grid container spacing={3} alignItems="center" justifyContent="center">
+                  <Grid item xs={12} sm={3}>
+                    <Typography variant="h6" sx={{ color: theme.primary, fontWeight: 'bold' }}>
+                      النتيجة: {score}/{totalProblems}
+                    </Typography>
+                    {streak > 0 && (
+                      <Typography variant="body2" sx={{ color: theme.accent, fontWeight: 'bold' }}>
+                        تسلسل: {streak} 🔥
+                      </Typography>
+                    )}
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={3}>
+                    <Typography variant="h6" sx={{ color: theme.primary, fontWeight: 'bold' }}>
+                      المستوى
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: theme.secondary }}>
+                      {gameManager.getCurrentLevel()}
+                    </Typography>
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={3}>
+                    <Typography variant="h6" sx={{ color: theme.primary, fontWeight: 'bold' }}>
+                      الوقت
+                    </Typography>
+                    <Timer active={timerActive} />
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={3}>
+                    <Typography variant="h6" sx={{ color: theme.primary, fontWeight: 'bold' }}>
+                      المحاولات: {calledNumbers.length}
+                    </Typography>
+                  </Grid>
                 </Grid>
                 
-                <Grid item xs={12} sm={4}>
-                  <Typography variant="h6">
-                    الوقت
+                {/* Progress Bar */}
+                <Box sx={{ mt: 2, mb: 2 }}>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    تقدم المستوى: {gameManager.getLevelProgress()}%
                   </Typography>
-                  <Timer active={timerActive} />
-                </Grid>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={gameManager.getLevelProgress()} 
+                    sx={{
+                      height: 8,
+                      borderRadius: 4,
+                      '& .MuiLinearProgress-bar': {
+                        background: `linear-gradient(45deg, ${theme.primary}, ${theme.secondary})`
+                      }
+                    }}
+                  />
+                </Box>
                 
-                <Grid item xs={12} sm={4}>
-                  <Typography variant="h6">
-                    مسائل محلولة: {calledNumbers.length}
-                  </Typography>
-                </Grid>
-              </Grid>
-              
-              {currentProblem && !gameWon && (
-                <Typography variant="h3" sx={{ mt: 3, mb: 2, fontWeight: 'bold', color: 'primary.main', direction: 'ltr' }}>
-                  {currentProblem.problem} = ?
-                </Typography>
-              )}
-              
-              {feedback && (
-                <Alert 
-                  severity={gameWon ? 'success' : (feedback.includes('صحيح') ? 'success' : 'error')} 
-                  sx={{ mt: 2, fontSize: '1.1rem', borderRadius: 2 }}
-                >
-                  {feedback}
-                </Alert>
-              )}
-            </Paper>
-
-            {/* Bingo Card */}
-            <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h5" align="center" sx={{ mb: 2, fontWeight: 'bold' }}>
-                كارت البينغو
-              </Typography>
-              
-              <Grid container spacing={1} sx={{ maxWidth: 400, mx: 'auto' }}>
-                {bingoCard.map((row, rowIndex) =>
-                  row.map((cell, colIndex) => {
-                    const cellKey = `${rowIndex}-${colIndex}`;
-                    const isMarked = markedCells.has(cellKey);
-                    const isFree = cell.isFree;
-                    
-                    return (
-                      <Grid item xs={2.4} key={cellKey}>
-                        <Button
-                          variant={isMarked ? 'contained' : 'outlined'}
-                          onClick={() => handleCellClick(rowIndex, colIndex)}
-                          disabled={gameWon || isMarked}
-                          sx={{
-                            width: '100%',
-                            height: '60px',
-                            fontSize: isFree ? '10px' : '14px',
-                            fontWeight: 'bold',
-                            backgroundColor: isMarked ? '#1976d2' : 'transparent',
-                            color: isMarked ? 'white' : 'inherit',
-                            border: isMarked ? 'none' : '2px solid #1976d2',
-                            '&:hover': {
-                              backgroundColor: isMarked ? '#1565c0' : '#e3f2fd',
-                              transform: 'scale(1.05)',
-                            },
-                            transition: 'all 0.2s ease'
-                          }}
-                        >
-                          {isFree ? 'مجاني' : cell.number}
-                        </Button>
-                      </Grid>
-                    );
-                  })
+                {currentProblem && !gameWon && (
+                  <Zoom in timeout={400}>
+                    <Typography 
+                      variant="h3" 
+                      sx={{ 
+                        mt: 3, 
+                        mb: 2, 
+                        fontWeight: 'bold', 
+                        background: `linear-gradient(45deg, ${theme.primary}, ${theme.secondary})`,
+                        backgroundClip: 'text',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        direction: 'ltr',
+                        textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
+                      }}
+                    >
+                      {currentProblem.problem} = ?
+                    </Typography>
+                  </Zoom>
                 )}
-              </Grid>
-            </Paper>
+                
+                {feedback && (
+                  <Zoom in timeout={300}>
+                    <Alert 
+                      severity={gameWon ? 'success' : (feedback.includes('صحيح') ? 'success' : 'error')} 
+                      sx={{ 
+                        mt: 2, 
+                        fontSize: '1.1rem', 
+                        borderRadius: 3,
+                        fontWeight: 'bold',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                      }}
+                    >
+                      {feedback}
+                    </Alert>
+                  </Zoom>
+                )}
+              </Paper>
+            </Fade>
+
+            {/* Enhanced Bingo Card */}
+            <Fade in timeout={600} style={{ transitionDelay: '400ms' }}>
+              <Paper 
+                elevation={6} 
+                sx={{ 
+                  p: 3, 
+                  mb: 3,
+                  background: 'rgba(255,255,255,0.95)',
+                  borderRadius: 4,
+                  backdropFilter: 'blur(10px)',
+                  border: '2px solid rgba(33, 150, 243, 0.1)'
+                }}
+              >
+                <Typography 
+                  variant="h5" 
+                  align="center" 
+                  sx={{ 
+                    mb: 3, 
+                    fontWeight: 'bold',
+                    color: theme.primary,
+                    textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+                  }}
+                >
+                  كارت البينغو
+                </Typography>
+                
+                <Grid container spacing={1.5} sx={{ maxWidth: 420, mx: 'auto' }}>
+                  {bingoCard.map((row, rowIndex) =>
+                    row.map((cell, colIndex) => {
+                      const cellKey = `${rowIndex}-${colIndex}`;
+                      const isMarked = markedCells.has(cellKey);
+                      const isFree = cell.isFree;
+                      const isAnimating = animatingCells.has(cellKey);
+                      
+                      return (
+                        <Grid item xs={2.4} key={cellKey}>
+                          <Zoom in timeout={400} style={{ transitionDelay: `${(rowIndex + colIndex) * 50}ms` }}>
+                            <Button
+                              variant={isMarked ? 'contained' : 'outlined'}
+                              onClick={() => handleCellClick(rowIndex, colIndex)}
+                              disabled={gameWon || isMarked}
+                              sx={{
+                                width: '100%',
+                                height: '70px',
+                                fontSize: isFree ? '11px' : '16px',
+                                fontWeight: 'bold',
+                                borderRadius: 3,
+                                ...enhancedButtonStyles.choice(theme, isMarked, isMarked, false),
+                                ...(isAnimating && cardAnimations.pulse),
+                                background: isMarked 
+                                  ? `linear-gradient(45deg, ${theme.primary}, ${theme.secondary})`
+                                  : isFree 
+                                  ? `linear-gradient(45deg, ${theme.accent}, #66bb6a)`
+                                  : 'white',
+                                color: isMarked || isFree ? 'white' : theme.primary,
+                                border: `2px solid ${isMarked ? 'transparent' : theme.primary}`,
+                                boxShadow: isMarked 
+                                  ? `0 6px 20px ${theme.primary}40`
+                                  : '0 4px 12px rgba(0,0,0,0.1)',
+                                '&:hover': !isMarked && !gameWon ? {
+                                  transform: 'translateY(-4px) scale(1.05)',
+                                  boxShadow: `0 8px 25px ${theme.primary}30`,
+                                  background: `linear-gradient(45deg, ${theme.primary}20, ${theme.secondary}20)`
+                                } : {},
+                                '&:disabled': {
+                                  opacity: isMarked ? 1 : 0.6
+                                },
+                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                              }}
+                            >
+                              {isFree ? 'مجاني' : cell.number}
+                            </Button>
+                          </Zoom>
+                        </Grid>
+                      );
+                    })
+                  )}
+                </Grid>
+              </Paper>
+            </Fade>
 
             {/* Called Numbers */}
-            <Paper elevation={2} sx={{ p: 2, mb: 3 }}>
-              <Typography variant="h6" align="center" sx={{ mb: 2 }}>
-                الأرقام المطلوبة
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'center', direction: 'ltr' }}>
-                {calledNumbers.length > 0 ? (
-                  calledNumbers.map((number, index) => (
-                    <Chip 
-                      key={index} 
-                      label={number} 
-                      color="primary" 
-                      variant="outlined"
-                      size="small"
-                    />
-                  ))
-                ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    لم يتم حل أي مسائل بعد
-                  </Typography>
-                )}
-              </Box>
-            </Paper>
+            <Fade in timeout={600} style={{ transitionDelay: '600ms' }}>
+              <Paper 
+                elevation={4} 
+                sx={{ 
+                  p: 3, 
+                  mb: 3,
+                  background: 'rgba(255,255,255,0.9)',
+                  borderRadius: 3,
+                  backdropFilter: 'blur(5px)'
+                }}
+              >
+                <Typography 
+                  variant="h6" 
+                  align="center" 
+                  sx={{ 
+                    mb: 2, 
+                    color: theme.primary,
+                    fontWeight: 'bold'
+                  }}
+                >
+                  الأرقام المطلوبة
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, justifyContent: 'center', direction: 'ltr' }}>
+                  {calledNumbers.length > 0 ? (
+                    calledNumbers.map((number, index) => (
+                      <Zoom in timeout={300} style={{ transitionDelay: `${index * 50}ms` }} key={index}>
+                        <Chip 
+                          label={number} 
+                          sx={{
+                            background: `linear-gradient(45deg, ${theme.primary}, ${theme.secondary})`,
+                            color: 'white',
+                            fontWeight: 'bold',
+                            fontSize: '1rem',
+                            height: '36px',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                            '&:hover': {
+                              transform: 'scale(1.1)',
+                              boxShadow: '0 6px 16px rgba(0,0,0,0.3)'
+                            },
+                            transition: 'all 0.3s ease'
+                          }}
+                        />
+                      </Zoom>
+                    ))
+                  ) : (
+                    <Typography variant="body1" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                      لم يتم حل أي مسائل بعد
+                    </Typography>
+                  )}
+                </Box>
+              </Paper>
+            </Fade>
 
-            {/* Control Buttons */}
-            <Box sx={{ textAlign: 'center', mt: 3 }}>
-              <Button 
-                variant="outlined" 
-                onClick={startGame}
-                sx={{ mr: 2, borderRadius: 2 }}
-              >
-                لعبة جديدة
-              </Button>
-              <Button 
-                variant="outlined" 
-                onClick={() => setGameStarted(false)}
-                sx={{ borderRadius: 2 }}
-              >
-                إنهاء اللعبة
-              </Button>
-            </Box>
+            {/* Enhanced Control Buttons */}
+            <Fade in timeout={600} style={{ transitionDelay: '800ms' }}>
+              <Box sx={{ textAlign: 'center', mt: 3 }}>
+                <Button 
+                  variant="contained"
+                  onClick={startGame}
+                  sx={{
+                    ...enhancedButtonStyles.primary(theme),
+                    mr: 2,
+                    fontSize: '1.1rem',
+                    py: 2,
+                    px: 4
+                  }}
+                >
+                  لعبة جديدة
+                </Button>
+                <Button 
+                  variant="outlined"
+                  onClick={() => setGameStarted(false)}
+                  sx={{
+                    borderRadius: 3,
+                    border: `2px solid ${theme.primary}`,
+                    color: theme.primary,
+                    py: 2,
+                    px: 4,
+                    fontSize: '1.1rem',
+                    fontWeight: 'bold',
+                    '&:hover': {
+                      background: theme.primary,
+                      color: 'white',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 6px 16px rgba(0,0,0,0.2)'
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  إنهاء اللعبة
+                </Button>
+              </Box>
+            </Fade>
           </>
         )}
-      </Paper>
-    </Container>
+          </Paper>
+        </Fade>
+      </Container>
+    </Box>
   );
 }

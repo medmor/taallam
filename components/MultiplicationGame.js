@@ -1,36 +1,65 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Box, Button, Paper, Typography, Stack } from "@mui/material";
+import React, { useEffect, useState, useRef } from "react";
+import { 
+  Box, 
+  Button, 
+  Paper, 
+  Typography, 
+  Stack, 
+  Chip, 
+  LinearProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Fade,
+  Zoom
+} from "@mui/material";
 import WinOverlay from "./WinOverlay";
 import Timer from "./Timer";
 import { playSfx } from "@/lib/sfx";
+import { 
+  GameProgressionManager, 
+  difficultyLevels, 
+  createParticleEffect, 
+  createPulseAnimation,
+  createShakeAnimation
+} from "@/lib/gameEnhancements";
 
 function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function generateForLevel(level) {
-  let a, b;
-  if (level === "easy") {
-    a = randInt(1, 9);
-    b = randInt(1, 9);
-  } else if (level === "medium") {
-    a = randInt(2, 12);
-    b = randInt(2, 12);
-  } else {
-    a = randInt(10, 20);
-    b = randInt(2, 12);
+  let a, b, maxChoices = 4;
+  
+  if (level === "beginner") {
+    a = randInt(1, 5);
+    b = randInt(1, 5);
+  } else if (level === "intermediate") {
+    a = randInt(2, 9);
+    b = randInt(2, 9);
+  } else if (level === "advanced") {
+    a = randInt(6, 12);
+    b = randInt(6, 12);
+  } else { // expert
+    a = randInt(10, 15);
+    b = randInt(10, 15);
+    maxChoices = 6;
   }
+  
   const answer = a * b;
   let wrongs = [];
-  while (wrongs.length < 2) {
-    const delta = wrongs.length === 0 ? randInt(1, 5) : randInt(6, 12);
+  
+  while (wrongs.length < maxChoices - 1) {
+    const delta = level === "expert" ? randInt(5, 15) : randInt(1, 8);
     const sign = Math.random() > 0.5 ? 1 : -1;
     const wrong = answer + sign * delta;
     if (wrong > 0 && wrong !== answer && !wrongs.includes(wrong)) {
       wrongs.push(wrong);
     }
   }
+  
   const choices = [answer, ...wrongs].sort(() => Math.random() - 0.5);
   return { a, b, answer, choices };
 }

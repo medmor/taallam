@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -10,8 +10,13 @@ import {
   Container,
   Chip,
   IconButton,
+  Zoom,
+  Fade,
+  LinearProgress,
 } from "@mui/material";
 import { preloadSfx, playSfx } from "@/lib/sfx";
+import { GameProgressionManager } from "@/lib/gameEnhancements";
+import { gameThemes, enhancedButtonStyles, cardAnimations, createFireworksEffect, enhancedSoundFeedback } from "@/lib/visualEnhancements";
 import Timer from "@/components/Timer";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -31,6 +36,14 @@ export default function EquationBalance() {
   const [problemsPerRound] = useState(10);
   const [gameComplete, setGameComplete] = useState(false);
   const [showBalance, setShowBalance] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [showFireworks, setShowFireworks] = useState(false);
+  const [animatingEquation, setAnimatingEquation] = useState(false);
+  
+  const gameRef = useRef(null);
+  const particleCanvasRef = useRef(null);
+  const gameManager = useRef(new GameProgressionManager('equationBalance')).current;
+  const theme = gameThemes.math;
 
   useEffect(() => {
     try {
@@ -38,39 +51,59 @@ export default function EquationBalance() {
     } catch (e) {}
   }, []);
 
-  // Generate a balanced equation with one missing value
+  // Generate a balanced equation with one missing value and difficulty progression
   const generateEquation = () => {
-    const operations = ["+", "-", "×"];
+    const currentLevel = gameManager.getCurrentLevel();
+    const operations = gameManager.getOperationsForLevel(currentLevel);
     const operation = operations[Math.floor(Math.random() * operations.length)];
 
     let num1, num2, result, missingPosition;
+    let maxNumber;
+    
+    // Set difficulty based on level
+    switch (currentLevel) {
+      case 'beginner':
+        maxNumber = 10;
+        break;
+      case 'intermediate':
+        maxNumber = 20;
+        break;
+      case 'advanced':
+        maxNumber = 50;
+        break;
+      case 'expert':
+        maxNumber = 100;
+        break;
+      default:
+        maxNumber = 10;
+    }
 
     // First, decide which position will be missing
     missingPosition = Math.floor(Math.random() * 3);
 
     switch (operation) {
-      case "+":
+      case 'addition':
         if (missingPosition === 0) {
           // Missing first number: ? + num2 = result
-          num2 = Math.floor(Math.random() * 20) + 1;
-          result = Math.floor(Math.random() * 30) + num2 + 1;
+          num2 = Math.floor(Math.random() * maxNumber) + 1;
+          result = Math.floor(Math.random() * maxNumber) + num2 + 1;
           num1 = result - num2;
         } else if (missingPosition === 1) {
           // Missing second number: num1 + ? = result
-          num1 = Math.floor(Math.random() * 20) + 1;
-          result = Math.floor(Math.random() * 30) + num1 + 1;
+          num1 = Math.floor(Math.random() * maxNumber) + 1;
+          result = Math.floor(Math.random() * maxNumber) + num1 + 1;
           num2 = result - num1;
         } else {
           // Missing result: num1 + num2 = ?
-          num1 = Math.floor(Math.random() * 20) + 1;
-          num2 = Math.floor(Math.random() * 20) + 1;
+          num1 = Math.floor(Math.random() * maxNumber) + 1;
+          num2 = Math.floor(Math.random() * maxNumber) + 1;
           result = num1 + num2;
         }
         break;
-      case "-":
+      case 'subtraction':
         if (missingPosition === 0) {
           // Missing first number: ? - num2 = result
-          result = Math.floor(Math.random() * 20) + 1;
+          result = Math.floor(Math.random() * maxNumber) + 1;
           num2 = Math.floor(Math.random() * result) + 1;
           num1 = result + num2;
         } else if (missingPosition === 1) {

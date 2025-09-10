@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Paper, Chip } from "@mui/material";
+import React, { useState, useEffect, useRef } from "react";
+import { Box, Button, Typography, Paper, Chip, Zoom, Fade, LinearProgress } from "@mui/material";
+import { GameProgressionManager } from "@/lib/gameEnhancements";
+import { gameThemes, enhancedButtonStyles, cardAnimations, createFireworksEffect, enhancedSoundFeedback } from "@/lib/visualEnhancements";
 import Timer from "./Timer";
 
 const MissingNumberGame = () => {
@@ -14,35 +16,60 @@ const MissingNumberGame = () => {
   const [resetKey, setResetKey] = useState(0);
   const [timerActive, setTimerActive] = useState(true);
   const [lastTime, setLastTime] = useState(null);
+  const [streak, setStreak] = useState(0);
+  const [showFireworks, setShowFireworks] = useState(false);
+  const [animatingSequence, setAnimatingSequence] = useState(false);
+  
+  const gameRef = useRef(null);
+  const particleCanvasRef = useRef(null);
+  const gameManager = useRef(new GameProgressionManager('missingNumber')).current;
+  const theme = gameThemes.math;
 
   useEffect(() => {
     generateNewSequence();
   }, [level]);
 
   const generateNewSequence = () => {
-    // Generate different types of sequences based on level
+    const currentLevel = gameManager.getCurrentLevel();
     let seq = [];
     let start = Math.floor(Math.random() * 10) + 1;
 
-    if (level === 1) {
-      // Simple counting sequences (1,2,3,?,5)
-      seq = Array.from({ length: 5 }, (_, i) => start + i);
-    } else if (level === 2) {
-      // Skip counting by 2s (2,4,6,?,10)
-      seq = Array.from({ length: 5 }, (_, i) => start + i * 2);
-    } else if (level === 3) {
-      // Skip counting by 5s (5,10,15,?,25)
-      start = Math.floor(Math.random() * 5) + 1;
-      seq = Array.from({ length: 5 }, (_, i) => start * 5 + i * 5);
-    } else {
-      // Mixed patterns
-      const patterns = [
-        // Skip by 3
-        Array.from({ length: 5 }, (_, i) => start + i * 3),
-        // Backwards counting
-        Array.from({ length: 5 }, (_, i) => start + 10 - i),
-      ];
-      seq = patterns[Math.floor(Math.random() * patterns.length)];
+    // Enhanced sequence generation based on difficulty level
+    switch (currentLevel) {
+      case 'beginner':
+        // Simple counting sequences (1,2,3,?,5)
+        seq = Array.from({ length: 5 }, (_, i) => start + i);
+        break;
+        
+      case 'intermediate':
+        // Skip counting by 2s or 3s
+        const skipBy = Math.random() > 0.5 ? 2 : 3;
+        seq = Array.from({ length: 5 }, (_, i) => start + i * skipBy);
+        break;
+        
+      case 'advanced':
+        // Skip counting by 5s, 10s, or backwards counting
+        const patterns = [
+          Array.from({ length: 5 }, (_, i) => start * 5 + i * 5), // Skip by 5s
+          Array.from({ length: 5 }, (_, i) => start * 10 + i * 10), // Skip by 10s
+          Array.from({ length: 5 }, (_, i) => start + 15 - i), // Backwards counting
+        ];
+        seq = patterns[Math.floor(Math.random() * patterns.length)];
+        break;
+        
+      case 'expert':
+        // Complex patterns: Fibonacci-like, squares, or arithmetic sequences
+        const complexPatterns = [
+          Array.from({ length: 5 }, (_, i) => start + i * i), // Squares pattern
+          Array.from({ length: 5 }, (_, i) => start + i * 4), // Skip by 4s
+          [start, start+3, start+6, start+9, start+12], // Skip by 3s but larger
+          [start, start*2, start*3, start*4, start*5], // Multiplication table
+        ];
+        seq = complexPatterns[Math.floor(Math.random() * complexPatterns.length)];
+        break;
+        
+      default:
+        seq = Array.from({ length: 5 }, (_, i) => start + i);
     }
 
     const missingIdx = Math.floor(Math.random() * seq.length);
