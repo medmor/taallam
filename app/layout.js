@@ -2,8 +2,9 @@
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/lib/theme';
+import { UserProvider } from '@/contexts/UserContext';
 
-import Header from '@/components/Header';
+import HeaderWithUser from '@/components/HeaderWithUser';
 import Footer from '@/components/Footer';
 
 export default function RootLayout({ children }) {
@@ -12,9 +13,11 @@ export default function RootLayout({ children }) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <body>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <UserProvider>
+            <HeaderWithUser />
+            <main>{children}</main>
+            <Footer />
+          </UserProvider>
         </body>
       </ThemeProvider>
     </html>

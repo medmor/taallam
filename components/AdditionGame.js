@@ -70,11 +70,11 @@ function generateForLevel(level) {
   return { a, b, answer, choices };
 }
 
-export default function AdditionGame() {
+export default function AdditionGame({ level: initialLevel = "beginner", onComplete, onBack }) {
   const [timerActive, setTimerActive] = useState(true);
   const [timerKey, setTimerKey] = useState(0);
   const [finalTime, setFinalTime] = useState(null);
-  const [level, setLevel] = useState("beginner");
+  const [level, setLevel] = useState(initialLevel);
   const [round, setRound] = useState(0);
   const [expr, setExpr] = useState(() => generateForLevel("beginner"));
   const [score, setScore] = useState(0);
@@ -151,6 +151,11 @@ export default function AdditionGame() {
         setShowWin(true);
         setTimerActive(false);
         playSfx("win");
+        
+        // Call onComplete callback if provided
+        if (onComplete) {
+          onComplete(score, finalTime || 0);
+        }
         return;
       }
 
@@ -213,7 +218,7 @@ export default function AdditionGame() {
           overflow: "hidden",
         }}
       >
-        {/* Difficulty indicator */}
+        {/* Difficulty indicator with back button */}
         <Box
           sx={{
             display: "flex",
@@ -222,6 +227,26 @@ export default function AdditionGame() {
             mb: 2,
           }}
         >
+          {onBack && (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={onBack}
+              sx={{
+                minWidth: 'auto',
+                px: 1,
+                borderRadius: 2,
+                border: '2px solid #666',
+                color: '#666',
+                '&:hover': {
+                  border: '2px solid #333',
+                  color: '#333'
+                }
+              }}
+            >
+              ← رجوع
+            </Button>
+          )}
           <Typography
             variant="h4"
             align="center"

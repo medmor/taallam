@@ -9,9 +9,10 @@ import Image from "next/image";
 import IconButton from "@mui/material/IconButton";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
+import { Person } from "@mui/icons-material";
 import { isMuted, setMuted } from "@/lib/sfx";
 
-export default function Header() {
+export default function Header({ currentUser, onSwitchUser }) {
   const [muted, setMutedState] = useState(false);
 
   useEffect(() => {
@@ -38,12 +39,34 @@ export default function Header() {
           </Link>
         </Typography>
 
-        <IconButton
+
+
+        {currentUser && onSwitchUser && (
+          <Button
+            variant="outlined"
+            startIcon={<Person />}
+            onClick={onSwitchUser}
+            sx={{ 
+              borderRadius: 3,
+              ml: 2,
+              color: 'white',
+              borderColor: 'rgba(255,255,255,0.5)',
+              '&:hover': {
+                borderColor: 'white',
+                backgroundColor: 'rgba(255,255,255,0.1)'
+              }
+            }}
+          >
+            تغيير المتعلم
+          </Button>
+        )}
+
+                <IconButton
           color="inherit"
           onClick={toggleMute}
           aria-label={muted ? "unmute" : "mute"}
         >
-          {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+          {muted ? <VolumeOffIcon sx={{ color: 'white' }} /> : <VolumeUpIcon sx={{ color: 'white' }} />}
         </IconButton>
       </Toolbar>
     </AppBar>

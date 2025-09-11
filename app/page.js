@@ -1,29 +1,111 @@
-import Link from 'next/link'
-import { Box, Button, Card, CardContent, CardMedia, Container, Grid, Typography } from '@mui/material'
-import AdditionGame from '@/components/AdditionGame'
+"use client";
+import React, { useState, useEffect } from 'react';
+import { Box, Container, Typography, Fade } from '@mui/material';
+import { School } from '@mui/icons-material';
+import UserSelector from '@/components/UserSelector';
+import LearningDashboard from '@/components/LearningDashboard';
+import AdditionGame from '@/components/AdditionGame';
+import { useUser } from '@/contexts/UserContext';
+import { userManager } from '@/lib/userManager';
 
 export default function Home() {
-  return (
-    <div>
-      <main>
-        <Box sx={{ pt: 8, pb: 6 }}>
+  const { 
+    currentUser, 
+    showUserSelector, 
+    setShowUserSelector,
+    handleUserSelected,
+    updateCurrentUser 
+  } = useUser();
+  
+  const [currentLesson, setCurrentLesson] = useState(null);
+  const [showGame, setShowGame] = useState(false);
+
+  const handleStartLesson = (lesson) => {
+    setCurrentLesson(lesson);
+    setShowGame(true);
+  };
+
+  const handleGameComplete = (score, time) => {
+    if (currentLesson && currentUser) {
+      // Update user progress
+      const completed = score >= 8; // 80% success rate
+      userManager.updateProgress(currentLesson.id, score, time, completed);
+      
+      // Refresh user data
+      updateCurrentUser();
+    }
+    
+    // Return to dashboard
+    setShowGame(false);
+    setCurrentLesson(null);
+  };
+
+  if (showGame && currentLesson) {
+    // Show the game component
+    return (
+      <AdditionGame 
+        level={currentLesson.level}
+        onComplete={handleGameComplete}
+        onBack={() => setShowGame(false)}
+      />
+    );
+  }
+
+  if (!currentUser) {
+    // Show welcome screen while user selector is loading
+    return (
+      <>
+        <Box sx={{ pt: 8, pb: 6, minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
           <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="text.primary"
-              gutterBottom
-            >
-              مرحباً بكم في تعلم
-            </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              المكان الأفضل لتعليم الأطفال اللغة العربية
-            </Typography>
-            <AdditionGame />
+            <Fade in timeout={800}>
+              <Box sx={{ textAlign: 'center', color: 'white' }}>
+                <School sx={{ fontSize: 80, mb: 3 }} />
+                <Typography
+                  component="h1"
+                  variant="h2"
+                  align="center"
+                  gutterBottom
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  مرحباً بكم في تعلّم
+                </Typography>
+                <Typography variant="h5" align="center" paragraph sx={{ opacity: 0.9 }}>
+                  منصة تعليمية تفاعلية لتعلم الرياضيات
+                </Typography>
+                <Typography variant="body1" align="center" paragraph sx={{ opacity: 0.8, mb: 4 }}>
+                  رحلة تعليمية ممتعة ومنظمة لإتقان مهارات الرياضيات خطوة بخطوة
+                </Typography>
+              </Box>
+            </Fade>
           </Container>
         </Box>
-      </main>
-    </div>
-  )
+        
+        <UserSelector
+          open={showUserSelector}
+          onClose={() => setShowUserSelector(false)}
+          onUserSelected={handleUserSelected}
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      {/* Main Dashboard */}
+      <Box sx={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
+        {/* Learning Dashboard */}
+        <LearningDashboard 
+          currentUser={currentUser}
+          onStartLesson={handleStartLesson}
+        />
+      </Box>
+
+      {/* User Selector Dialog */}
+      <UserSelector
+        open={showUserSelector}
+        onClose={() => setShowUserSelector(false)}
+        onUserSelected={handleUserSelected}
+      />
+    </>
+  );
 }
