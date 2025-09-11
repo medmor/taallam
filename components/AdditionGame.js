@@ -1,30 +1,31 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import Timer from "./Timer";
-import { 
-  Box, 
-  Button, 
-  Paper, 
-  Typography, 
-  Stack, 
-  Chip, 
+import {
+  Box,
+  Button,
+  Paper,
+  Typography,
+  Stack,
+  Chip,
   LinearProgress,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
   Fade,
-  Zoom
+  Zoom,
+  Grid,
 } from "@mui/material";
 import WinOverlay from "./WinOverlay";
 import { playSfx } from "@/lib/sfx";
-import { 
-  GameProgressionManager, 
-  difficultyLevels, 
-  createParticleEffect, 
+import {
+  GameProgressionManager,
+  difficultyLevels,
+  createParticleEffect,
   animateNumber,
   createPulseAnimation,
-  createShakeAnimation
+  createShakeAnimation,
 } from "@/lib/gameEnhancements";
 
 function randInt(min, max) {
@@ -33,8 +34,10 @@ function randInt(min, max) {
 
 function generateForLevel(level) {
   // Enhanced difficulty progression
-  let a, b, maxChoices = 4;
-  
+  let a,
+    b,
+    maxChoices = 4;
+
   if (level === "beginner") {
     a = randInt(1, 5);
     b = randInt(1, 5);
@@ -44,15 +47,16 @@ function generateForLevel(level) {
   } else if (level === "advanced") {
     a = randInt(10, 25);
     b = randInt(10, 25);
-  } else { // expert
+  } else {
+    // expert
     a = randInt(20, 50);
     b = randInt(20, 50);
     maxChoices = 6; // More challenging choices
   }
-  
+
   const answer = a + b;
   let wrongs = [];
-  
+
   while (wrongs.length < maxChoices - 1) {
     const delta = level === "expert" ? randInt(1, 8) : randInt(1, 5);
     const sign = Math.random() > 0.5 ? 1 : -1;
@@ -61,7 +65,7 @@ function generateForLevel(level) {
       wrongs.push(wrong);
     }
   }
-  
+
   const choices = [answer, ...wrongs].sort(() => Math.random() - 0.5);
   return { a, b, answer, choices };
 }
@@ -80,11 +84,11 @@ export default function AdditionGame() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [showFeedback, setShowFeedback] = useState(false);
-  
+
   const particleCanvasRef = useRef(null);
   const scoreRef = useRef(null);
-  const progressManager = useRef(new GameProgressionManager('addition-game'));
-  
+  const progressManager = useRef(new GameProgressionManager("addition-game"));
+
   const totalRounds = 10;
   const maxStreak = 10;
 
@@ -105,15 +109,15 @@ export default function AdditionGame() {
   const nextRound = (selectedChoice) => {
     const correct = selectedChoice === expr.answer;
     const responseTime = Date.now() - questionStartTime;
-    
+
     setSelectedAnswer(selectedChoice);
     setShowFeedback(true);
-    
+
     if (correct) {
       const newStreak = streak + 1;
       setStreak(newStreak);
       setScore((s) => s + 1);
-      
+
       // Enhanced feedback based on performance
       if (responseTime < 3000) {
         setFeedback("⚡ سريع جداً!");
@@ -125,14 +129,13 @@ export default function AdditionGame() {
         setFeedback("✅ ممتاز!");
         playSfx("correct");
       }
-      
+
       // Create particle effect for correct answers
-      createParticleEffect(particleCanvasRef.current, 'success');
-      
+      createParticleEffect(particleCanvasRef.current, "success");
+
       // Update progress manager
       progressManager.current.updateScore(10, responseTime);
       progressManager.current.updateStreak(newStreak);
-      
     } else {
       setStreak(0);
       setFeedback(`❌ الإجابة الصحيحة: ${expr.answer}`);
@@ -143,14 +146,14 @@ export default function AdditionGame() {
     setTimeout(() => {
       setShowFeedback(false);
       setSelectedAnswer(null);
-      
+
       if (round + 1 >= totalRounds) {
         setShowWin(true);
         setTimerActive(false);
         playSfx("win");
         return;
       }
-      
+
       setRound((r) => r + 1);
       setExpr(generateForLevel(level));
       setQuestionStartTime(Date.now());
@@ -177,25 +180,25 @@ export default function AdditionGame() {
         flexDirection: "column",
         alignItems: "center",
         mt: 4,
-        position: "relative"
+        position: "relative",
       }}
     >
       {/* Particle effect canvas */}
-      <canvas 
-        ref={particleCanvasRef} 
+      <canvas
+        ref={particleCanvasRef}
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-          zIndex: 10
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          zIndex: 10,
         }}
         width="800"
         height="600"
       />
-      
+
       <Paper
         elevation={8}
         sx={{
@@ -205,54 +208,69 @@ export default function AdditionGame() {
           maxWidth: 450,
           border: `3px solid ${difficultyLevels[level].color}`,
           boxShadow: `0 8px 32px ${difficultyLevels[level].color}40`,
-          background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
-          position: 'relative',
-          overflow: 'hidden'
+          background: "linear-gradient(145deg, #ffffff, #f8f9fa)",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
         {/* Difficulty indicator */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
           <Typography
             variant="h4"
             align="center"
-            sx={{ 
-              fontWeight: "bold", 
+            sx={{
+              fontWeight: "bold",
               color: difficultyLevels[level].color,
-              flexGrow: 1
+              flexGrow: 1,
             }}
           >
             تحدي الجمع {difficultyLevels[level].icon}
           </Typography>
-          <Chip 
+          <Chip
             label={difficultyLevels[level].name}
-            sx={{ 
+            sx={{
               backgroundColor: difficultyLevels[level].color,
-              color: 'white',
-              fontWeight: 'bold'
+              color: "white",
+              fontWeight: "bold",
             }}
           />
         </Box>
 
         {/* Game stats */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, flexWrap: 'wrap', gap: 1 }}>
-          <Chip 
-            label={`الجولة: ${round + 1}/${totalRounds}`} 
-            color="primary" 
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            mb: 3,
+            flexWrap: "wrap",
+            gap: 1,
+          }}
+        >
+          <Chip
+            label={`الجولة: ${round + 1}/${totalRounds}`}
+            color="primary"
             variant="outlined"
           />
-          <Chip 
+          <Chip
             ref={scoreRef}
-            label={`النقاط: ${score}`} 
-            color="success" 
+            label={`النقاط: ${score}`}
+            color="success"
             variant="outlined"
           />
           {streak > 0 && (
-            <Chip 
-              label={`متتالية: ${streak} 🔥`} 
-              sx={{ 
-                backgroundColor: '#ff6b35',
-                color: 'white',
-                ...createPulseAnimation()
+            <Chip
+              label={`متتالية: ${streak} 🔥`}
+              sx={{
+                backgroundColor: "#ff6b35",
+                color: "white",
+                ...createPulseAnimation(),
               }}
             />
           )}
@@ -260,20 +278,20 @@ export default function AdditionGame() {
 
         {/* Progress bar */}
         <Box sx={{ mb: 3 }}>
-          <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
+          <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
             التقدم في اللعبة
           </Typography>
-          <LinearProgress 
-            variant="determinate" 
+          <LinearProgress
+            variant="determinate"
             value={(round / totalRounds) * 100}
-            sx={{ 
-              height: 8, 
+            sx={{
+              height: 8,
               borderRadius: 4,
-              backgroundColor: '#e0e0e0',
-              '& .MuiLinearProgress-bar': {
+              backgroundColor: "#e0e0e0",
+              "& .MuiLinearProgress-bar": {
                 backgroundColor: difficultyLevels[level].color,
-                borderRadius: 4
-              }
+                borderRadius: 4,
+              },
             }}
           />
         </Box>
@@ -289,13 +307,19 @@ export default function AdditionGame() {
               disabled={showFeedback}
             >
               {Object.entries(difficultyLevels).map(([key, config]) => (
-                <MenuItem 
-                  key={key} 
+                <MenuItem
+                  key={key}
                   value={key}
-                  disabled={!progressManager.current.getProgress().difficultyUnlocked.includes(key)}
+                  disabled={
+                    !progressManager.current
+                      .getProgress()
+                      .difficultyUnlocked.includes(key)
+                  }
                 >
                   {config.icon} {config.name}
-                  {!progressManager.current.getProgress().difficultyUnlocked.includes(key) && ' 🔒'}
+                  {!progressManager.current
+                    .getProgress()
+                    .difficultyUnlocked.includes(key) && " 🔒"}
                 </MenuItem>
               ))}
             </Select>
@@ -310,9 +334,9 @@ export default function AdditionGame() {
               p: 3,
               mb: 3,
               borderRadius: 3,
-              backgroundColor: '#f8f9fa',
-              border: '2px solid #e9ecef',
-              textAlign: 'center'
+              backgroundColor: "#f8f9fa",
+              border: "2px solid #e9ecef",
+              textAlign: "center",
             }}
           >
             <Typography
@@ -321,10 +345,11 @@ export default function AdditionGame() {
                 fontWeight: "bold",
                 color: "#2c3e50",
                 fontFamily: "'Amiri', serif",
-                mb: 1
+                mb: 1,
+                direction: "ltr",
               }}
             >
-              {expr.a} + {expr.b} = ؟
+              {expr.a} + {expr.b} = ?
             </Typography>
           </Paper>
         </Zoom>
@@ -338,10 +363,15 @@ export default function AdditionGame() {
                 p: 3,
                 mb: 3,
                 borderRadius: 3,
-                backgroundColor: selectedAnswer === expr.answer ? '#e8f5e8' : '#ffeaea',
-                border: `2px solid ${selectedAnswer === expr.answer ? '#4caf50' : '#f44336'}`,
-                textAlign: 'center',
-                ...(selectedAnswer === expr.answer ? createPulseAnimation() : createShakeAnimation())
+                backgroundColor:
+                  selectedAnswer === expr.answer ? "#e8f5e8" : "#ffeaea",
+                border: `2px solid ${
+                  selectedAnswer === expr.answer ? "#4caf50" : "#f44336"
+                }`,
+                textAlign: "center",
+                ...(selectedAnswer === expr.answer
+                  ? createPulseAnimation()
+                  : createShakeAnimation()),
               }}
             >
               <Typography
@@ -349,7 +379,7 @@ export default function AdditionGame() {
                 sx={{
                   fontWeight: "bold",
                   color: selectedAnswer === expr.answer ? "#2e7d32" : "#c62828",
-                  mb: 1
+                  mb: 1,
                 }}
               >
                 {feedback}
@@ -358,65 +388,81 @@ export default function AdditionGame() {
           </Fade>
         )}
 
-        {/* Answer choices */}
         {!showFeedback && (
-          <Stack spacing={2}>
+          <Grid
+            container
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+          >
             {expr.choices.map((choice, index) => (
-              <Zoom 
-                key={choice} 
-                in={true} 
-                timeout={300}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <Button
-                  variant="outlined"
-                  size="large"
-                  onClick={() => nextRound(choice)}
-                  disabled={showFeedback}
-                  sx={{
-                    py: 2,
-                    fontSize: "1.4rem",
-                    fontWeight: "bold",
-                    borderRadius: 3,
-                    border: '2px solid #e0e0e0',
-                    backgroundColor: 'white',
-                    color: '#333',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      backgroundColor: difficultyLevels[level].color,
-                      color: 'white',
-                      transform: 'translateY(-4px)',
-                      boxShadow: `0 8px 16px ${difficultyLevels[level].color}40`,
-                      border: `2px solid ${difficultyLevels[level].color}`
-                    },
-                    '&:active': {
-                      transform: 'translateY(0px)',
-                    }
-                  }}
+              <Grid item key={choice}>
+                <Zoom
+                  in={true}
+                  timeout={300}
+                  style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  {choice}
-                </Button>
-              </Zoom>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={() => nextRound(choice)}
+                    disabled={showFeedback}
+                    sx={{
+                      py: 2,
+                      minWidth: 100,
+                      fontSize: "1.4rem",
+                      fontWeight: "bold",
+                      borderRadius: 3,
+                      border: "2px solid #e0e0e0",
+                      backgroundColor: "white",
+                      color: "#333",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        backgroundColor: difficultyLevels[level].color,
+                        color: "white",
+                        transform: "translateY(-4px)",
+                        boxShadow: `0 8px 16px ${difficultyLevels[level].color}40`,
+                        border: `2px solid ${difficultyLevels[level].color}`,
+                      },
+                      "&:active": {
+                        transform: "translateY(0px)",
+                      },
+                    }}
+                  >
+                    {choice}
+                  </Button>
+                </Zoom>
+              </Grid>
             ))}
-          </Stack>
+          </Grid>
         )}
 
         {/* Timer display */}
-        <Box sx={{ mt: 3, textAlign: 'center' }}>
-          <Stack direction="row" gap={2} justifyContent="center" alignItems="center">
-            <Typography variant="h6" sx={{ color: '#666' }}>
+        <Box sx={{ mt: 3, textAlign: "center" }}>
+          <Stack
+            direction="row"
+            gap={2}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Typography variant="h6" sx={{ color: "#666" }}>
               الوقت:
             </Typography>
-            <Timer 
-              active={timerActive} 
-              key={timerKey} 
+            <Timer
+              active={timerActive}
+              key={timerKey}
               onStop={handleTimerStop}
-              sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}
+              sx={{ fontSize: "1.2rem", fontWeight: "bold" }}
             />
           </Stack>
           {finalTime !== null && (
             <Typography
-              sx={{ mt: 1, fontSize: 16, color: "#00838f", textAlign: "center" }}
+              sx={{
+                mt: 1,
+                fontSize: 16,
+                color: "#00838f",
+                textAlign: "center",
+              }}
             >
               الوقت المستغرق:{" "}
               {Math.floor(finalTime / 60)
@@ -440,7 +486,7 @@ export default function AdditionGame() {
             setStreak(0);
             setExpr(generateForLevel(level));
             setTimerActive(true);
-            setTimerKey(k => k + 1);
+            setTimerKey((k) => k + 1);
             setQuestionStartTime(Date.now());
             setFeedback("");
             setSelectedAnswer(null);
