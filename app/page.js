@@ -5,6 +5,7 @@ import { School } from '@mui/icons-material';
 import UserSelector from '@/components/UserSelector';
 import LearningDashboard from '@/components/LearningDashboard';
 import AdditionGame from '@/components/AdditionGame';
+import MultiplicationGame from '@/components/MultiplicationGame';
 import { useUser } from '@/contexts/UserContext';
 import { userManager } from '@/lib/userManager';
 
@@ -41,9 +42,22 @@ export default function Home() {
   };
 
   if (showGame && currentLesson) {
+    const gameComponents = {
+      AdditionGame,
+      MultiplicationGame,
+    };
+    const GameComponent = gameComponents[currentLesson.component];
+
+    if (!GameComponent) {
+      console.error(`Game component "${currentLesson.component}" not found!`);
+      // Optionally, show an error message to the user
+      setShowGame(false);
+      return null;
+    }
+
     // Show the game component
     return (
-      <AdditionGame 
+      <GameComponent
         level={currentLesson.level}
         onComplete={handleGameComplete}
         onBack={() => setShowGame(false)}
