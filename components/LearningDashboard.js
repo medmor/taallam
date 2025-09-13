@@ -325,10 +325,10 @@ const LearningDashboard = ({ currentUser, onStartLesson }) => {
                         {/* Action Button */}
                         <Button
                           fullWidth
-                          variant={status === 'available' ? 'contained' : 'outlined'}
+                          variant={status === 'available' ? 'contained' : status === 'completed' ? 'contained' : 'outlined'}
                           disabled={status === 'locked'}
                           startIcon={getStatusIcon(status)}
-                          onClick={() => status === 'available' && onStartLesson(lesson)}
+                          onClick={() => (status === 'available' || status === 'completed') && onStartLesson(lesson)}
                           sx={{
                             borderRadius: 2,
                             py: 1.5,
@@ -337,10 +337,17 @@ const LearningDashboard = ({ currentUser, onStartLesson }) => {
                               '&:hover': {
                                 background: 'linear-gradient(45deg, #1976d2, #0288d1)'
                               }
+                            }),
+                            ...(status === 'completed' && {
+                              background: 'linear-gradient(45deg, #4caf50, #66bb6a)',
+                              color: 'white',
+                              '&:hover': {
+                                background: 'linear-gradient(45deg, #388e3c, #4caf50)'
+                              }
                             })
                           }}
                         >
-                          {status === 'completed' ? 'مكتمل' : 
+                          {status === 'completed' ? 'إعادة اللعب' : 
                            status === 'available' ? 'ابدأ الدرس' : 'مقفل'}
                         </Button>
 
