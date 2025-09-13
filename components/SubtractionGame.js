@@ -33,103 +33,76 @@ function randInt(min, max) {
 }
 
 function generateForLevel(level) {
-  // Enhanced difficulty progression for fractions
-  let numerator, denominator, maxChoices = 4;
+  // Enhanced difficulty progression for subtraction
+  let a, b, maxChoices = 4;
 
   if (level === "beginner") {
-    // Simple fractions like 1/2, 1/4, 3/4
-    const denominators = [2, 4, 8];
-    denominator = denominators[randInt(0, denominators.length - 1)];
-    numerator = randInt(1, Math.max(1, denominator - 1));
+    // Simple subtraction (1-20)
+    a = randInt(5, 20);
+    b = randInt(1, Math.min(a, 10)); // Ensure b <= a
   } else if (level === "intermediate") {
-    // More complex fractions
-    const denominators = [3, 5, 6, 8, 10];
-    denominator = denominators[randInt(0, denominators.length - 1)];
-    numerator = randInt(1, Math.max(1, denominator - 1));
+    // Medium subtraction (1-50)
+    a = randInt(15, 50);
+    b = randInt(1, Math.min(a, 25)); // Ensure b <= a
   } else if (level === "advanced") {
-    // Complex fractions with larger denominators
-    denominator = randInt(6, 12);
-    numerator = randInt(1, Math.max(1, denominator - 1));
+    // Advanced subtraction (20-100)
+    a = randInt(30, 100);
+    b = randInt(1, Math.min(a, 50)); // Ensure b <= a
   } else {
-    // expert - very complex fractions
-    denominator = randInt(8, 16);
-    numerator = randInt(1, Math.max(1, denominator - 1));
-    maxChoices = 6;
+    // expert - complex subtraction (50-200)
+    a = randInt(50, 200);
+    b = randInt(1, Math.min(a, 100)); // Ensure b <= a
+    maxChoices = 6; // More challenging choices
   }
 
-  // Ensure valid fraction (numerator < denominator and both > 0)
-  if (numerator <= 0) numerator = 1;
-  if (denominator <= 1) denominator = 2;
-  if (numerator >= denominator) numerator = denominator - 1;
-
-  // Generate wrong answer choices with safety mechanism
+  const answer = a - b;
   let wrongs = [];
+
+  // Generate wrong answers with safety mechanism
   let attempts = 0;
   const maxAttempts = 50; // Prevent infinite loops
-  
+
   while (wrongs.length < maxChoices - 1 && attempts < maxAttempts) {
     attempts++;
     
-    // Generate wrong numerator with same denominator
-    if (wrongs.length < maxChoices - 1) {
-      const wrongNumerator = randInt(1, Math.max(1, denominator - 1));
-      if (wrongNumerator !== numerator) {
-        const fractionText = `${wrongNumerator}/${denominator}`;
-        if (!wrongs.includes(fractionText)) {
-          wrongs.push(fractionText);
-        }
+    // Generate wrong answers using common subtraction mistakes
+    const delta = level === "expert" ? randInt(1, 15) : randInt(1, 8);
+    const wrongAnswer1 = answer + delta; // Too high
+    const wrongAnswer2 = Math.max(0, answer - delta); // Too low
+    const wrongAnswer3 = Math.max(0, a + b); // Addition instead of subtraction
+    const wrongAnswer4 = Math.max(0, b - a); // Reversed subtraction
+    
+    const potentialWrongs = [wrongAnswer1, wrongAnswer2, wrongAnswer3, wrongAnswer4];
+    
+    for (const wrong of potentialWrongs) {
+      if (wrongs.length >= maxChoices - 1) break;
+      if (wrong !== answer && wrong >= 0 && !wrongs.includes(wrong)) {
+        wrongs.push(wrong);
       }
     }
     
-    // Generate wrong answers with different denominators
+    // Add some random nearby numbers as fallback
     if (wrongs.length < maxChoices - 1) {
-      const commonDenominators = [2, 3, 4, 6, 8];
-      const altDenominator = commonDenominators[randInt(0, commonDenominators.length - 1)];
-      const altNumerator = randInt(1, Math.max(1, altDenominator - 1));
-      
-      if (altDenominator !== denominator || altNumerator !== numerator) {
-        const fractionText = `${altNumerator}/${altDenominator}`;
-        if (!wrongs.includes(fractionText)) {
-          wrongs.push(fractionText);
-        }
-      }
-    }
-    
-    // Add some simple wrong fractions as fallback
-    if (wrongs.length < maxChoices - 1) {
-      const simpleFractions = ['1/2', '1/3', '1/4', '2/3', '3/4', '1/5', '2/5', '3/5', '4/5'];
-      const randomFraction = simpleFractions[randInt(0, simpleFractions.length - 1)];
-      if (randomFraction !== `${numerator}/${denominator}` && !wrongs.includes(randomFraction)) {
-        wrongs.push(randomFraction);
+      const randomWrong = Math.max(0, answer + randInt(-5, 5));
+      if (randomWrong !== answer && !wrongs.includes(randomWrong)) {
+        wrongs.push(randomWrong);
       }
     }
   }
-  
+
   // If we still don't have enough wrong answers, add some guaranteed different ones
   while (wrongs.length < maxChoices - 1) {
-    const fallbackNumerator = (numerator % denominator) + 1;
-    const fallbackFraction = `${fallbackNumerator}/${denominator}`;
-    if (fallbackFraction !== `${numerator}/${denominator}` && !wrongs.includes(fallbackFraction)) {
-      wrongs.push(fallbackFraction);
-    } else {
-      // Last resort: add a completely different fraction
-      wrongs.push(`${randInt(1, 3)}/${randInt(4, 8)}`);
+    const fallbackWrong = Math.max(0, answer + (wrongs.length + 1));
+    if (!wrongs.includes(fallbackWrong)) {
+      wrongs.push(fallbackWrong);
     }
   }
 
-  const correctAnswer = `${numerator}/${denominator}`;
-  const choices = [correctAnswer, ...wrongs].sort(() => Math.random() - 0.5);
-  
-  return { 
-    numerator, 
-    denominator, 
-    answer: correctAnswer, 
-    choices,
-    visualSlices: denominator // Number of pizza slices
-  };
+  const choices = [answer, ...wrongs].sort(() => Math.random() - 0.5);
+  return { a, b, answer, choices };
 }
 
-export default function PizzaFractionsGame({ level: initialLevel = "beginner", onComplete, onBack }) {
+export default function SubtractionGame({ level: initialLevel = "beginner", onComplete, onBack }) {
   const [timerActive, setTimerActive] = useState(true);
   const [timerKey, setTimerKey] = useState(0);
   const [finalTime, setFinalTime] = useState(null);
@@ -146,7 +119,7 @@ export default function PizzaFractionsGame({ level: initialLevel = "beginner", o
 
   const particleCanvasRef = useRef(null);
   const scoreRef = useRef(null);
-  const progressManager = useRef(new GameProgressionManager("pizza-fractions-game"));
+  const progressManager = useRef(new GameProgressionManager("subtraction-game"));
 
   const totalRounds = 10;
 
@@ -177,11 +150,11 @@ export default function PizzaFractionsGame({ level: initialLevel = "beginner", o
       setScore((s) => s + 1);
 
       // Enhanced feedback based on performance
-      if (responseTime < 5000) {
-        setFeedback("⚡ رائع!");
+      if (responseTime < 3000) {
+        setFeedback("⚡ سريع جداً!");
         playSfx("streak");
-      } else if (newStreak >= 3) {
-        setFeedback(`🔥 متتالية ممتازة! ${newStreak}`);
+      } else if (newStreak >= 5) {
+        setFeedback(`🔥 متتالية رائعة! ${newStreak}`);
         playSfx("bonus");
       } else {
         setFeedback("✅ ممتاز!");
@@ -221,7 +194,7 @@ export default function PizzaFractionsGame({ level: initialLevel = "beginner", o
       setExpr(generateForLevel(level));
       setQuestionStartTime(Date.now());
       setFeedback("");
-    }, 2000);
+    }, 1500);
   };
 
   // Preload sound effects on mount
@@ -235,64 +208,6 @@ export default function PizzaFractionsGame({ level: initialLevel = "beginner", o
   const handleTimerStop = (seconds) => {
     setFinalTime(seconds);
   };
-
-  // Function to render pizza visual (memoized to prevent unnecessary re-renders)
-  const renderPizzaVisual = React.useMemo(() => {
-    const { numerator, denominator } = expr;
-    
-    // Limit denominator to reasonable values to prevent performance issues
-    const safeDenominator = Math.min(Math.max(denominator, 2), 16);
-    const safeNumerator = Math.min(Math.max(numerator, 1), safeDenominator - 1);
-    
-    const sliceAngle = 360 / safeDenominator;
-    const radius = 80;
-    const centerX = 100;
-    const centerY = 100;
-
-    const slices = [];
-    for (let i = 0; i < safeDenominator; i++) {
-      const startAngle = (i * sliceAngle - 90) * (Math.PI / 180);
-      const endAngle = ((i + 1) * sliceAngle - 90) * (Math.PI / 180);
-      
-      const x1 = centerX + radius * Math.cos(startAngle);
-      const y1 = centerY + radius * Math.sin(startAngle);
-      const x2 = centerX + radius * Math.cos(endAngle);
-      const y2 = centerY + radius * Math.sin(endAngle);
-      
-      const isColored = i < safeNumerator;
-      
-      slices.push(
-        <g key={i}>
-          <path
-            d={`M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`}
-            fill={isColored ? "#ff6b35" : "#f5f5f5"}
-            stroke="#333"
-            strokeWidth="2"
-          />
-        </g>
-      );
-    }
-
-    return (
-      <svg width="200" height="200" viewBox="0 0 200 200" style={{ margin: "20px auto" }}>
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={radius + 5}
-          fill="#8B4513"
-          stroke="#654321"
-          strokeWidth="3"
-        />
-        {slices}
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r="8"
-          fill="#ff6b35"
-        />
-      </svg>
-    );
-  }, [expr.numerator, expr.denominator]);
 
   return (
     <Box
@@ -325,8 +240,8 @@ export default function PizzaFractionsGame({ level: initialLevel = "beginner", o
         sx={{
           p: 4,
           borderRadius: 4,
-          minWidth: 450,
-          maxWidth: 500,
+          minWidth: 380,
+          maxWidth: 450,
           border: `3px solid ${difficultyLevels[level].color}`,
           boxShadow: `0 8px 32px ${difficultyLevels[level].color}40`,
           background: "linear-gradient(145deg, #ffffff, #f8f9fa)",
@@ -372,7 +287,7 @@ export default function PizzaFractionsGame({ level: initialLevel = "beginner", o
               flexGrow: 1,
             }}
           >
-            كسور البيتزا 🍕 {difficultyLevels[level].icon}
+            تحدي الطرح ➖ {difficultyLevels[level].icon}
           </Typography>
           <Chip
             label={difficultyLevels[level].name}
@@ -467,7 +382,7 @@ export default function PizzaFractionsGame({ level: initialLevel = "beginner", o
           </FormControl>
         </Box>
 
-        {/* Pizza visual and question */}
+        {/* Main question display */}
         <Zoom in={!showFeedback} timeout={500}>
           <Paper
             elevation={4}
@@ -475,32 +390,22 @@ export default function PizzaFractionsGame({ level: initialLevel = "beginner", o
               p: 3,
               mb: 3,
               borderRadius: 3,
-              backgroundColor: "#fff8f0",
-              border: "2px solid #ff6b35",
+              backgroundColor: "#f8f9fa",
+              border: "2px solid #e9ecef",
               textAlign: "center",
             }}
           >
             <Typography
-              variant="h5"
+              variant="h3"
               sx={{
                 fontWeight: "bold",
                 color: "#2c3e50",
-                mb: 2,
+                fontFamily: "'Amiri', serif",
+                mb: 1,
+                direction: "ltr",
               }}
             >
-              ما هو الكسر الممثل في البيتزا؟
-            </Typography>
-            
-            {renderPizzaVisual}
-            
-            <Typography
-              variant="body1"
-              sx={{
-                color: "#666",
-                mt: 1,
-              }}
-            >
-              القطع الملونة من إجمالي القطع
+              {expr.a} - {expr.b} = ?
             </Typography>
           </Paper>
         </Zoom>
@@ -547,7 +452,7 @@ export default function PizzaFractionsGame({ level: initialLevel = "beginner", o
             alignItems="center"
           >
             {expr.choices.map((choice, index) => (
-              <Grid item xs={6} key={choice}>
+              <Grid item key={choice}>
                 <Zoom
                   in={true}
                   timeout={300}
@@ -559,9 +464,9 @@ export default function PizzaFractionsGame({ level: initialLevel = "beginner", o
                     onClick={() => nextRound(choice)}
                     disabled={showFeedback}
                     sx={{
-                      py: 3,
-                      minWidth: 120,
-                      fontSize: "1.8rem",
+                      py: 2,
+                      minWidth: 100,
+                      fontSize: "1.4rem",
                       fontWeight: "bold",
                       borderRadius: 3,
                       border: "2px solid #e0e0e0",

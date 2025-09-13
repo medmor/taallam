@@ -7,6 +7,7 @@ import LearningDashboard from '@/components/LearningDashboard';
 import AdditionGame from '@/components/AdditionGame';
 import MultiplicationGame from '@/components/MultiplicationGame';
 import PizzaFractionsGame from '@/components/PizzaFractionsGame';
+import SubtractionGame from '@/components/SubtractionGame';
 import { useUser } from '@/contexts/UserContext';
 import { userManager } from '@/lib/userManager';
 
@@ -47,6 +48,7 @@ export default function Home() {
       AdditionGame,
       MultiplicationGame,
       PizzaFractionsGame,
+      SubtractionGame,
     };
     const GameComponent = gameComponents[currentLesson.component];
 
