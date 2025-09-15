@@ -10,6 +10,7 @@ import PizzaFractionsGame from '@/components/PizzaFractionsGame';
 import SubtractionGame from '@/components/SubtractionGame';
 import DivisionGame from '@/components/DivisionGame';
 import FractionsComparison from '@/components/FractionsComparison';
+import NumberPatternsGame from '@/components/NumberPatternsGame';
 import { useUser } from '@/contexts/UserContext';
 import { userManager } from '@/lib/userManager';
 
@@ -36,6 +37,11 @@ export default function Home() {
       let totalPossible = 10; // Default for most games
       if (currentLesson.component === 'FractionsComparison') {
         totalPossible = 8; // FractionsComparison has 8 rounds
+      } else if (currentLesson.component === 'NumberPatternsGame') {
+        // NumberPatternsGame rounds vary by level
+        if (currentLesson.level === 'beginner') totalPossible = 8;
+        else if (currentLesson.level === 'intermediate') totalPossible = 10;
+        else totalPossible = 12; // advanced
       }
       
       // 80% success rate required for completion
@@ -59,6 +65,7 @@ export default function Home() {
       SubtractionGame,
       DivisionGame,
       FractionsComparison,
+      NumberPatternsGame,
     };
     const GameComponent = gameComponents[currentLesson.component];
 
