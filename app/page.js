@@ -9,6 +9,7 @@ import MultiplicationGame from '@/components/MultiplicationGame';
 import PizzaFractionsGame from '@/components/PizzaFractionsGame';
 import SubtractionGame from '@/components/SubtractionGame';
 import DivisionGame from '@/components/DivisionGame';
+import FractionsComparison from '@/components/FractionsComparison';
 import { useUser } from '@/contexts/UserContext';
 import { userManager } from '@/lib/userManager';
 
@@ -31,8 +32,14 @@ export default function Home() {
 
   const handleGameComplete = (score, time) => {
     if (currentLesson && currentUser) {
-      // Update user progress
-      const completed = score >= 8; // 80% success rate
+      // Determine total possible score based on game type
+      let totalPossible = 10; // Default for most games
+      if (currentLesson.component === 'FractionsComparison') {
+        totalPossible = 8; // FractionsComparison has 8 rounds
+      }
+      
+      // 80% success rate required for completion
+      const completed = score >= Math.ceil(totalPossible * 0.8);
       userManager.updateProgress(currentLesson.id, score, time, completed);
       
       // Refresh user data
@@ -51,6 +58,7 @@ export default function Home() {
       PizzaFractionsGame,
       SubtractionGame,
       DivisionGame,
+      FractionsComparison,
     };
     const GameComponent = gameComponents[currentLesson.component];
 

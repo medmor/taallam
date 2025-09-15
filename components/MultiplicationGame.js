@@ -128,10 +128,12 @@ export default function MultiplicationGame({ level: initialLevel = "beginner", o
     setSelectedAnswer(selectedChoice);
     setShowFeedback(true);
 
+    let newScore = score;
     if (correct) {
       const newStreak = streak + 1;
       setStreak(newStreak);
-      setScore((s) => s + 1);
+      newScore = score + 1;
+      setScore(newScore);
 
       // Enhanced feedback based on performance
       if (responseTime < 3000) {
@@ -167,9 +169,9 @@ export default function MultiplicationGame({ level: initialLevel = "beginner", o
         setTimerActive(false);
         playSfx("win");
         
-        // Call onComplete callback if provided
+        // Call onComplete callback with correct final score
         if (onComplete) {
-          onComplete(score, finalTime || 0);
+          onComplete(newScore, finalTime || 0);
         }
         return;
       }
