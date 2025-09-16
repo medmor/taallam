@@ -11,6 +11,7 @@ import SubtractionGame from '@/components/SubtractionGame';
 import DivisionGame from '@/components/DivisionGame';
 import FractionsComparison from '@/components/FractionsComparison';
 import NumberPatternsGame from '@/components/NumberPatternsGame';
+import ArabicLettersGame from '@/components/ArabicLettersGame';
 import { useUser } from '@/contexts/UserContext';
 import { userManager } from '@/lib/userManager';
 
@@ -42,6 +43,11 @@ export default function Home() {
         if (currentLesson.level === 'beginner') totalPossible = 8;
         else if (currentLesson.level === 'intermediate') totalPossible = 10;
         else totalPossible = 12; // advanced
+      } else if (currentLesson.component === 'ArabicLettersGame') {
+        // ArabicLettersGame rounds vary by level
+        if (currentLesson.level === 'beginner') totalPossible = 10;
+        else if (currentLesson.level === 'intermediate') totalPossible = 15;
+        else totalPossible = 20; // advanced
       }
       
       // 80% success rate required for completion
@@ -66,6 +72,7 @@ export default function Home() {
       DivisionGame,
       FractionsComparison,
       NumberPatternsGame,
+      ArabicLettersGame,
     };
     const GameComponent = gameComponents[currentLesson.component];
 
