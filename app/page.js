@@ -14,6 +14,11 @@ import DivisionGame from '@/components/DivisionGame';
 import FractionsComparison from '@/components/FractionsComparison';
 import NumberPatternsGame from '@/components/NumberPatternsGame';
 import ArabicLettersGame from '@/components/ArabicLettersGame';
+import LetterPictureMatchGame from '@/components/LetterPictureMatchGame';
+import LetterWordMatchGame from '@/components/LetterWordMatchGame';
+import WordFromPictureGame from '@/components/WordFromPictureGame';
+import WordBuilderGame from '@/components/WordBuilderGame';
+import SentenceBuilderGame from '@/components/SentenceBuilderGame';
 import { useUser } from '@/contexts/UserContext';
 import { userManager } from '@/lib/userManager';
 
@@ -53,6 +58,16 @@ export default function Home() {
         if (currentLesson.level === 'beginner') totalPossible = 10;
         else if (currentLesson.level === 'intermediate') totalPossible = 15;
         else totalPossible = 20; // advanced
+      } else if (currentLesson.component === 'LetterPictureMatchGame') {
+        if (currentLesson.level === 'beginner') totalPossible = 10; else if (currentLesson.level === 'intermediate') totalPossible = 15; else totalPossible = 20;
+      } else if (currentLesson.component === 'LetterWordMatchGame') {
+        if (currentLesson.level === 'beginner') totalPossible = 10; else if (currentLesson.level === 'intermediate') totalPossible = 15; else totalPossible = 20;
+      } else if (currentLesson.component === 'WordFromPictureGame') {
+        if (currentLesson.level === 'beginner') totalPossible = 10; else if (currentLesson.level === 'intermediate') totalPossible = 15; else totalPossible = 20;
+      } else if (currentLesson.component === 'WordBuilderGame') {
+        if (currentLesson.level === 'beginner') totalPossible = 8; else if (currentLesson.level === 'intermediate') totalPossible = 10; else totalPossible = 12;
+      } else if (currentLesson.component === 'SentenceBuilderGame') {
+        if (currentLesson.level === 'beginner') totalPossible = 8; else if (currentLesson.level === 'intermediate') totalPossible = 10; else totalPossible = 12;
       }
       
       // 80% success rate required for completion
@@ -90,6 +105,11 @@ export default function Home() {
       FractionsComparison,
       NumberPatternsGame,
       ArabicLettersGame,
+      LetterPictureMatchGame,
+      LetterWordMatchGame,
+      WordFromPictureGame,
+      WordBuilderGame,
+      SentenceBuilderGame,
     };
     const GameComponent = gameComponents[currentLesson.component];
 

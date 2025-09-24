@@ -19,7 +19,6 @@ import {
 } from '@mui/material';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import Timer from './Timer';
-import WinOverlay from './WinOverlay';
 import {
   GameProgressionManager,
   difficultyLevels,
@@ -94,7 +93,6 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
   const [streak, setStreak] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState('');
-  const [showWin, setShowWin] = useState(false);
   const [timerActive, setTimerActive] = useState(true);
   const [timerKey, setTimerKey] = useState(0);
   const [finalTime, setFinalTime] = useState(null);
@@ -109,6 +107,8 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
   const progressManager = useRef(new GameProgressionManager('arabic-letters'));
   const particleCanvasRef = useRef(null);
   const scoreRef = useRef(null);
+  const finishedRef = useRef(false);
+  const elapsedRef = useRef(0);
 
   // Initialize or reset on level change
   useEffect(() => {
@@ -116,11 +116,13 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
     setScore(0);
     setStreak(0);
     setShowFeedback(false);
-    setShowWin(false);
+  // no win overlay; return via onComplete
     setTimerActive(true);
     setTimerKey(k => k + 1);
     setFinalTime(null);
     setSelectedAnswer(null);
+    finishedRef.current = false;
+    elapsedRef.current = 0;
     generateNewQuestion();
     setQuestionStartTime(Date.now());
   }, [level]);
@@ -134,11 +136,13 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
     setScore(0);
     setStreak(0);
     setShowFeedback(false);
-    setShowWin(false);
+  // no win overlay
     setTimerActive(true);
     setTimerKey(k => k + 1);
     setFinalTime(null);
     setSelectedAnswer(null);
+    finishedRef.current = false;
+    elapsedRef.current = 0;
     generateNewQuestion();
     setQuestionStartTime(Date.now());
   };
@@ -213,18 +217,18 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
     setTimeout(() => {
       setShowFeedback(false);
       setSelectedAnswer(null);
-
       if (round + 1 >= totalRounds) {
-        setTimerActive(false);
-        setShowWin(true);
-        playSfx("win");
-        // Call onComplete callback with correct final score
-        if (onComplete) {
-          onComplete(newScore, finalTime || 0);
+        if (round) {
+          finishedRef.current = true;
+          setTimerActive(false);
+          playSfx("win");
+          const spent = elapsedRef.current || finalTime || 0;
+          if (onComplete) onComplete(newScore, spent);
+          // Defer navigation slightly to allow parent state to update if needed
+          if (onBack) setTimeout(() => onBack(), 0);
         }
         return;
       }
-
       setRound(r => r + 1);
       generateNewQuestion();
       setQuestionStartTime(Date.now());
@@ -527,7 +531,12 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
           <Typography variant="h6" sx={{ color: '#666' }}>
             الوقت:
           </Typography>
-          <Timer active={timerActive} key={timerKey} onStop={setFinalTime} />
+          <Timer
+            active={timerActive}
+            resetKey={timerKey}
+            onTick={(s) => { elapsedRef.current = s; }}
+            onStop={(s) => { setFinalTime(s); elapsedRef.current = s; }}
+          />
           {finalTime !== null && (
             <Typography sx={{ mt: 1, fontSize: 16, color: '#00838f', textAlign: 'center' }}>
               الوقت المستغرق: {Math.floor(finalTime / 60).toString().padStart(2, '0')}
@@ -537,17 +546,7 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
         </Box>
       </Paper>
 
-      {showWin && (
-        <WinOverlay
-          boardPixel={320}
-          moves={score}
-          errors={totalRounds - score}
-          onPlayAgain={() => {
-            setShowWin(false);
-            resetGame();
-          }}
-        />
-      )}
+      {/* No WinOverlay for Arabic path; parent handles return */}
     </Box>
   );
 }
