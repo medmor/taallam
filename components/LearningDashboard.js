@@ -33,17 +33,17 @@ import {
 } from '@mui/icons-material';
 import { userManager, LEARNING_PATH } from '@/lib/userManager';
 
-const LearningDashboard = ({ currentUser, onStartLesson }) => {
+const LearningDashboard = ({ currentUser, onStartLesson, selectedPath = null }) => {
   const [learningPath, setLearningPath] = useState([]);
   const [userStats, setUserStats] = useState(null);
 
   useEffect(() => {
     if (currentUser) {
-      const pathWithProgress = userManager.getLearningPathWithProgress();
+      const pathWithProgress = userManager.getLearningPathWithProgress(selectedPath || null);
       setLearningPath(pathWithProgress);
       setUserStats(userManager.getUserStats());
     }
-  }, [currentUser]);
+  }, [currentUser, selectedPath]);
 
   const getLessonStatus = (lesson) => {
     if (lesson.progress.completed) return 'completed';

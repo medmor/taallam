@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Container, Typography, Fade } from '@mui/material';
 import { School } from '@mui/icons-material';
+import PathSelector from '@/components/PathSelector';
+import { useSearchParams, useRouter } from 'next/navigation';
 import UserSelector from '@/components/UserSelector';
 import LearningDashboard from '@/components/LearningDashboard';
 import AdditionGame from '@/components/AdditionGame';
@@ -24,6 +26,9 @@ export default function Home() {
     updateCurrentUser 
   } = useUser();
   
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [selectedPath, setSelectedPath] = useState(searchParams.get('path') || 'math');
   const [currentLesson, setCurrentLesson] = useState(null);
   const [showGame, setShowGame] = useState(false);
 
@@ -62,6 +67,18 @@ export default function Home() {
     setShowGame(false);
     setCurrentLesson(null);
   };
+
+  // Keep URL in sync when selectedPath changes
+  useEffect(() => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (selectedPath) {
+      current.set('path', selectedPath);
+    } else {
+      current.delete('path');
+    }
+    const query = current.toString();
+    router.replace(`/?${query}`);
+  }, [selectedPath]);
 
   if (showGame && currentLesson) {
     const gameComponents = {
@@ -139,7 +156,13 @@ export default function Home() {
         <LearningDashboard 
           currentUser={currentUser}
           onStartLesson={handleStartLesson}
+          selectedPath={selectedPath}
         />
+
+        {/* Path selector */}
+        <Container maxWidth="lg" sx={{ mt: 2 }}>
+          <PathSelector selected={selectedPath} onSelect={setSelectedPath} />
+        </Container>
       </Box>
 
       {/* User Selector Dialog */}

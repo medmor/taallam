@@ -5,29 +5,28 @@ import {
   Box,
   Typography,
   Button,
-  Container,
   LinearProgress,
-  Fade,
-  Zoom,
-  IconButton,
-  Alert,
-  useTheme,
-  useMediaQuery,
   FormControl,
+  InputLabel,
   Select,
   MenuItem,
-  InputLabel,
-  Card,
-  CardContent
+  Fade,
+  Zoom,
+  Grid,
+  Chip,
+  Paper,
+  IconButton
 } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ErrorIcon from '@mui/icons-material/Error';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import SchoolIcon from '@mui/icons-material/School';
 import Timer from './Timer';
 import WinOverlay from './WinOverlay';
-import { GameProgressionManager, createParticleEffect } from '@/lib/gameEnhancements';
+import {
+  GameProgressionManager,
+  difficultyLevels,
+  createParticleEffect,
+  createPulseAnimation,
+  createShakeAnimation,
+} from '@/lib/gameEnhancements';
 import { playSfx } from '@/lib/sfx';
 
 // Arabic letters with associated words and images
@@ -86,83 +85,83 @@ const LEVEL_CONFIG = {
 };
 
 export default function ArabicLettersGame({ level: initialLevel = "beginner", onComplete, onBack }) {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
   // Game state
   const [level, setLevel] = useState(initialLevel);
   const [currentLetter, setCurrentLetter] = useState(null);
   const [choices, setChoices] = useState([]);
-  const [round, setRound] = useState(1);
+  const [round, setRound] = useState(0);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [showWin, setShowWin] = useState(false);
   const [timerActive, setTimerActive] = useState(true);
-  const [finalTime, setFinalTime] = useState(0);
+  const [timerKey, setTimerKey] = useState(0);
+  const [finalTime, setFinalTime] = useState(null);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [gameMode, setGameMode] = useState('letter-to-word'); // 'letter-to-word' or 'word-to-letter'
 
   const config = LEVEL_CONFIG[level];
   const totalRounds = config.rounds;
-  const availableLetters = ARABIC_LETTERS.slice(0, config.lettersCount);
 
   // Refs
-  const progressManager = useRef(null);
+  const progressManager = useRef(new GameProgressionManager('arabic-letters'));
   const particleCanvasRef = useRef(null);
+  const scoreRef = useRef(null);
 
-  // Initialize game
+  // Initialize or reset on level change
   useEffect(() => {
-    progressManager.current = new GameProgressionManager();
-    generateNewQuestion();
-    setQuestionStartTime(Date.now());
-  }, [level]);
-
-  // Handle level change
-  const handleLevelChange = (newLevel) => {
-    if (round === 1) {
-      setLevel(newLevel);
-      resetGame();
-    }
-  };
-
-  const resetGame = () => {
-    setRound(1);
+    setRound(0);
     setScore(0);
     setStreak(0);
     setShowFeedback(false);
     setShowWin(false);
     setTimerActive(true);
-    setFinalTime(0);
+    setTimerKey(k => k + 1);
+    setFinalTime(null);
+    setSelectedAnswer(null);
+    generateNewQuestion();
+    setQuestionStartTime(Date.now());
+  }, [level]);
+
+  const handleLevelChange = (newLevel) => {
+    setLevel(newLevel);
+  };
+
+  const resetGame = () => {
+    setRound(0);
+    setScore(0);
+    setStreak(0);
+    setShowFeedback(false);
+    setShowWin(false);
+    setTimerActive(true);
+    setTimerKey(k => k + 1);
+    setFinalTime(null);
     setSelectedAnswer(null);
     generateNewQuestion();
     setQuestionStartTime(Date.now());
   };
 
   const generateNewQuestion = () => {
-    // Randomly select a letter from available letters
-    const randomLetter = availableLetters[Math.floor(Math.random() * availableLetters.length)];
+    const available = ARABIC_LETTERS.slice(0, LEVEL_CONFIG[level].lettersCount);
+    const randomLetter = available[Math.floor(Math.random() * available.length)];
     setCurrentLetter(randomLetter);
 
     // Generate choices
     const correctChoice = randomLetter;
     const wrongChoices = [];
-    
-    while (wrongChoices.length < config.choicesCount - 1) {
-      const randomChoice = availableLetters[Math.floor(Math.random() * availableLetters.length)];
-      if (randomChoice.letter !== correctChoice.letter && 
+    while (wrongChoices.length < LEVEL_CONFIG[level].choicesCount - 1) {
+      const randomChoice = available[Math.floor(Math.random() * available.length)];
+      if (randomChoice.letter !== correctChoice.letter &&
           !wrongChoices.find(choice => choice.letter === randomChoice.letter)) {
         wrongChoices.push(randomChoice);
       }
     }
 
-    // Shuffle choices
-    const allChoices = [correctChoice, ...wrongChoices];
-    setChoices(allChoices.sort(() => Math.random() - 0.5));
+    const allChoices = [correctChoice, ...wrongChoices].sort(() => Math.random() - 0.5);
+    setChoices(allChoices);
 
-    // Randomly decide game mode for variety
     setGameMode(Math.random() > 0.5 ? 'letter-to-word' : 'word-to-letter');
   };
 
@@ -206,7 +205,7 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
       progressManager.current.updateStreak(newStreak);
     } else {
       setStreak(0);
-      setFeedback(`❌ خطأ! الإجابة الصحيحة: ${currentLetter.word}`);
+      setFeedback(`❌ خطأ! الإجابة الصحيحة: ${gameMode === 'letter-to-word' ? currentLetter.word : currentLetter.letter}`);
       playSfx("wrong");
     }
 
@@ -215,11 +214,10 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
       setShowFeedback(false);
       setSelectedAnswer(null);
 
-      if (round >= totalRounds) {
+      if (round + 1 >= totalRounds) {
         setTimerActive(false);
         setShowWin(true);
         playSfx("win");
-        
         // Call onComplete callback with correct final score
         if (onComplete) {
           onComplete(newScore, finalTime || 0);
@@ -227,42 +225,34 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
         return;
       }
 
-      setRound((r) => r + 1);
+      setRound(r => r + 1);
       generateNewQuestion();
       setQuestionStartTime(Date.now());
-    }, 2500);
-  };
-
-  const handleTimeUp = (time) => {
-    setFinalTime(time);
-    setTimerActive(false);
-    setShowWin(true);
-    playSfx("lose");
-    
-    if (onComplete) {
-      onComplete(score, time);
-    }
+    }, 1500);
   };
 
   const restartGame = () => {
     resetGame();
   };
-
   if (!currentLetter) {
     return (
-      <Container maxWidth="md" sx={{ textAlign: 'center', py: 4 }}>
+      <Box sx={{ textAlign: 'center', py: 4 }}>
         <Typography variant="h6">جاري تحضير الحروف...</Typography>
-      </Container>
+      </Box>
     );
   }
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      p: 2
-    }}>
-      {/* Particle canvas */}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        mt: 4,
+        position: 'relative',
+      }}
+    >
+      {/* Particle effect canvas */}
       <canvas
         ref={particleCanvasRef}
         style={{
@@ -272,341 +262,292 @@ export default function ArabicLettersGame({ level: initialLevel = "beginner", on
           width: '100%',
           height: '100%',
           pointerEvents: 'none',
-          zIndex: 1000
+          zIndex: 10,
         }}
+        width="800"
+        height="600"
       />
 
-      <Container maxWidth="md" sx={{ position: 'relative' }}>
-        {/* Header Card */}
-        <Box sx={{
-          bgcolor: 'white',
+      <Paper
+        elevation={8}
+        sx={{
+          p: 4,
           borderRadius: 4,
-          p: 3,
-          mb: 3,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-          border: '3px solid',
-          borderColor: 'primary.main'
-        }}>
-          {/* Top Row: Back button, Title, Round indicator */}
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+          minWidth: 380,
+          maxWidth: 600,
+          border: `3px solid ${difficultyLevels[level].color}`,
+          boxShadow: `0 8px 32px ${difficultyLevels[level].color}40`,
+          background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Header */}
+        <Box
+          sx={{
+            display: 'flex',
             justifyContent: 'space-between',
-            mb: 2
-          }}>
+            alignItems: 'center',
+            mb: 2,
+          }}
+        >
+          {onBack && (
             <Button
-              onClick={onBack}
-              startIcon={<ArrowBackIcon />}
               variant="outlined"
+              size="small"
+              onClick={onBack}
               sx={{
-                borderRadius: 3,
-                px: 3,
-                py: 1,
-                borderColor: 'grey.300',
-                color: 'text.primary',
+                minWidth: 'auto',
+                px: 1,
+                borderRadius: 2,
+                border: '2px solid #666',
+                color: '#666',
                 '&:hover': {
-                  borderColor: 'primary.main',
-                  bgcolor: 'primary.light'
-                }
+                  border: '2px solid #333',
+                  color: '#333',
+                },
               }}
             >
-              رجوع
+              ← رجوع
             </Button>
-
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <SchoolIcon sx={{ color: 'primary.main', fontSize: 28 }} />
-              <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-                تعلم الحروف
-              </Typography>
-            </Box>
-
-            <Box sx={{ 
-              bgcolor: 'primary.main', 
-              color: 'white', 
-              px: 2, 
-              py: 1, 
-              borderRadius: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              minWidth: 60
-            }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', lineHeight: 1 }}>
-                {round}
-              </Typography>
-              <Typography variant="caption" sx={{ lineHeight: 1 }}>
-                {totalRounds}
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Second Row: Game info */}
-          <Box sx={{ 
-            display: 'flex', 
-            gap: 2, 
-            mb: 2, 
-            flexWrap: 'wrap',
-            alignItems: 'center'
-          }}>
-            <Box sx={{
-              bgcolor: 'success.light',
-              color: 'success.contrastText',
-              borderRadius: 3,
-              px: 2,
-              py: 1,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1
-            }}>
-              <Typography variant="body2">النقاط:</Typography>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                {score}
-              </Typography>
-            </Box>
-            
-            <Box sx={{
-              bgcolor: 'warning.light',
-              color: 'warning.contrastText',
-              borderRadius: 3,
-              px: 2,
-              py: 1,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1
-            }}>
-              <Typography variant="body2">الجولة:</Typography>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                {round}/{totalRounds}
-              </Typography>
-            </Box>
-
-            <Box sx={{ flex: 1, minWidth: 200 }}>
-              <Timer 
-                initialTime={config.timeLimit}
-                isActive={timerActive}
-                onTimeUp={handleTimeUp}
-              />
-            </Box>
-          </Box>
-
-          {/* Third Row: Progress and Difficulty */}
-          <Box sx={{ mb: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Typography variant="body2" color="text.secondary">
-                التقدم في اللعبة
-              </Typography>
-              <LinearProgress 
-                variant="determinate" 
-                value={(round - 1) / totalRounds * 100}
-                sx={{ flexGrow: 1, height: 6, borderRadius: 3 }}
-              />
-            </Box>
-
-            <FormControl size="small" sx={{ minWidth: 150 }}>
-              <InputLabel>مستوى الصعوبة</InputLabel>
-              <Select
-                value={level}
-                onChange={(e) => handleLevelChange(e.target.value)}
-                label="مستوى الصعوبة"
-                disabled={round > 1}
-                sx={{ borderRadius: 2 }}
-              >
-                <MenuItem value="beginner">مبتدئ 🌱</MenuItem>
-                <MenuItem value="intermediate">متوسط 🌿</MenuItem>
-                <MenuItem value="advanced">متقدم 🌳</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
+          )}
+          <Typography
+            variant="h4"
+            align="center"
+            sx={{
+              fontWeight: 'bold',
+              color: difficultyLevels[level].color,
+              flexGrow: 1,
+            }}
+          >
+            تعلم الحروف العربية
+          </Typography>
+          <Chip
+            label={difficultyLevels[level].name}
+            sx={{
+              backgroundColor: difficultyLevels[level].color,
+              color: 'white',
+              fontWeight: 'bold',
+            }}
+          />
         </Box>
 
-        {/* Main Game Card */}
-        <Box sx={{
-          bgcolor: 'white',
-          borderRadius: 4,
-          p: 4,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-          mb: 3
-        }}>
-          {/* Question Display */}
-          <Fade in={!showFeedback}>
-            <Box sx={{ textAlign: 'center' }}>
+        {/* Stats */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            mb: 3,
+            flexWrap: 'wrap',
+            gap: 1,
+          }}
+        >
+          <Chip label={`الجولة: ${round + 1}/${totalRounds}`} color="primary" variant="outlined" />
+          <Chip ref={scoreRef} label={`النقاط: ${score}`} color="success" variant="outlined" />
+          {streak > 0 && (
+            <Chip
+              label={`متتالية: ${streak} 🔥`}
+              sx={{ backgroundColor: '#ff6b35', color: 'white', ...createPulseAnimation() }}
+            />
+          )}
+        </Box>
+
+        {/* Progress */}
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
+            التقدم في اللعبة
+          </Typography>
+          <LinearProgress
+            variant="determinate"
+            value={(round / totalRounds) * 100}
+            sx={{
+              height: 8,
+              borderRadius: 4,
+              backgroundColor: '#e0e0e0',
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: difficultyLevels[level].color,
+                borderRadius: 4,
+              },
+            }}
+          />
+        </Box>
+
+        {/* Difficulty selector */}
+        <Box sx={{ mb: 3 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel>مستوى الصعوبة</InputLabel>
+            <Select value={level} label="مستوى الصعوبة" onChange={(e) => handleLevelChange(e.target.value)} disabled={showFeedback}>
+              {Object.entries(difficultyLevels).map(([key, config]) => (
+                <MenuItem
+                  key={key}
+                  value={key}
+                  disabled={!progressManager.current.getProgress().difficultyUnlocked.includes(key)}
+                >
+                  {config.icon} {config.name}
+                  {!progressManager.current.getProgress().difficultyUnlocked.includes(key) && ' 🔒'}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+
+        {/* Question panel */}
+        {!showFeedback && (
+          <Zoom in={!showFeedback} timeout={500}>
+            <Paper
+              elevation={4}
+              sx={{
+                p: 3,
+                mb: 3,
+                borderRadius: 3,
+                backgroundColor: '#f8f9fa',
+                border: '2px solid #e9ecef',
+                textAlign: 'center',
+              }}
+            >
               {gameMode === 'letter-to-word' ? (
                 <Box>
-                  <Typography variant="h6" sx={{ mb: 3, color: 'text.primary' }}>
-                    اختر الكلمة التي تبدأ بالحرف:
+                  <Typography variant="h6" sx={{ mb: 2, color: '#2c3e50' }}>
+                    اختر الكلمة التي تبدأ بالحرف التالي
                   </Typography>
-                  
-                  {/* Letter Display */}
-                  <Box sx={{ mb: 4 }}>
-                    <Box
-                      sx={{
-                        width: 120,
-                        height: 120,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        border: 4,
-                        borderColor: 'primary.main',
-                        borderRadius: 3,
-                        backgroundColor: 'primary.light',
-                        fontSize: '4rem',
-                        fontWeight: 'bold',
-                        color: 'primary.contrastText',
-                        mx: 'auto',
-                        mb: 2,
-                        boxShadow: 3
-                      }}
-                    >
-                      {currentLetter.letter}
-                    </Box>
-                    <IconButton
-                      onClick={() => playLetterAudio(currentLetter)}
-                      sx={{
-                        bgcolor: 'secondary.main',
-                        color: 'white',
-                        '&:hover': { bgcolor: 'secondary.dark' }
-                      }}
-                    >
-                      <VolumeUpIcon />
-                    </IconButton>
+                  <Box
+                    sx={{
+                      width: 120,
+                      height: 120,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: 4,
+                      borderColor: difficultyLevels[level].color,
+                      borderRadius: 3,
+                      backgroundColor: '#fff',
+                      fontSize: '4rem',
+                      fontWeight: 'bold',
+                      color: '#2c3e50',
+                      mx: 'auto',
+                      mb: 2,
+                      boxShadow: 1,
+                    }}
+                  >
+                    {currentLetter.letter}
                   </Box>
+                  <IconButton onClick={() => playLetterAudio(currentLetter)} color="secondary">
+                    <VolumeUpIcon />
+                  </IconButton>
                 </Box>
               ) : (
                 <Box>
-                  <Typography variant="h6" sx={{ mb: 3, color: 'text.primary' }}>
-                    اختر الحرف الذي تبدأ به الكلمة:
+                  <Typography variant="h6" sx={{ mb: 2, color: '#2c3e50' }}>
+                    اختر الحرف الذي تبدأ به هذه الكلمة
                   </Typography>
-                  
-                  {/* Word Display */}
-                  <Box sx={{ mb: 4 }}>
-                    <Typography variant="h3" sx={{ 
-                      fontWeight: 'bold', 
-                      color: 'primary.main',
-                      mb: 1
-                    }}>
-                      {currentLetter.word}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      ({currentLetter.image})
-                    </Typography>
-                  </Box>
+                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: difficultyLevels[level].color }}>
+                    {currentLetter.word}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    ({currentLetter.image})
+                  </Typography>
                 </Box>
               )}
+            </Paper>
+          </Zoom>
+        )}
 
-              {/* Choices */}
-              <Box sx={{ 
-                display: 'grid',
-                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(2, 1fr)',
-                gap: 2,
-                maxWidth: 600,
-                mx: 'auto'
-              }}>
-                {choices.map((choice, index) => (
-                  <Card
-                    key={index}
-                    sx={{
-                      cursor: showFeedback ? 'default' : 'pointer',
-                      transition: 'all 0.3s ease',
-                      border: 2,
-                      borderColor: selectedAnswer?.letter === choice.letter 
-                        ? (choice.letter === currentLetter.letter ? 'success.main' : 'error.main')
-                        : 'transparent',
-                      '&:hover': showFeedback ? {} : {
-                        transform: 'translateY(-4px)',
-                        boxShadow: 4
-                      }
-                    }}
-                    onClick={() => !showFeedback && checkAnswer(choice)}
-                  >
-                    <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                      {gameMode === 'letter-to-word' ? (
-                        <Box>
-                          <Typography variant="h4" sx={{ 
-                            fontWeight: 'bold', 
-                            color: 'primary.main',
-                            mb: 1
-                          }}>
-                            {choice.word}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            ({choice.image})
-                          </Typography>
-                        </Box>
-                      ) : (
-                        <Typography variant="h2" sx={{ 
-                          fontWeight: 'bold', 
-                          color: 'primary.main'
-                        }}>
-                          {choice.letter}
-                        </Typography>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </Box>
-            </Box>
-          </Fade>
-
-          {/* Feedback */}
-          <Zoom in={showFeedback}>
-            <Box sx={{ textAlign: 'center', mt: 3 }}>
-              <Alert 
-                severity={feedback.includes('✅') ? 'success' : 'error'}
-                icon={feedback.includes('✅') ? <CheckCircleIcon /> : <ErrorIcon />}
-                sx={{ 
-                  fontSize: '1.2rem', 
-                  justifyContent: 'center',
-                  borderRadius: 3
+        {/* Feedback */}
+        {showFeedback && (
+          <Fade in={showFeedback} timeout={300}>
+            <Paper
+              elevation={4}
+              sx={{
+                p: 3,
+                mb: 3,
+                borderRadius: 3,
+                backgroundColor: selectedAnswer?.letter === currentLetter.letter ? '#e8f5e8' : '#ffeaea',
+                border: `2px solid ${selectedAnswer?.letter === currentLetter.letter ? '#4caf50' : '#f44336'}`,
+                textAlign: 'center',
+                ...(selectedAnswer?.letter === currentLetter.letter ? createPulseAnimation() : createShakeAnimation()),
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 'bold',
+                  color: selectedAnswer?.letter === currentLetter.letter ? '#2e7d32' : '#c62828',
+                  mb: 1,
                 }}
               >
                 {feedback}
-              </Alert>
-            </Box>
-          </Zoom>
-        </Box>
-
-        {/* Streak Display */}
-        {streak > 0 && (
-          <Box sx={{ textAlign: 'center', mb: 2 }}>
-            <Box sx={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              bgcolor: 'white',
-              color: 'warning.main',
-              px: 3,
-              py: 2,
-              borderRadius: 4,
-              boxShadow: 3,
-              border: '2px solid',
-              borderColor: 'warning.main'
-            }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                🔥 متتالية: {streak}
               </Typography>
-            </Box>
-          </Box>
+            </Paper>
+          </Fade>
         )}
 
-        {/* Win Overlay */}
-        {showWin && (
-          <WinOverlay
-            open={showWin}
-            title={score >= totalRounds * 0.8 ? "🎉 ممتاز!" : "💪 حاول مرة أخرى"}
-            subtitle={
-              score >= totalRounds * 0.8 
-                ? "لقد أتقنت تعلم الحروف العربية!" 
-                : "تدرب أكثر على الحروف"
-            }
-            moves={score}
-            errors={totalRounds - score}
-            onRestart={restartGame}
-            onBack={() => {
-              restartGame();
-              if (onBack) onBack();
-            }}
-          />
+        {/* Choices */}
+        {!showFeedback && (
+          <Grid container spacing={2} justifyContent="center" alignItems="center">
+            {choices.map((choice, index) => (
+              <Grid item key={choice.letter + index}>
+                <Zoom in={true} timeout={300} style={{ transitionDelay: `${index * 100}ms` }}>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={() => checkAnswer(choice)}
+                    disabled={showFeedback}
+                    sx={{
+                      py: 2,
+                      minWidth: gameMode === 'letter-to-word' ? 160 : 100,
+                      fontSize: gameMode === 'letter-to-word' ? '1.2rem' : '1.8rem',
+                      fontWeight: 'bold',
+                      borderRadius: 3,
+                      border: '2px solid #e0e0e0',
+                      backgroundColor: 'white',
+                      color: '#333',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        backgroundColor: difficultyLevels[level].color,
+                        color: 'white',
+                        transform: 'translateY(-4px)',
+                        boxShadow: `0 8px 16px ${difficultyLevels[level].color}40`,
+                        border: `2px solid ${difficultyLevels[level].color}`,
+                      },
+                      '&:active': {
+                        transform: 'translateY(0px)',
+                      },
+                    }}
+                  >
+                    {gameMode === 'letter-to-word' ? choice.word : choice.letter}
+                  </Button>
+                </Zoom>
+              </Grid>
+            ))}
+          </Grid>
         )}
-      </Container>
+
+        {/* Timer */}
+        <Box sx={{ mt: 3, textAlign: 'center' }}>
+          <Typography variant="h6" sx={{ color: '#666' }}>
+            الوقت:
+          </Typography>
+          <Timer active={timerActive} key={timerKey} onStop={setFinalTime} />
+          {finalTime !== null && (
+            <Typography sx={{ mt: 1, fontSize: 16, color: '#00838f', textAlign: 'center' }}>
+              الوقت المستغرق: {Math.floor(finalTime / 60).toString().padStart(2, '0')}
+              :{(finalTime % 60).toString().padStart(2, '0')}
+            </Typography>
+          )}
+        </Box>
+      </Paper>
+
+      {showWin && (
+        <WinOverlay
+          boardPixel={320}
+          moves={score}
+          errors={totalRounds - score}
+          onPlayAgain={() => {
+            setShowWin(false);
+            resetGame();
+          }}
+        />
+      )}
     </Box>
   );
 }
