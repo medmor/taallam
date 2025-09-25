@@ -219,120 +219,76 @@ export default function PlantsPartsGame({
             userSelect: "none",
           }}
         >
-          <svg
-            viewBox="0 0 200 260"
-            width="100%"
-            height="100%"
-            style={{ display: "block" }}
-          >
+          <svg viewBox="0 0 200 260" width="100%" height="100%" style={{ display:'block' }}>
+            <defs>
+              <linearGradient id="soilGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#8d6e63" />
+                <stop offset="100%" stopColor="#6d4c41" />
+              </linearGradient>
+              <linearGradient id="stemGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#66bb6a" />
+                <stop offset="100%" stopColor="#2e7d32" />
+              </linearGradient>
+              <linearGradient id="leafGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#43a047" />
+                <stop offset="100%" stopColor="#1b5e20" />
+              </linearGradient>
+              <radialGradient id="flowerPetalGrad" cx="50%" cy="40%" r="70%">
+                <stop offset="0%" stopColor="#ff8abf" />
+                <stop offset="100%" stopColor="#ec407a" />
+              </radialGradient>
+              <radialGradient id="flowerCenterGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#fff59d" />
+                <stop offset="100%" stopColor="#fbc02d" />
+              </radialGradient>
+              <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <style>{`.part:hover { filter: brightness(1.1); cursor:pointer; }`}</style>
+            </defs>
             {/* Soil */}
-            <rect x="0" y="200" width="200" height="60" fill="#8d6e63" />
+            <rect x="0" y="200" width="200" height="60" fill="url(#soilGrad)" />
             {/* Root */}
-            <g
-              data-part="root"
-              onClick={() => handleSelect("root")}
-              style={{ cursor: "pointer" }}
-            >
-              {(() => {
-                const { isTarget, isCorrect, isWrong } =
-                  partVisualState("root");
-                return (
-                  <g>
-                    <path
-                      d="M100 200 C95 215 95 225 90 235 M100 200 C103 213 107 225 110 235"
-                      stroke={
-                        isCorrect ? "#2e7d32" : isWrong ? "#c62828" : "#5d4037"
-                      }
-                      strokeWidth={isTarget ? 4 : 3}
-                      strokeLinecap="round"
-                      fill="none"
-                    />
-                    <circle
-                      cx="100"
-                      cy="198"
-                      r={isTarget ? 11 : 9}
-                      fill={
-                        isCorrect ? "#4caf50" : isWrong ? "#ef5350" : "#6d4c41"
-                      }
-                      stroke={isTarget ? difficultyColor : "transparent"}
-                      strokeWidth={isTarget ? 2 : 0}
-                    />
-                  </g>
-                );
-              })()}
-            </g>
+            {(() => { const {isCorrect,isWrong}=partVisualState('root'); return (
+              <g data-part="root" onClick={()=>handleSelect('root')} className="part" filter={isCorrect? 'url(#glow)' : undefined}>
+                {/* Main tap root (no target hint) */}
+                <path d="M100 200 C100 212 99 225 100 238" stroke={isCorrect?'#4caf50': isWrong? '#c62828':'#5d4037'} strokeWidth={4} strokeLinecap="round" fill="none" />
+                {/* Left lateral branches */}
+                <path d="M100 212 C96 214 94 218 92 223" stroke={isCorrect?'#4caf50': isWrong? '#c62828':'#5d4037'} strokeWidth={3} strokeLinecap="round" fill="none" />
+                <path d="M99 223 C95 226 93 231 91 235" stroke={isCorrect?'#4caf50': isWrong? '#c62828':'#5d4037'} strokeWidth={2.5} strokeLinecap="round" fill="none" />
+                {/* Right lateral branches */}
+                <path d="M100 215 C104 218 106 222 108 226" stroke={isCorrect?'#4caf50': isWrong? '#c62828':'#5d4037'} strokeWidth={3} strokeLinecap="round" fill="none" />
+                <path d="M101 226 C105 229 107 233 109 236" stroke={isCorrect?'#4caf50': isWrong? '#c62828':'#5d4037'} strokeWidth={2.5} strokeLinecap="round" fill="none" />
+              </g> ) })()}
             {/* Stem */}
-            <g
-              data-part="stem"
-              onClick={() => handleSelect("stem")}
-              style={{ cursor: "pointer" }}
-            >
-              {(() => {
-                const { isTarget, isCorrect, isWrong } =
-                  partVisualState("stem");
-                return (
-                  <rect
-                    x="95"
-                    y="110"
-                    width="10"
-                    height="90"
-                    rx="4"
-                    fill={
-                      isCorrect ? "#66bb6a" : isWrong ? "#ef5350" : "#4caf50"
-                    }
-                    stroke={isTarget ? difficultyColor : "transparent"}
-                    strokeWidth={isTarget ? 3 : 0}
-                  />
-                );
-              })()}
-            </g>
+            {(() => { const {isCorrect,isWrong}=partVisualState('stem'); return (
+              <g data-part="stem" onClick={()=>handleSelect('stem')} className="part" filter={isCorrect? 'url(#glow)' : undefined}>
+                <rect x="95" y="100" width="10" height="100" rx="5" fill={isCorrect? '#66bb6a': isWrong? '#ef5350':'url(#stemGrad)'} />
+              </g> ) })()}
             {/* Leaf */}
-            <g
-              data-part="leaf"
-              onClick={() => handleSelect("leaf")}
-              style={{ cursor: "pointer" }}
-            >
-              {(() => {
-                const { isTarget, isCorrect, isWrong } =
-                  partVisualState("leaf");
-                return (
-                  <path
-                    d="M110 140 C145 120 165 155 140 175 C120 190 95 170 110 140 Z"
-                    fill={
-                      isCorrect ? "#43a047" : isWrong ? "#ef5350" : "#388e3c"
-                    }
-                    stroke={isTarget ? difficultyColor : "transparent"}
-                    strokeWidth={isTarget ? 3 : 0}
-                  />
-                );
-              })()}
-            </g>
+            {(() => { const {isCorrect,isWrong}=partVisualState('leaf'); return (
+              <g data-part="leaf" onClick={()=>handleSelect('leaf')} className="part" filter={isCorrect? 'url(#glow)' : undefined}>
+                {/* Leaf moved 20px higher, no target hint */}
+                <path d="M95 130 C70 118 58 154 83 174 C102 190 118 152 95 130 Z" fill={isCorrect? '#43a047': isWrong? '#ef5350':'url(#leafGrad)'} />
+                <path d="M92 134 C86 146 86 158 94 168" stroke={isCorrect? '#e8f5e9':'#c8e6c9'} strokeWidth={2} fill="none" strokeLinecap="round" />
+              </g> ) })()}
             {/* Flower */}
-            <g
-              data-part="flower"
-              onClick={() => handleSelect("flower")}
-              style={{ cursor: "pointer" }}
-            >
-              {(() => {
-                const { isTarget, isCorrect, isWrong } =
-                  partVisualState("flower");
-                return (
-                  <g>
-                    <circle
-                      cx="100"
-                      cy="80"
-                      r="28"
-                      fill={
-                        isCorrect ? "#ec407a" : isWrong ? "#ef5350" : "#f06292"
-                      }
-                      stroke={isTarget ? difficultyColor : "transparent"}
-                      strokeWidth={isTarget ? 4 : 0}
-                    />
-                    <circle cx="100" cy="80" r="10" fill="#ffeb3b" />
-                  </g>
-                );
-              })()}
-            </g>
+            {(() => { const {isCorrect,isWrong}=partVisualState('flower'); return (
+              <g data-part="flower" onClick={()=>handleSelect('flower')} className="part" filter={isCorrect? 'url(#glow)' : undefined}>
+                {/* Petals */}
+                {Array.from({length:6}).map((_,i)=> {
+                  const angle = (i/6)*Math.PI*2;
+                  const cx = 100 + Math.cos(angle)*18;
+                  const cy = 80 + Math.sin(angle)*18;
+                  return <circle key={i} cx={cx} cy={cy} r={14} fill={isCorrect? '#ec407a': isWrong? '#ef5350':'url(#flowerPetalGrad)'} opacity={0.95} />
+                })}
+                {/* Center */}
+                <circle cx="100" cy="80" r="15" fill="url(#flowerCenterGrad)" />
+              </g> ) })()}
           </svg>
         </Box>
         {/* Feedback overlay (optional message) */}
