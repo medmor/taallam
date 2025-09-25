@@ -19,6 +19,13 @@ import LetterWordMatchGame from '@/components/LetterWordMatchGame';
 import WordFromPictureGame from '@/components/WordFromPictureGame';
 import WordBuilderGame from '@/components/WordBuilderGame';
 import SentenceBuilderGame from '@/components/SentenceBuilderGame';
+import AnimalsSoundsGame from '@/components/AnimalsSoundsGame';
+import PlantsPartsGame from '@/components/PlantsPartsGame';
+import WeatherSeasonsGame from '@/components/WeatherSeasonsGame';
+import BodyPartsGame from '@/components/BodyPartsGame';
+import FiveSensesGame from '@/components/FiveSensesGame';
+import MagnetismElectricityGame from '@/components/MagnetismElectricityGame';
+import WaterCycleGame from '@/components/WaterCycleGame';
 import { useUser } from '@/contexts/UserContext';
 import { userManager } from '@/lib/userManager';
 
@@ -33,7 +40,8 @@ export default function Home() {
   
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [selectedPath, setSelectedPath] = useState(searchParams.get('path') || 'math');
+  // Start with no selected path; user must choose explicitly
+  const [selectedPath, setSelectedPath] = useState(searchParams.get('path') || '');
   const [currentLesson, setCurrentLesson] = useState(null);
   const [showGame, setShowGame] = useState(false);
 
@@ -68,6 +76,21 @@ export default function Home() {
         if (currentLesson.level === 'beginner') totalPossible = 8; else if (currentLesson.level === 'intermediate') totalPossible = 10; else totalPossible = 12;
       } else if (currentLesson.component === 'SentenceBuilderGame') {
         if (currentLesson.level === 'beginner') totalPossible = 8; else if (currentLesson.level === 'intermediate') totalPossible = 10; else totalPossible = 12;
+      } else if ([
+        'AnimalsSoundsGame',
+        'PlantsPartsGame',
+        'WeatherSeasonsGame',
+        'BodyPartsGame',
+        'FiveSensesGame',
+        'MagnetismElectricityGame',
+        'WaterCycleGame'
+      ].includes(currentLesson.component)) {
+        if (currentLesson.component === 'AnimalsSoundsGame') {
+          if (currentLesson.level === 'beginner') totalPossible = 6; else if (currentLesson.level === 'intermediate') totalPossible = 8; else totalPossible = 10;
+        } else {
+          // Other science placeholders still 6 rounds until implemented
+          totalPossible = 6;
+        }
       }
       
       // 80% success rate required for completion
@@ -89,10 +112,11 @@ export default function Home() {
     if (selectedPath) {
       current.set('path', selectedPath);
     } else {
+      // If empty, remove any existing param so URL stays clean and no auto-redirect to math
       current.delete('path');
     }
     const query = current.toString();
-    router.replace(`/?${query}`);
+    router.replace(query ? `/?${query}` : '/');
   }, [selectedPath]);
 
   if (showGame && currentLesson) {
@@ -110,6 +134,13 @@ export default function Home() {
       WordFromPictureGame,
       WordBuilderGame,
       SentenceBuilderGame,
+      AnimalsSoundsGame,
+      PlantsPartsGame,
+      WeatherSeasonsGame,
+      BodyPartsGame,
+      FiveSensesGame,
+      MagnetismElectricityGame,
+      WaterCycleGame,
     };
     const GameComponent = gameComponents[currentLesson.component];
 
@@ -168,29 +199,41 @@ export default function Home() {
     );
   }
 
+  // If no path chosen yet, show only path selector (after user creation)
+  if (!selectedPath) {
+    return (
+      <>
+        <Box sx={{ minHeight: '100vh', backgroundColor: '#f8f9fa', pt: 6 }}>
+          <Container maxWidth="md" sx={{ mt: 4 }}>
+            <PathSelector selected={selectedPath} onSelect={setSelectedPath} />
+          </Container>
+        </Box>
+        <UserSelector
+          open={showUserSelector}
+          onClose={() => setShowUserSelector(false)}
+          onUserSelected={handleUserSelected}
+        />
+      </>
+    );
+  }
+
   return (
     <>
-      {/* Main Dashboard */}
-      <Box sx={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
-        {/* Learning Dashboard */}
-        <LearningDashboard 
-          currentUser={currentUser}
-          onStartLesson={handleStartLesson}
-          selectedPath={selectedPath}
+        <Box sx={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
+          <LearningDashboard 
+            currentUser={currentUser}
+            onStartLesson={handleStartLesson}
+            selectedPath={selectedPath}
+          />
+          <Container maxWidth="lg" sx={{ mt: 2 }}>
+            <PathSelector selected={selectedPath} onSelect={setSelectedPath} />
+          </Container>
+        </Box>
+        <UserSelector
+          open={showUserSelector}
+          onClose={() => setShowUserSelector(false)}
+          onUserSelected={handleUserSelected}
         />
-
-        {/* Path selector */}
-        <Container maxWidth="lg" sx={{ mt: 2 }}>
-          <PathSelector selected={selectedPath} onSelect={setSelectedPath} />
-        </Container>
-      </Box>
-
-      {/* User Selector Dialog */}
-      <UserSelector
-        open={showUserSelector}
-        onClose={() => setShowUserSelector(false)}
-        onUserSelected={handleUserSelected}
-      />
     </>
   );
 }

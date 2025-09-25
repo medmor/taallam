@@ -6,7 +6,7 @@ import { School, Calculate, Translate, Science } from '@mui/icons-material';
 const PATHS = [
   { id: 'math', title: 'مسار الرياضيات', icon: <Calculate />, color: '#22c55e', description: 'الجمع، الطرح، الضرب، القسمة، الكسور، الأنماط' },
   { id: 'language', title: 'مسار اللغة العربية', icon: <Translate />, color: '#3b82f6', description: 'الحروف، الكلمات، القراءة، المفردات' },
-  // Future: add more like science, geography
+  { id: 'science', title: 'مسار العلوم الطبيعية', icon: <Science />, color: '#f59e0b', description: 'الحيوانات، النباتات، الطقس، الجسم، الحواس، الظواهر' },
 ];
 
 export default function PathSelector({ selected, onSelect }) {
