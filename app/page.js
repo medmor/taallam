@@ -87,8 +87,11 @@ export default function Home() {
       ].includes(currentLesson.component)) {
         if (currentLesson.component === 'AnimalsSoundsGame') {
           if (currentLesson.level === 'beginner') totalPossible = 6; else if (currentLesson.level === 'intermediate') totalPossible = 8; else totalPossible = 10;
+        } else if (['WeatherSeasonsGame','BodyPartsGame','FiveSensesGame','MagnetismElectricityGame','WaterCycleGame'].includes(currentLesson.component)) {
+          // These now follow the same difficulty presets: 6/8/10
+          if (currentLesson.level === 'beginner') totalPossible = 6; else if (currentLesson.level === 'intermediate') totalPossible = 8; else totalPossible = 10;
         } else {
-          // Other science placeholders still 6 rounds until implemented
+          // Remaining science placeholders
           totalPossible = 6;
         }
       }
