@@ -62,15 +62,17 @@ function randFrom(arr, n) {
   return n ? copy.slice(0, n) : copy[0];
 }
 
-export default function WeatherSeasonsGame() {
+export default function WeatherSeasonsGame({ level = "beginner", onComplete, onBack } = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [difficulty, setDifficulty] = useState("beginner");
+  const initialDifficulty = difficultyPresets[level] ? level : "beginner";
+  const [difficulty, setDifficulty] = useState(initialDifficulty);
   const [mode, setMode] = useState("seasons");
   const [started, setStarted] = useState(false);
   const [round, setRound] = useState(1);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
   const [question, setQuestion] = useState(null);
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -90,6 +92,10 @@ export default function WeatherSeasonsGame() {
   }, [started, mode, difficulty]);
 
   const goBack = () => {
+    if (typeof onBack === "function") {
+      try { onBack(); } catch {}
+      return;
+    }
     const qpBack = searchParams?.get("back") || searchParams?.get("from") || searchParams?.get("path");
     const normalized = typeof qpBack === "string" && qpBack.startsWith("/") ? qpBack : null;
     try {
@@ -104,6 +110,12 @@ export default function WeatherSeasonsGame() {
   const endGame = () => {
     setStarted(false);
     playSfx("win");
+    try {
+      if (typeof onComplete === "function") {
+        const accuracy = Math.round(((correctCount || 0) / (totalRounds || 1)) * 100);
+        onComplete(score, accuracy);
+      }
+    } catch {}
     // navigate back instead of showing overlay
     setTimeout(goBack, 600);
   };
@@ -163,6 +175,7 @@ export default function WeatherSeasonsGame() {
       playSfx("correct");
       setScore(s => s + 10 + streak * 2);
       setStreak(s => s + 1);
+      setCorrectCount(c => c + 1);
     } else {
       playSfx("wrong");
       setStreak(0);
@@ -180,6 +193,7 @@ export default function WeatherSeasonsGame() {
   function start() {
     setScore(0);
     setStreak(0);
+    setCorrectCount(0);
     setRound(1);
     setStarted(true);
   }
