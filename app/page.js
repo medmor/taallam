@@ -23,6 +23,11 @@ import AnimalsSoundsGame from '@/components/AnimalsSoundsGame';
 import PlantsPartsGame from '@/components/PlantsPartsGame';
 import WeatherSeasonsGame from '@/components/WeatherSeasonsGame';
 import BodyPartsGame from '@/components/BodyPartsGame';
+import HomeNeighborhoodGame from '@/components/HomeNeighborhoodGame';
+import CityCountryGame from '@/components/CityCountryGame';
+import ContinentsGame from '@/components/ContinentsGame';
+import OldTimesGame from '@/components/OldTimesGame';
+import AncientCivilizationsGame from '@/components/AncientCivilizationsGame';
 import FiveSensesGame from '@/components/FiveSensesGame';
 import MagnetismElectricityGame from '@/components/MagnetismElectricityGame';
 import WaterCycleGame from '@/components/WaterCycleGame';
@@ -144,6 +149,12 @@ export default function Home() {
       FiveSensesGame,
       MagnetismElectricityGame,
       WaterCycleGame,
+      // Geography & History
+      HomeNeighborhoodGame,
+      CityCountryGame,
+      ContinentsGame,
+      OldTimesGame,
+      AncientCivilizationsGame,
     };
     const GameComponent = gameComponents[currentLesson.component];
 
