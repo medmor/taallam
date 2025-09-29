@@ -31,6 +31,13 @@ import AncientCivilizationsGame from '@/components/AncientCivilizationsGame';
 import FiveSensesGame from '@/components/FiveSensesGame';
 import MagnetismElectricityGame from '@/components/MagnetismElectricityGame';
 import WaterCycleGame from '@/components/WaterCycleGame';
+import ColorsBasicsGame from '@/components/ColorsBasicsGame';
+import ColorMixingGame from '@/components/ColorMixingGame';
+import GeometryShapesGame from '@/components/GeometryShapesGame';
+import ShapesInEnvironmentGame from '@/components/ShapesInEnvironmentGame';
+import InteractiveDrawingGame from '@/components/InteractiveDrawingGame';
+import MusicalInstrumentsGame from '@/components/MusicalInstrumentsGame';
+import RhythmMelodyGame from '@/components/RhythmMelodyGame';
 import { useUser } from '@/contexts/UserContext';
 import { userManager } from '@/lib/userManager';
 
@@ -88,13 +95,27 @@ export default function Home() {
         'BodyPartsGame',
         'FiveSensesGame',
         'MagnetismElectricityGame',
-        'WaterCycleGame'
+        'WaterCycleGame',
+        'ColorsBasicsGame',
+        'ColorMixingGame',
+        'GeometryShapesGame',
+        'ShapesInEnvironmentGame',
+        'InteractiveDrawingGame',
+        'MusicalInstrumentsGame',
+        'RhythmMelodyGame'
       ].includes(currentLesson.component)) {
         if (currentLesson.component === 'AnimalsSoundsGame') {
           if (currentLesson.level === 'beginner') totalPossible = 6; else if (currentLesson.level === 'intermediate') totalPossible = 8; else totalPossible = 10;
         } else if (['WeatherSeasonsGame','BodyPartsGame','FiveSensesGame','MagnetismElectricityGame','WaterCycleGame'].includes(currentLesson.component)) {
           // These now follow the same difficulty presets: 6/8/10
           if (currentLesson.level === 'beginner') totalPossible = 6; else if (currentLesson.level === 'intermediate') totalPossible = 8; else totalPossible = 10;
+        } else if (['ColorsBasicsGame','ColorMixingGame','GeometryShapesGame','ShapesInEnvironmentGame','InteractiveDrawingGame','MusicalInstrumentsGame','RhythmMelodyGame'].includes(currentLesson.component)) {
+          // ColorsBasicsGame and ColorMixingGame follow 6/8/10; others are placeholders for now
+          if (currentLesson.component === 'ColorsBasicsGame' || currentLesson.component === 'ColorMixingGame') {
+            if (currentLesson.level === 'beginner') totalPossible = 6; else if (currentLesson.level === 'intermediate') totalPossible = 8; else totalPossible = 10;
+          } else {
+            totalPossible = 6;
+          }
         } else {
           // Remaining science placeholders
           totalPossible = 6;
@@ -149,6 +170,13 @@ export default function Home() {
       FiveSensesGame,
       MagnetismElectricityGame,
       WaterCycleGame,
+  ColorsBasicsGame,
+  ColorMixingGame,
+  GeometryShapesGame,
+  ShapesInEnvironmentGame,
+  InteractiveDrawingGame,
+  MusicalInstrumentsGame,
+  RhythmMelodyGame,
       // Geography & History
       HomeNeighborhoodGame,
       CityCountryGame,

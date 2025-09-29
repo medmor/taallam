@@ -17,7 +17,6 @@ import {
   Zoom,
   Grid,
 } from "@mui/material";
-import WinOverlay from "./WinOverlay";
 import { playSfx } from "@/lib/sfx";
 import {
   GameProgressionManager,
@@ -501,26 +500,7 @@ export default function AdditionGame({ level: initialLevel = "beginner", onCompl
         </Box>
       </Paper>
 
-      {showWin && (
-        <WinOverlay
-          boardPixel={320}
-          moves={score}
-          errors={totalRounds - score}
-          onPlayAgain={() => {
-            setShowWin(false);
-            setRound(0);
-            setScore(0);
-            setStreak(0);
-            setExpr(generateForLevel(level));
-            setTimerActive(true);
-            setTimerKey((k) => k + 1);
-            setQuestionStartTime(Date.now());
-            setFeedback("");
-            setSelectedAnswer(null);
-            setShowFeedback(false);
-          }}
-        />
-      )}
+      {/* WinOverlay removed: parent handles navigation on completion */}
     </Box>
   );
 }

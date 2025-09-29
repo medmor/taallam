@@ -24,7 +24,6 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import PatternIcon from "@mui/icons-material/GridOn";
 import Timer from "./Timer";
-import WinOverlay from "./WinOverlay";
 import {
   GameProgressionManager,
   createParticleEffect,
@@ -152,7 +151,6 @@ export default function NumberPatternsGame({
   const [streak, setStreak] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [showWin, setShowWin] = useState(false);
   const [timerActive, setTimerActive] = useState(true);
   const [finalTime, setFinalTime] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
@@ -250,7 +248,6 @@ export default function NumberPatternsGame({
 
       if (round >= totalRounds) {
         setTimerActive(false);
-        setShowWin(true);
         playSfx("win");
 
         // Call onComplete callback with correct final score
@@ -269,7 +266,6 @@ export default function NumberPatternsGame({
   const handleTimeUp = (time) => {
     setFinalTime(time);
     setTimerActive(false);
-    setShowWin(true);
     playSfx("lose");
 
     if (onComplete) {
@@ -287,7 +283,6 @@ export default function NumberPatternsGame({
     setRound(1);
     setScore(0);
     setStreak(0);
-    setShowWin(false);
     setTimerActive(true);
     setFinalTime(0);
     setShowFeedback(false);
@@ -655,27 +650,7 @@ export default function NumberPatternsGame({
           </Box>
         )}
 
-        {/* Win Overlay */}
-        {showWin && (
-          <WinOverlay
-            open={showWin}
-            title={
-              score >= totalRounds * 0.8 ? "🎉 ممتاز!" : "💪 حاول مرة أخرى"
-            }
-            subtitle={
-              score >= totalRounds * 0.8
-                ? "لقد أتقنت اكتشاف الأنماط الرقمية!"
-                : "تدرب أكثر على اكتشاف الأنماط"
-            }
-            moves={score}
-            errors={totalRounds - score}
-            onRestart={restartGame}
-            onBack={() => {
-              restartGame();
-              if (onBack) onBack();
-            }}
-          />
-        )}
+        {/* No overlay; completion handled via onComplete */}
       </Container>
     </Box>
   );

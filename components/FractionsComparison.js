@@ -19,7 +19,6 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-import WinOverlay from "./WinOverlay";
 import { playSfx } from "@/lib/sfx";
 import {
   GameProgressionManager,
@@ -200,7 +199,6 @@ export default function FractionsComparison({ level: initialLevel = "beginner", 
   const [round, setRound] = useState(0);
   const [gameData, setGameData] = useState(() => generateForLevel("beginner"));
   const [score, setScore] = useState(0);
-  const [showWin, setShowWin] = useState(false);
   const [streak, setStreak] = useState(0);
   const [feedback, setFeedback] = useState("");
   const [userOrder, setUserOrder] = useState([]);
@@ -219,7 +217,6 @@ export default function FractionsComparison({ level: initialLevel = "beginner", 
     setRound(0);
     setScore(0);
     setStreak(0);
-    setShowWin(false);
     setTimerActive(true);
     setTimerKey((k) => k + 1);
     setFinalTime(null);
@@ -283,10 +280,9 @@ export default function FractionsComparison({ level: initialLevel = "beginner", 
       setUserOrder([]);
 
       if (round + 1 >= totalRounds) {
-        setShowWin(true);
         setTimerActive(false);
         playSfx("win");
-        
+
         // Call onComplete callback with the correct final score
         if (onComplete) {
           onComplete(newScore, finalTime || 0);
@@ -706,26 +702,7 @@ export default function FractionsComparison({ level: initialLevel = "beginner", 
         </Box>
       </Paper>
 
-      {showWin && (
-        <WinOverlay
-          boardPixel={320}
-          moves={score}
-          errors={totalRounds - score}
-          onPlayAgain={() => {
-            setShowWin(false);
-            setRound(0);
-            setScore(0);
-            setStreak(0);
-            setGameData(generateForLevel(level));
-            setTimerActive(true);
-            setTimerKey((k) => k + 1);
-            setQuestionStartTime(Date.now());
-            setFeedback("");
-            setUserOrder([]);
-            setShowFeedback(false);
-          }}
-        />
-      )}
+
     </Box>
   );
 }
