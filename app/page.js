@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Box, Container, Typography, Fade } from '@mui/material';
+import React, { Suspense, useState, useEffect } from 'react';
+import { Box, Container, Typography, Fade, CircularProgress } from '@mui/material';
 import { School } from '@mui/icons-material';
 import PathSelector from '@/components/PathSelector';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -41,7 +41,7 @@ import RhythmMelodyGame from '@/components/RhythmMelodyGame';
 import { useUser } from '@/contexts/UserContext';
 import { userManager } from '@/lib/userManager';
 
-export default function Home() {
+function HomeContent() {
   const { 
     currentUser, 
     showUserSelector, 
@@ -277,5 +277,20 @@ export default function Home() {
           onUserSelected={handleUserSelected}
         />
     </>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense
+      fallback={
+        <Box sx={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+          <CircularProgress size={56} />
+          <Typography variant="h6" color="primary">جاري التحميل...</Typography>
+        </Box>
+      }
+    >
+      <HomeContent />
+    </Suspense>
   );
 }
