@@ -41,7 +41,7 @@ export default function Header({ currentUser, onSwitchUser }) {
           </Link>
         </Typography>
 
-        <Button
+        {/* <Button
           variant="outlined"
           endIcon={<Store />}
           onClick={() => router.push('/store')}
@@ -61,7 +61,7 @@ export default function Header({ currentUser, onSwitchUser }) {
           }}
         >
           متجر التعلم
-        </Button>
+        </Button> */}
 
         {currentUser && onSwitchUser && (
           <Button
