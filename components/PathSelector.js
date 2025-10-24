@@ -14,19 +14,87 @@ const PATHS = [
 export default function PathSelector({ selected, onSelect }) {
   return (
     <Box>
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', color: '#333' }}>
-        <School sx={{ mr: 1, verticalAlign: 'middle' }} /> اختر مسارك التعليمي
+      <Typography 
+        variant="h4" 
+        sx={{ 
+          mb: 4, 
+          fontWeight: 'bold', 
+          color: '#1e293b',
+          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 2
+        }}
+      >
+        <School sx={{ fontSize: 40 }} /> اختر مسارك التعليمي
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ maxWidth: 1400, mx: 'auto' }} justifyContent="center">
         {PATHS.map((p) => (
-          <Grid item xs={12} md={6} key={p.id}>
-            <Card elevation={selected === p.id ? 8 : 3} sx={{ borderRadius: 3, border: selected === p.id ? `3px solid ${p.color}` : 'none' }}>
-              <CardActionArea onClick={() => onSelect(p.id)}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
-                    <Chip icon={p.icon} label={p.title} sx={{ bgcolor: p.color, color: 'white', fontWeight: 'bold' }} />
+          <Grid item xs={12} sm={6} md={4} key={p.id}>
+            <Card 
+              elevation={selected === p.id ? 12 : 2} 
+              sx={{ 
+                borderRadius: 4,
+                border: selected === p.id ? `4px solid ${p.color}` : '2px solid transparent',
+                transition: 'all 0.3s ease',
+                height: '100%',
+                background: selected === p.id 
+                  ? `linear-gradient(135deg, ${p.color}08, ${p.color}18)` 
+                  : 'white',
+                '&:hover': {
+                  transform: 'translateY(-8px)',
+                  boxShadow: `0 12px 24px ${p.color}40`,
+                  border: `2px solid ${p.color}`,
+                },
+                minWidth: { xs: '90vw', sm: '400px' },
+              }}
+            >
+              <CardActionArea 
+                onClick={() => onSelect(p.id)}
+                sx={{ height: '100%', p: 1 }}
+              >
+                <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                  <Box 
+                    sx={{ 
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 80,
+                      height: 80,
+                      borderRadius: '50%',
+                      bgcolor: `${p.color}20`,
+                      mb: 2,
+                      '& svg': {
+                        fontSize: 48,
+                        color: p.color
+                      }
+                    }}
+                  >
+                    {p.icon}
                   </Box>
-                  <Typography variant="body2" color="text.secondary">{p.description}</Typography>
+                  <Typography 
+                    variant="h6" 
+                    sx={{ 
+                      mb: 2, 
+                      fontWeight: 'bold',
+                      color: p.color,
+                      fontSize: '1.25rem'
+                    }}
+                  >
+                    {p.title}
+                  </Typography>
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary"
+                    sx={{ 
+                      lineHeight: 1.8,
+                      px: 1,
+                      minHeight: 60
+                    }}
+                  >
+                    {p.description}
+                  </Typography>
                 </CardContent>
               </CardActionArea>
             </Card>
