@@ -9,11 +9,13 @@ import Image from "next/image";
 import IconButton from "@mui/material/IconButton";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
-import { Person } from "@mui/icons-material";
+import { Person, Store } from "@mui/icons-material";
 import { isMuted, setMuted } from "@/lib/sfx";
+import { useRouter } from "next/navigation";
 
 export default function Header({ currentUser, onSwitchUser }) {
   const [muted, setMutedState] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -39,12 +41,32 @@ export default function Header({ currentUser, onSwitchUser }) {
           </Link>
         </Typography>
 
-
+        <Button
+          variant="outlined"
+          endIcon={<Store />}
+          onClick={() => router.push('/store')}
+          sx={{ 
+            borderRadius: 3,
+            ml: 2,
+            color: 'white',
+            borderColor: 'rgba(255,255,255,0.5)',
+            '&:hover': {
+              borderColor: 'white',
+              backgroundColor: 'rgba(255,255,255,0.1)'
+            },
+            '& .MuiButton-endIcon': {
+              marginLeft: 1,
+              marginRight: 0
+            }
+          }}
+        >
+          متجر التعلم
+        </Button>
 
         {currentUser && onSwitchUser && (
           <Button
             variant="outlined"
-            startIcon={<Person />}
+            endIcon={<Person />}
             onClick={onSwitchUser}
             sx={{ 
               borderRadius: 3,
@@ -54,6 +76,10 @@ export default function Header({ currentUser, onSwitchUser }) {
               '&:hover': {
                 borderColor: 'white',
                 backgroundColor: 'rgba(255,255,255,0.1)'
+              },
+              '& .MuiButton-endIcon': {
+                marginLeft: 1,
+                marginRight: 0
               }
             }}
           >
