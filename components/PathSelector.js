@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { Box, Grid, Card, CardActionArea, CardContent, Typography, Chip } from '@mui/material';
-import { School, Calculate, Translate, Science, Public, Brush, MusicNote } from '@mui/icons-material';
+import { School, Calculate, Translate, Science, Public, Brush, MusicNote, Computer } from '@mui/icons-material';
 
 const PATHS = [
   { id: 'math', title: 'مسار الرياضيات', icon: <Calculate />, color: '#22c55e', description: 'الجمع، الطرح، الضرب، القسمة، الكسور، الأنماط' },
@@ -9,6 +9,7 @@ const PATHS = [
   { id: 'science', title: 'مسار العلوم الطبيعية', icon: <Science />, color: '#f59e0b', description: 'الحيوانات، النباتات، الطقس، الجسم، الحواس، الظواهر' },
   { id: 'geo', title: 'مسار الجغرافيا والتاريخ', icon: <Public />, color: '#10b981', description: 'المنزل والحي، المدن والبلدان، القارات، الأزمنة والحضارات' },
   { id: 'arts', title: 'مسار الفنون والإبداع', icon: <Brush />, color: '#ec4899', description: 'الألوان، الأشكال، الرسم التفاعلي، الموسيقى والإيقاع' },
+  { id: 'technology', title: 'مسار التكنولوجيا والبرمجة', icon: <Computer />, color: '#8b5cf6', description: 'أجزاء الحاسوب، الفأرة، التسلسل المنطقي، الحلقات البسيطة' },
 ];
 
 export default function PathSelector({ selected, onSelect }) {

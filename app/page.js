@@ -38,6 +38,10 @@ import ShapesInEnvironmentGame from '@/components/ShapesInEnvironmentGame';
 import InteractiveDrawingGame from '@/components/InteractiveDrawingGame';
 import MusicalInstrumentsGame from '@/components/MusicalInstrumentsGame';
 import RhythmMelodyGame from '@/components/RhythmMelodyGame';
+import ComputerPartsGame from '@/components/ComputerPartsGame';
+import MouseControlGame from '@/components/MouseControlGame';
+import SequenceStepsGame from '@/components/SequenceStepsGame';
+import LoopsPatternGame from '@/components/LoopsPatternGame';
 import { useUser } from '@/contexts/UserContext';
 import { userManager } from '@/lib/userManager';
 
@@ -102,7 +106,11 @@ function HomeContent() {
         'ShapesInEnvironmentGame',
         'InteractiveDrawingGame',
         'MusicalInstrumentsGame',
-        'RhythmMelodyGame'
+        'RhythmMelodyGame',
+        'ComputerPartsGame',
+        'MouseControlGame',
+        'SequenceStepsGame',
+        'LoopsPatternGame'
       ].includes(currentLesson.component)) {
         if (currentLesson.component === 'AnimalsSoundsGame') {
           if (currentLesson.level === 'beginner') totalPossible = 6; else if (currentLesson.level === 'intermediate') totalPossible = 8; else totalPossible = 10;
@@ -116,6 +124,9 @@ function HomeContent() {
           } else {
             totalPossible = 6;
           }
+        } else if (['ComputerPartsGame','MouseControlGame','SequenceStepsGame','LoopsPatternGame'].includes(currentLesson.component)) {
+          // Technology games follow 6/8/10 difficulty presets
+          if (currentLesson.level === 'beginner') totalPossible = 6; else if (currentLesson.level === 'intermediate') totalPossible = 8; else totalPossible = 10;
         } else {
           // Remaining science placeholders
           totalPossible = 6;
@@ -170,19 +181,24 @@ function HomeContent() {
       FiveSensesGame,
       MagnetismElectricityGame,
       WaterCycleGame,
-  ColorsBasicsGame,
-  ColorMixingGame,
-  GeometryShapesGame,
-  ShapesInEnvironmentGame,
-  InteractiveDrawingGame,
-  MusicalInstrumentsGame,
-  RhythmMelodyGame,
+      ColorsBasicsGame,
+      ColorMixingGame,
+      GeometryShapesGame,
+      ShapesInEnvironmentGame,
+      InteractiveDrawingGame,
+      MusicalInstrumentsGame,
+      RhythmMelodyGame,
       // Geography & History
       HomeNeighborhoodGame,
       CityCountryGame,
       ContinentsGame,
       OldTimesGame,
       AncientCivilizationsGame,
+      // Technology & Programming
+      ComputerPartsGame,
+      MouseControlGame,
+      SequenceStepsGame,
+      LoopsPatternGame,
     };
     const GameComponent = gameComponents[currentLesson.component];
 
