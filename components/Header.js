@@ -87,6 +87,23 @@ export default function Header({ currentUser, onSwitchUser }) {
           </Button>
         )}
 
+        <Button
+          variant="outlined"
+          onClick={() => router.push('/youtube')}
+          sx={{
+            borderRadius: 3,
+            ml: 2,
+            color: 'white',
+            borderColor: 'rgba(255,255,255,0.5)',
+            '&:hover': {
+              borderColor: 'white',
+              backgroundColor: 'rgba(255,255,255,0.1)'
+            }
+          }}
+        >
+          YouTube
+        </Button>
+
                 <IconButton
           color="inherit"
           onClick={toggleMute}
